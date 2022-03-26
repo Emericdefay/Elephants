@@ -1,0 +1,5 @@
+# app
+django==4.0.3
+
+# dev
+pip-tools

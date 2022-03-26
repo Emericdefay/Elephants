@@ -1,0 +1,8 @@
+# logos
+*logos.*
+
+# caches
+*pycache*/
+
+# env
+env/
