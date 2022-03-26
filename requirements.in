@@ -1,5 +1,11 @@
 # app
 django==4.0.3
+django-import-export
+pyexcel-xlsx
 
 # dev
 pip-tools
+flake8
+
+# tests
+coverage

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Les Elephants</title>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+        <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+
+    </head>
+    <body class="overflow-hidden bg-light">
+        <!-- Navbar -->
+        <ul class="nav nav-tabs" id="menu" role="tablist">
+            <li class="nav-brand h-100">
+                <img src="{% static 'logo.png' %}"
+                     alt="Small"
+                     class="d-inline-block align-top"
+                     height="42"
+                />
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="client-tab" data-toggle="tab" href="#client" role="tab" aria-controls="client" aria-selected="true">Clients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="planning-tab" data-toggle="tab" href="#planning" role="tab" aria-controls="planning" aria-selected="true">Planning</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="food-tab" data-toggle="tab" href="#food" role="tab" aria-controls="food" aria-selected="false">Plats</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="circuit-tab" data-toggle="tab" href="#circuit" role="tab" aria-controls="circuit" aria-selected="false">Tournées</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="bill-tab" data-toggle="tab" href="#bill" role="tab" aria-controls="bill" aria-selected="false">Factures</a>
+            </li>
+        </ul>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="wrapper pt-0">
+            <!-- Main content -->
+            <section class="content p-0 vh-100">
+                <div class="container-fluid vh-100">
+                    <div class="row vh-100">
+                        <div class="col-12 h-100">
+                            <div class="tab-content" id="menuContent">
+                                <div class="tab-pane fade show active" id="client" role="tabpanel" aria-labelledby="client-tab">
+                                    <p>
+                                    NOM PRENOM | Plats par repas ☑ PAR DEFAUT | TOURNEE ATTRIBUEE 🛵 | + Ajouter des Clients | Montant total | Exporter en excel à l'unité
+                                    </p>
+                                </div>
+                                <div class="tab-pane fade" id="planning" role="tabpanel" aria-labelledby="planning-tab">
+                                    <p>
+                                    NOM PRENOM | Matrice calendrier | 2-3 cases par jour | trois couleurs : 1-pas de plats 2-plat régulier 3-plat différent des autres jours | cliquer pour modifier | hover pour apercevoir
+                                    </p>
+                                </div>
+                                <div class="tab-pane fade" id="food" role="tabpanel" aria-labelledby="food-tab">
+                                    Nom des plats | Coûts des plats | + Ajouter plats | 
+                                </div>
+                                <div class="tab-pane fade" id="circuit" role="tabpanel" aria-labelledby="circuit-tab">
+                                    VISION PLANNING > Nombre de plats par client > Nombre de plats totaux par tournée > | + ajouter tournée | Attribuer nom à la tournée
+                                </div>
+                                <div class="tab-pane fade" id="bill" role="tabpanel" aria-labelledby="bill-tab">
+                                    Factures
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </body>
+</html>
