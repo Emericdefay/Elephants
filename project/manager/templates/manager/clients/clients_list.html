@@ -1,19 +1,160 @@
 {% load static %}
 
+<style> 
+    /* 
+    Generic Styling, for Desktops/Laptops 
+    */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    /* Zebra striping */
+    tr:nth-of-type(odd) {
+      background: #eee;
+    }
+
+    th {
+      background: #333;
+      color: white;
+      font-weight: bold;
+    }
+
+    td, th {
+      padding: 6px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    /* 
+    Max width before this PARTICULAR table gets nasty
+    This query will take effect for any screen smaller than 760px
+    and also iPads specifically.
+    */
+    @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+      .responsive-table-input-matrix {
+        display: block;
+        position: relative;
+        width: 100%;
+      }
+      .responsive-table-input-matrix:after {
+        clear: both;
+        content: "";
+        display: block;
+        font-size: 0;
+        height: 0;
+        visibility: hidden;
+      }
+      .responsive-table-input-matrix tbody {
+        display: block;
+        overflow-x: auto;
+        position: relative;
+        white-space: nowrap;
+        width: auto;
+      }
+      .responsive-table-input-matrix tbody tr {
+        display: inline-block;
+        vertical-align: top;
+      }
+      .responsive-table-input-matrix tbody tr td {
+        display: block;
+        text-align: center;
+      }
+      .responsive-table-input-matrix tbody tr td:first-child {
+        text-align: center;
+      }
+      .responsive-table-input-matrix thead {
+        display: block;
+        float: left;
+        margin-right: 10px;
+      }
+      .responsive-table-input-matrix thead:after {
+        clear: both;
+        content: "";
+        display: block;
+        font-size: 0;
+        height: 0;
+        visibility: hidden;
+      }
+      .responsive-table-input-matrix thead th:first-of-type {
+        height: 1.4em;
+      }
+      .responsive-table-input-matrix thead th {
+        display: block;
+        text-align: center;
+      }
+      .responsive-table-input-matrix thead th:first-child {
+        text-align: center;
+      }
+    }
+</style>
+
 <form action="{% url "manager:update" %}" method="post" id="myform">
     {% csrf_token %}
-
+    <h3>
+        Clients
+    </h3>
+    <table class="responsive-table-input-matrix table table-light">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>🥖</th>
+                <th>S</th>
+                <th>E</th>
+                <th>P</th>
+                <th>D</th>
+                <th>🍒</th>
+                <th>YA</th>
+                <th>EK</th>
+                <th>FR</th>
+                <th>LEGS</th>
+                <th>Tournée</th>
+                <th>Community</th>
+                <th>Community</th>
+                <th>Community</th>
+                <th>Community</th>
+                <th>Community</th>
+                <th>Community</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for client in formClient %}
+        {% ifchanged client.circuit.value %} {% if forloop.counter0 != 0 %}<tr style="border-collapse: separate;
+        border-spacing:0 20px;"><td></td></tr>{% endif %}{% endifchanged %}
+        <tr style="background-color: {% for grad in gradients %}{% if grad.0|striptags == client.circuit.value|striptags %}{{grad.1}}{% endif %}{% endfor %}; margin-bottom:1rem;">
+              
+                <td><input type="text" name="last_name_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.last_name.value}}"/></td>
+                <td><input type="text" name="first_name_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.first_name.value}}"/></td>
+                {% for default in formDefaultCommand %}
+                    <td>
+                        <input
+                            type="checkbox"
+                            id="default_command-box_{{client.id.value}}_{{default}}"
+                            name="default_command_{{client.id.value}}_{{default}}"
+                        {% for box_client in client.default_command.value %}
+                            {% if default|striptags == box_client|striptags %}
+                                checked
+                            {% endif %}
+                        {% endfor %}
+                        class="default_box">
+                    </td>
+                {% endfor %}
+                <td>
+                    <select name="circuit_{{client.id.value}}" id="circuit-select_{{client.id.value}}">
+                        {% for circuit in formCircuit %}
+                            <option value="{{ circuit.id.value }}" {% if circuit.id.value == client.circuit.value %}selected="selected"{% endif %}> {{ circuit.name.value }} </option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td><input type="checkbox"></td>
+                <td><input type="checkbox"></td>
+                <td><input type="checkbox"></td>
+                <td><input type="checkbox"></td>
+                <td><input type="checkbox"></td>
+                <td><input type="checkbox"></td>
+            </tr>
             
-    {% for client in formClient %}
-        <input type="text" name="last_name_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.last_name.value}}"/>
-        <input type="text" name="first_name_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.first_name.value}}"/>
-        <input type="text" name="address_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.address.value}}"/>
-        {{client.default_command}}
-        <select name="circuit_{{client.id.value}}" id="circuit-select_{{client.id.value}}">
-            {% for circuit in formCircuit %}
-                <option value="{{circuit.id}}">{{circuit.name}}</option>
-            {% endfor %}
-        </select>
-    {% endfor %}
-
+        {% endfor %}
+    </table>
 </form>

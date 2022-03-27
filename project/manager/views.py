@@ -1,5 +1,6 @@
 # Local libs
 import json
+import operator
 import logging
 from datetime import timedelta
 # django libs
@@ -14,8 +15,8 @@ from django.views.generic import TemplateView, DetailView, UpdateView
 from django.views.generic.dates import timezone_today
 from django.shortcuts import render
 # app libs
-from .models import Food, Client, Circuit, Command, Planning
-from .forms import ClientForm, CircuitForm
+from .models import Food, Client, Circuit, Command, Planning, DefaultCommand
+from .forms import ClientForm, CircuitForm, DefaultCommandForm
 from .serializers import ClientSerializer
 
 
@@ -48,25 +49,28 @@ class HomeView(TemplateView, UpdateView):
 
     def get_form(self):
         """ form for setting the status of a synergy """
-        clients = Client.objects.all().order_by('last_name', 'first_name')
+        clients = Client.objects.all().order_by('circuit', 'last_name', 'first_name')
         circuits = Circuit.objects.all().order_by('name')
-        print(circuits)
+        defaultcommands = DefaultCommand.objects.all().order_by('default')
+        print(len(list(circuits)))
+        gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
+        gradients_colors = {(circuit.id, gradients[index]) for index, circuit in enumerate(circuits)}
+        print(gradients_colors)
         form = {
-            'clients':({(ClientForm(instance=(client))) for client in (clients)}),
-            'circuits':({(CircuitForm(instance=(circuit))) for circuit in (circuits)}),
+            'clients':((ClientForm(instance=(client))) for client in list(clients)),
+            'circuits':({(CircuitForm(instance=(circuit))) for circuit in list(circuits)}),
+            'defaultcommands': (defaultcommands),
+            'gradients': gradients_colors,
         }
         return form
 
-    def get_circuit_form(self):
-        """ form for setting the status of a synergy """
-        circuits = Circuit.objects.all()
-        return ({(CircuitForm(instance=(circuit))) for circuit in (circuits)})
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['clients'] = Client.objects.all()
-        context['formClient'] = self.get_form()['clients']
-        context['formCircuit'] = self.get_form()['circuits']
+        form = self.get_form()
+        context['formClient'] = form['clients']
+        context['formCircuit'] = form['circuits']
+        context['formDefaultCommand'] = form['defaultcommands']
+        context['gradients'] = form['gradients']
         return context
 
     def object(self):

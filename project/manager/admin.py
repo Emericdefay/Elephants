@@ -34,6 +34,7 @@ class CustomClient(admin.ModelAdmin):
 		('last_name', {'fields': ['last_name']}),
 		('address', {'fields': ['address']}),
 		('default_command', {'fields': ['default_command']}),
+		('circuit', {'fields': ['circuit']}),
 	]
 
 

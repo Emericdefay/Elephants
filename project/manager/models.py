@@ -20,11 +20,13 @@ class Food(models.Model):
         print(FoodCategory(self.category).__dict__)
         return FoodCategory(self.category).label
 
+
 class DefaultCommand(models.Model):
     default = models.CharField(max_length=10, choices=FoodCategory.choices, verbose_name=("Plats réguliers"), blank=False, null=False)
 
     def __str__(self):
-        return self.default
+        return str(self.default)
+
 
 # Circuit
 # -Name
@@ -48,7 +50,10 @@ class Client(models.Model):
     last_name = models.CharField(verbose_name=("Nom"), max_length=100, blank=False, null=False)
     address = models.CharField(verbose_name=("Adresse"), max_length=1000, blank=False, null=False)
     default_command = models.ManyToManyField(DefaultCommand)
+    circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
     
+    class Meta:
+        ordering = ['circuit', 'last_name', 'first_name']
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
 

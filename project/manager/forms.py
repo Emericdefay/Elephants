@@ -1,7 +1,7 @@
 # Django Libs:
 from django import forms
 from .choices import FoodCategory
-from .models import Food, Client, Circuit
+from .models import Food, Client, Circuit, DefaultCommand
 from django.utils.safestring import mark_safe
 
 			
@@ -21,11 +21,13 @@ class ClientForm(forms.ModelForm):
 	first_name = forms.Field(label="", )
 	last_name = forms.Field(label="", )
 	address = forms.Field(label="", )
+	circuit = forms.Field(label="", )
 	default_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
+	#circuit = forms.MultipleChoiceField(label="", choices=Circuit.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 
 	class Meta():
 		model = Client
-		fields = ['id', 'first_name', 'last_name', 'address', 'default_command', ]
+		fields = ['id', 'first_name', 'last_name', 'address', 'default_command', 'circuit']
 		widgets = {
 		    'id': forms.TextInput(attrs={
 		        'placeholder': 'Commande par défaut'}),
@@ -43,25 +45,29 @@ class ClientForm(forms.ModelForm):
 		}
 
 
-class DefaultCommandForm(forms.Form):
+class DefaultCommandForm(forms.ModelForm):
 	"""_summary_
 
 	Args:
 		forms (_type_): _description_
 	"""
-	default = forms.MultipleChoiceField(choices=Food.objects.all()),
+	default = forms.Field(label="", )
+
+	class Meta:
+		model= DefaultCommand
+		fields = ['default']
+	
 
 			
 class CircuitForm(forms.ModelForm):
 	"""Surcharge the class Circuit to put place holder
 	and remove help_text."""
-	id = forms.Field(choices=Circuit.objects.all())
+	id = forms.Field(label="", widget=forms.TextInput(attrs={'class': 'invisible'}))
+	name = forms.Field(label="", )
 
 	class Meta:
 		model = Circuit
-		fields = ['id']
-
-
+		fields = ['id', 'name']
 
 			
 class CommandForm(forms.Form):
