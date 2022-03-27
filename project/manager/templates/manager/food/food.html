@@ -1,0 +1,35 @@
+{% load static humanize %}
+
+<h3>
+    Plats
+    <button
+      class="btn btn-info align-content-center mx-3"
+      type="button"
+      id="createFood">
+      Ajouter
+    </button>
+</h3>
+
+<table class="responsive-table-input-matrix table table-light">
+<thead>
+    <tr>
+        <th>Plat</th>
+        <th>Catégorie</th>
+        <th>Prix</th>
+    </tr>
+</thead>
+<tbody class="overflow-auto">
+    {% for food in foods %}
+    <tr>
+        <td><p>{{food.name}}</td>
+        <td>
+            <select name="food_{{food.id}}" id="food-select_{{food.id}}">
+                {% for category in foodcategories %}
+                    <option value="{{ category.0 }}" {% if food.id|striptags == category.0|striptags %}selected="selected"{% endif %}> {{ category.1 }} </option>
+                {% endfor %}
+            </select>
+        </td>
+        <td><input type="text" name="food_{{food.id.value}}" id="food_id_{{food.id.value}}" value="{{food.price}}"/></td>
+     </tr>
+    {% endfor %}
+</table>

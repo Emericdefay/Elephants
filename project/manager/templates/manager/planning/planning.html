@@ -1,0 +1,79 @@
+{% load static humanize %}
+
+<table class="responsive-table-input-matrix table table-light">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Total</th>
+            <th>Prix U</th>
+            <th>Nb.Repas</th>
+            {% for day in days %}
+                <th>{{day}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody class="overflow-auto">
+        {% now "d" as todays_date %}
+        {% for command in commands %}
+        {% ifchanged command.client.circuit %} {% if forloop.counter0 != 0 %}<tr style="border-collapse: separate; border-spacing:0 20px;"><td colspan="36"></td></tr>{% endif %}{% endifchanged %}
+        <tr style="background-color: {% for grad in gradients %}{% if grad.0|striptags == command.client.circuit.id|striptags %}{{grad.1}}{% endif %}{% endfor %}; margin-bottom:1rem;">
+            <td><strong>{{command.fields.client.last_name}}</strong></td>
+            <td><strong>{{command}}</strong></td>
+            <td><strong>Total</strong></td>
+            <td><strong>Prix U</strong></td>
+            <td><strong>Nb. Repas</strong></td>
+            {% for day in days %}
+                <td style="
+                       width:1em;
+                       {% if todays_date|striptags == day|striptags %}
+                          background-color:cyan;
+                       {% endif %}">
+                    <input
+                       type="number"
+                       min=0
+                       id="command-morning_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       name="command_morning_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       value={% if command.day_date_command.value|striptags == day|striptags and command.month_date_command.value|striptags == month|striptags and command.year_date_command.value|striptags == year|striptags %}{{command.morning_command.value}}{% else %}0{% endif %}
+                       style="width:50px;"
+                       class="default_box">
+                    <input
+                       type="number"
+                       min=0
+                       id="command-evening_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       name="command_evening_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       value={% if command.day_date_command.value|striptags == day|striptags and command.month_date_command.value|striptags == month|striptags and command.year_date_command.value|striptags == year|striptags %}{{command.evening_command.value}}{% else %}0{% endif %}
+                       style="width:50px;"
+                       class="default_box">
+                    <input
+                       type="number"
+                       min=1
+                       max=31
+                       id="command-day_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       name="command_day_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       value="{{day}}"
+                       style="width:50px;"
+                       class="default_box">
+                    <input
+                       type="number"
+                       min=1
+                       max=12
+                       id="command-month_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       name="command_month_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       value="{{month}}"
+                       style="width:50px;"
+                       class="default_box">
+                    <input
+                       type="number"
+                       min=2020
+                       id="command-year_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       name="command_year_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
+                       value="{{year}}"
+                       style="width:50px;"
+                       class="default_box">
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+<pre>{% debug %}</pre>

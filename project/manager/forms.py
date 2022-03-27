@@ -1,8 +1,13 @@
 # Django Libs:
 from django import forms
 from .choices import FoodCategory
-from .models import Food, Client, Circuit, DefaultCommand
+from .models import Food, Client, Circuit, DefaultCommand, Command
 from django.utils.safestring import mark_safe
+from django.forms.models import BaseInlineFormSet
+from django.forms.models import inlineformset_factory
+from django.db import models
+
+
 
 			
 class FoodForm(forms.Form):
@@ -11,7 +16,6 @@ class FoodForm(forms.Form):
 	name = forms.Field(label="food_name"),
 	price = forms.Field(label="food_price"),
 	category = forms.Field(label="food_category"),
-
 
 
 class ClientForm(forms.ModelForm):
@@ -25,7 +29,7 @@ class ClientForm(forms.ModelForm):
 	default_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 	#circuit = forms.MultipleChoiceField(label="", choices=Circuit.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 
-	class Meta():
+	class Meta:
 		model = Client
 		fields = ['id', 'first_name', 'last_name', 'address', 'default_command', 'circuit']
 		widgets = {
@@ -56,7 +60,6 @@ class DefaultCommandForm(forms.ModelForm):
 	class Meta:
 		model= DefaultCommand
 		fields = ['default']
-	
 
 			
 class CircuitForm(forms.ModelForm):
@@ -69,21 +72,20 @@ class CircuitForm(forms.ModelForm):
 		model = Circuit
 		fields = ['id', 'name']
 
-			
-class CommandForm(forms.Form):
+
+class CommandForm(forms.ModelForm):
 	"""Surcharge the class Command to put place holder
 	and remove help_text."""
-	food = forms.Field(label=""),
-	client = forms.Field(label=""),
-	morning_command = forms.Field(label=""),
-	evening_command = forms.Field(label=""),
-	day_date_command = forms.Field(label=""),
-	month_date__command = forms.Field(label=""),
-	year_date__command = forms.Field(label=""),
+	YEAR_CHOICES       = [(r, r) for r in range(2020, 2050)]
+	MONTH_CHOICES      = [(r, r) for r in range(1, 13)]
+	DAY_CHOICES        = [(r, r) for r in range(1, 32)]
+	food               = forms.Field(label="")
+	morning_command    = forms.IntegerField(label="", )
+	evening_command    = forms.IntegerField(label="", )
+	day_date_command   = forms.DateField(label="", widget=forms.Select(choices=DAY_CHOICES)  )
+	year_date_command  = forms.DateField(label="", widget=forms.Select(choices=YEAR_CHOICES) )
+	month_date_command = forms.DateField(label="", widget=forms.Select(choices=MONTH_CHOICES))
 
-			
-class PlanningForm(forms.Form):
-	"""Surcharge the class Planning to put place holder
-	and remove help_text."""
-	circuit = forms.Field(label=""),
-	command = forms.Field(label=""),
+	class Meta:
+		model = Command
+		fields = ['morning_command', 'evening_command', 'day_date_command','year_date_command', 'month_date_command', ]

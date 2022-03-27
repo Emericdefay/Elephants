@@ -1,7 +1,7 @@
 # Django REST Libs:
 from rest_framework import serializers
 # Local Libs:
-from .models import Food, DefaultCommand, Client, Circuit, Command, Planning
+from .models import Food, DefaultCommand, Client, Circuit, Command
 
 
 class FoodSerializer(serializers.ModelSerializer):
@@ -54,11 +54,3 @@ class CommandSerializer(serializers.ModelSerializer):
 		fields = "__all__"
 
 
-class PlanningSerializer(serializers.ModelSerializer):
-	"""
-	Planning serializer
-	Based on serializers.ModelSerializer
-	"""
-	class Meta:
-		model = Planning
-		fields = "__all__"

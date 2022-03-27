@@ -1,4 +1,4 @@
-{% load static %}
+{% load static humanize %}
 
 <style> 
     /* 
@@ -89,10 +89,15 @@
     }
 </style>
 
-<form action="{% url "manager:update" %}" method="post" id="myform">
-    {% csrf_token %}
     <h3>
         Clients
+        <button
+          class="btn btn-info align-content-center mx-3"
+          type="button"
+          id="createClient"
+          >
+          Ajouter
+        </button>
     </h3>
     <table class="responsive-table-input-matrix table table-light">
         <thead>
@@ -110,18 +115,16 @@
                 <th>FR</th>
                 <th>LEGS</th>
                 <th>Tournée</th>
-                <th>Community</th>
-                <th>Community</th>
-                <th>Community</th>
-                <th>Community</th>
-                <th>Community</th>
-                <th>Community</th>
+                <th>Montant</th>
+                <th>Nb. Repas</th>
+                <th>Export</th>
+                <th>Supprimer</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="overflow-auto">
         {% for client in formClient %}
         {% ifchanged client.circuit.value %} {% if forloop.counter0 != 0 %}<tr style="border-collapse: separate;
-        border-spacing:0 20px;"><td></td></tr>{% endif %}{% endifchanged %}
+        border-spacing:0 20px;"><td colspan="17"></td></tr>{% endif %}{% endifchanged %}
         <tr style="background-color: {% for grad in gradients %}{% if grad.0|striptags == client.circuit.value|striptags %}{{grad.1}}{% endif %}{% endfor %}; margin-bottom:1rem;">
               
                 <td><input type="text" name="last_name_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.last_name.value}}"/></td>
@@ -147,14 +150,19 @@
                         {% endfor %}
                     </select>
                 </td>
-                <td><input type="checkbox"></td>
-                <td><input type="checkbox"></td>
-                <td><input type="checkbox"></td>
-                <td><input type="checkbox"></td>
-                <td><input type="checkbox"></td>
-                <td><input type="checkbox"></td>
+                <td>SOMME</td>
+                <td>Nb repas</td>
+                <td><button
+                  class="btn btn-warning align-content-center mx-3"
+                  type="button">
+                  Excel à l'unitée
+                </button></td>
+                <td><button
+                  class="btn btn-danger align-content-center mx-3"
+                  type="button">
+                  Supprimer
+                </button></td>
             </tr>
             
         {% endfor %}
     </table>
-</form>

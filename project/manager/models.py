@@ -1,14 +1,10 @@
 from email.policy import default
+from pydoc import describe
 from statistics import mode
 from django.db import models
-
 from .choices import FoodCategory, CommandTimes
 
 
-# Food
-# -nom
-# -prix
-# -FoodCategory*
 class Food(models.Model):
     """_summary_
     """
@@ -17,7 +13,6 @@ class Food(models.Model):
     category = models.CharField(max_length=2, choices=FoodCategory.choices, db_index=True)
 
     def __str__(self):
-        print(FoodCategory(self.category).__dict__)
         return FoodCategory(self.category).label
 
 
@@ -25,12 +20,12 @@ class DefaultCommand(models.Model):
     default = models.CharField(max_length=10, choices=FoodCategory.choices, verbose_name=("Plats réguliers"), blank=False, null=False)
 
     def __str__(self):
-        return str(self.default)
+        for name, member in FoodCategory.__members__.items():
+            if member == self.default:
+                return name
+        return self.default
 
 
-# Circuit
-# -Name
-# -Description
 class Circuit(models.Model):
     """_summary_
     """
@@ -51,43 +46,63 @@ class Client(models.Model):
     address = models.CharField(verbose_name=("Adresse"), max_length=1000, blank=False, null=False)
     default_command = models.ManyToManyField(DefaultCommand)
     circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
-    
+
     class Meta:
         ordering = ['circuit', 'last_name', 'first_name']
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
 
 
-# Commande
-# -Food*
-# -Clients*
-# -date_commande
-# -
+class Day(models.Model):
+    """_summary_
+    """
+    date = models.IntegerField(verbose_name=("Jour"), blank=False, null=False)
+    def __str__(self):
+        return f"{self.date}"
+
+
+class Month(models.Model):
+    """_summary_
+    """
+    date = models.IntegerField(verbose_name=("Mois"), blank=False, null=False)
+    def __str__(self):
+        return f"{self.date}"
+
+
+class Year(models.Model):
+    """_summary_
+    """
+    date = models.IntegerField(verbose_name=("Année"), blank=False, null=False)
+    def __str__(self):
+        return f"{self.date}"
+
+
+class MorningNumberCommand(models.Model):
+    """_summary_
+    """
+    number = models.IntegerField(verbose_name=("Nom"), blank=False, null=False)
+    def __str__(self):
+        return f"{self.number}"
+
+
+class EveningNumberCommand(models.Model):
+    """_summary_
+    """
+    number = models.IntegerField(verbose_name=("Nom"), blank=False, null=False)
+    def __str__(self):
+        return f"{self.number}"
+
+
 class Command(models.Model):
     """_summary_
     """
-    food = models.ManyToManyField('Food', verbose_name=("Plat commandé"))
-    client = models.ForeignKey(Client, verbose_name=("Client lié"), on_delete=models.CASCADE)
-    morning_command = models.CharField(choices=CommandTimes.choices, max_length=2, verbose_name=("Commande Midi"))
-    evening_command = models.CharField(choices=CommandTimes.choices, max_length=2, verbose_name=("Commande Soir"))
-    day_date_command = models.IntegerField(verbose_name=("Jour"), blank=False, null=False)
-    month_date_command = models.IntegerField(verbose_name=("Mois"), blank=False, null=False)
-    year_date_command = models.IntegerField(verbose_name=("Année"), blank=False, null=False)
-    
-    def __str__(self):
-        return f"{self.day_date_command}/{self.month_date_command}/{self.year_date_command} - {self.client}"
-
-
-# Planning
-# -Circuit*
-# -Commande*
-class Planning(models.Model):
-    """_summary_
-    """
-    circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
-    command = models.ForeignKey(Command, on_delete=models.PROTECT)
+    food = models.ManyToManyField('Food')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    morning_command = models.IntegerField(verbose_name="")
+    evening_command = models.IntegerField(verbose_name="")
+    day_date_command = models.IntegerField(verbose_name="", blank=False)
+    month_date_command = models.IntegerField(verbose_name="", blank=False)
+    year_date_command = models.IntegerField(verbose_name="", blank=False)
 
     def __str__(self):
-        return f"{self.circuit.name} : {self.command.day_date_command}/{self.command.month_date_command}/{self.command.year_date_command}"
-
-
+        return f"{self.__dict__}"
