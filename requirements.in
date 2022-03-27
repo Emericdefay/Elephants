@@ -1,5 +1,6 @@
 # app
 django==4.0.3
+djangorestframework
 django-import-export
 pyexcel-xlsx
 

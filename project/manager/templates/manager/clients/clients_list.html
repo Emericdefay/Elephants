@@ -1,0 +1,19 @@
+{% load static %}
+
+<form action="{% url "manager:update" %}" method="post" id="myform">
+    {% csrf_token %}
+
+            
+    {% for client in formClient %}
+        <input type="text" name="last_name_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.last_name.value}}"/>
+        <input type="text" name="first_name_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.first_name.value}}"/>
+        <input type="text" name="address_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.address.value}}"/>
+        {{client.default_command}}
+        <select name="circuit_{{client.id.value}}" id="circuit-select_{{client.id.value}}">
+            {% for circuit in formCircuit %}
+                <option value="{{circuit.id}}">{{circuit.name}}</option>
+            {% endfor %}
+        </select>
+    {% endfor %}
+
+</form>
