@@ -79,7 +79,7 @@ class CommandForm(forms.ModelForm):
 	YEAR_CHOICES       = [(r, r) for r in range(2020, 2050)]
 	MONTH_CHOICES      = [(r, r) for r in range(1, 13)]
 	DAY_CHOICES        = [(r, r) for r in range(1, 32)]
-	food               = forms.Field(label="")
+	#food               = forms.Field(label="")
 	morning_command    = forms.IntegerField(label="", )
 	evening_command    = forms.IntegerField(label="", )
 	day_date_command   = forms.DateField(label="", widget=forms.Select(choices=DAY_CHOICES)  )

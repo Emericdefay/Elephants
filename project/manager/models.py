@@ -96,13 +96,13 @@ class EveningNumberCommand(models.Model):
 class Command(models.Model):
     """_summary_
     """
-    food = models.ManyToManyField('Food')
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.PROTECT)
     morning_command = models.IntegerField(verbose_name="")
     evening_command = models.IntegerField(verbose_name="")
     day_date_command = models.IntegerField(verbose_name="", blank=False)
     month_date_command = models.IntegerField(verbose_name="", blank=False)
     year_date_command = models.IntegerField(verbose_name="", blank=False)
-
+    
     def __str__(self):
-        return f"{self.__dict__}"
+        return f"{self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
+

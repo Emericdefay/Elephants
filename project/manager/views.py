@@ -95,10 +95,36 @@ class HomeView(TemplateView, UpdateView):
         context['foods'] = form['foods']
         context['foodcategories'] = form['foodcategories']
 
-        all_objects = [*Command.objects.all(), *Client.objects.all()]
-        data = serializers.serialize('json', all_objects)
+        existing_clients = Client.objects.all()
 
-        context['data'] = data
+        for index, client in enumerate(existing_clients):
+            Command.objects.get_or_create(
+                client=client,
+                morning_command=0,
+                evening_command=0,
+                day_date_command=1,
+                month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
+                year_date_command=kwargs['year'] if 'year' in kwargs else datetime.now().year,
+            )
+            print(kwargs['year'] if 'year' in kwargs else datetime.now().year)
+            print(kwargs['month'] if 'month' in kwargs else datetime.now().month)
+
+        commands = Command.objects.filter(
+            Q(month_date_command=(kwargs['month'] if 'month' in kwargs else datetime.now().month))
+            & Q(year_date_command=(kwargs['year'] if 'year' in kwargs else datetime.now().year))
+            ).order_by('client')
+
+        print(commands)
+        clients_commands = {
+            'client':'a'
+        }
+
+        all_objects = [*Command.objects.all().order_by('client__circuit'), *Client.objects.all()]
+
+        data = serializers.serialize('json', all_objects)
+        
+
+        context['data'] = commands
 
         
         return context

@@ -126,7 +126,7 @@ class CustomCommand(admin.ModelAdmin):
 	"""Allow to edit Command informations"""
 	# list_display = ('', )
 	fieldsets = [
-		('food', {'fields': ['food']}),
+		#('food', {'fields': ['food']}),
 		('client', {'fields': ['client']}),
 		('morning_command', {'fields': ['morning_command']}),
 		('evening_command', {'fields': ['evening_command']}),

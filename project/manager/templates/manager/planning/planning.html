@@ -1,10 +1,23 @@
-{% load static humanize %}
+{% load static humanize index %}
+
+<style>
+    .meals {
+        padding: 0!important;
+    }
+
+    .meals-details {
+        vertical-align: middle !important;
+    }
+    .line {
+        border-bottom: 2px solid;
+        border-color: black;
+      }
+</style>
 
 <table class="responsive-table-input-matrix table table-light">
     <thead>
         <tr>
             <th>Nom</th>
-            <th>Prénom</th>
             <th>Total</th>
             <th>Prix U</th>
             <th>Nb.Repas</th>
@@ -12,68 +25,134 @@
                 <th>{{day}}</th>
             {% endfor %}
         </tr>
-    </thead>
+    </thead>    
     <tbody class="overflow-auto">
         {% now "d" as todays_date %}
-        {% for command in commands %}
-        {% ifchanged command.client.circuit %} {% if forloop.counter0 != 0 %}<tr style="border-collapse: separate; border-spacing:0 20px;"><td colspan="36"></td></tr>{% endif %}{% endifchanged %}
-        <tr style="background-color: {% for grad in gradients %}{% if grad.0|striptags == command.client.circuit.id|striptags %}{{grad.1}}{% endif %}{% endfor %}; margin-bottom:1rem;">
-            <td><strong>{{command.fields.client.last_name}}</strong></td>
-            <td><strong>{{command}}</strong></td>
-            <td><strong>Total</strong></td>
-            <td><strong>Prix U</strong></td>
-            <td><strong>Nb. Repas</strong></td>
+        {% regroup data by client as client_list %}
+        {% for client, command_list in client_list %}
+            {% ifchanged client.circuit.id %}
+                {% if forloop.counter0 != 0 %}
+                    <tr style="border-collapse: separate; border-spacing:0 20px; margin-bottom:1rem;">
+                        <td colspan="36">
+                        </td>
+                    </tr>
+                    {% endif %}
+                {% endifchanged %}
+                <tr class="line" style="margin-bottom: 1rem; border-spacing:0 20px; border-collapse: separate;background-color:
+                    {% for grad in gradients %}
+                        {% if grad.0|striptags == client.circuit.id|striptags %}
+                            {{grad.1}}
+                        {% endif %}
+                    {% endfor %}
+                ;">
+                
+            <td class="meals meals-details"><strong>{{client.last_name}} {{client.first_name}}</strong></td>
+            <td class="meals meals-details"><strong>Total</strong></td>
+            <td class="meals meals-details"><strong>Prix U</strong></td>
+            <td class="meals meals-details"><strong>Nb. Repas</strong></td>
             {% for day in days %}
-                <td style="
-                       width:1em;
-                       {% if todays_date|striptags == day|striptags %}
-                          background-color:cyan;
-                       {% endif %}">
-                    <input
-                       type="number"
-                       min=0
-                       id="command-morning_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       name="command_morning_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       value={% if command.day_date_command.value|striptags == day|striptags and command.month_date_command.value|striptags == month|striptags and command.year_date_command.value|striptags == year|striptags %}{{command.morning_command.value}}{% else %}0{% endif %}
-                       style="width:50px;"
-                       class="default_box">
-                    <input
-                       type="number"
-                       min=0
-                       id="command-evening_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       name="command_evening_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       value={% if command.day_date_command.value|striptags == day|striptags and command.month_date_command.value|striptags == month|striptags and command.year_date_command.value|striptags == year|striptags %}{{command.evening_command.value}}{% else %}0{% endif %}
-                       style="width:50px;"
-                       class="default_box">
-                    <input
-                       type="number"
-                       min=1
-                       max=31
-                       id="command-day_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       name="command_day_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       value="{{day}}"
-                       style="width:50px;"
-                       class="default_box">
-                    <input
-                       type="number"
-                       min=1
-                       max=12
-                       id="command-month_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       name="command_month_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       value="{{month}}"
-                       style="width:50px;"
-                       class="default_box">
-                    <input
-                       type="number"
-                       min=2020
-                       id="command-year_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       name="command_year_date_command_{{command.client.id.value}}_{{day}}_{{month}}_{{year}}"
-                       value="{{year}}"
-                       style="width:50px;"
-                       class="default_box">
-                </td>
+                {% if day <= command_list|length %}
+                    {% with command_list|index1:day as command_client %}
+                        <td class="meals" style="
+                               width:1em;
+                               {% if todays_date == day %}
+                                  background-color:cyan;
+                               {% endif %}">
+                            <input
+                               type="number"
+                               min=0
+                               id="command-morning_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               name="command_morning_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               value={{command_client.morning_command}}
+                               style="width:50px;"
+                               class="default_box">
+                            <input
+                               type="number"
+                               min=0
+                               id="command-evening_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               name="command_evening_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               value={{command_client.evening_command}}
+                               style="width:50px;"
+                               class="default_box">
+                            <input
+                               type="number"
+                               min=1
+                               max=31
+                               id="command-day_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               name="command_day_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               value="{{day}}"
+                               style="width:50px;"
+                               class="default_box invisible d-none">
+                            <input
+                               type="number"
+                               min=1
+                               max=12
+                               id="command-month_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               name="command_month_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               value="{{month}}"
+                               style="width:50px;"
+                               class="default_box invisible d-none">
+                            <input
+                               type="number"
+                               min=2000
+                               id="command-year_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               name="command_year_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+                               value="{{year}}"
+                               style="width:50px;"
+                               class="default_box invisible d-none">
+                        </td>
+                    {% endwith %}
+                {% else %}
+                    <td class="meals" style="
+                           width:1em;
+                           {% if todays_date == day %}
+                              background-color:cyan;
+                           {% endif %}">
+                        <input
+                           type="number"
+                           min=0
+                           id="command-morning_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           name="command_morning_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           value=0
+                           style="width:50px;"
+                           class="default_box">
+                        <input
+                           type="number"
+                           min=0
+                           id="command-evening_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           name="command_evening_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           value=0
+                           style="width:50px;"
+                           class="default_box">
+                        <input
+                           type="number"
+                           min=1
+                           max=31
+                           id="command-day_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           name="command_day_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           value="{{day}}"
+                           style="width:50px;"
+                           class="default_box invisible d-none">
+                        <input
+                           type="number"
+                           min=1
+                           max=12
+                           id="command-month_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           name="command_month_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           value="{{month}}"
+                           style="width:50px;"
+                           class="default_box invisible d-none">
+                        <input
+                           type="number"
+                           min=2000
+                           id="command-year_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           name="command_year_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           value="{{year}}"
+                           style="width:50px;"
+                           class="default_box invisible d-none">
+                    </td>
+                {% endif %}
             {% endfor %}
-        </tr>
-    {% endfor %}
+        {% endfor %}
+    </tr>
 </table>
-<pre>{% debug %}</pre>
