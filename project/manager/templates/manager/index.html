@@ -15,6 +15,7 @@
 
         <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
         <script src="{% static 'js/navbar.js' %}"></script>
+        <script src="{% static 'js/getModal.js' %}"></script>
     </head>
     <body class="overflow-hidden bg-light">
         <!-- Navbar -->
@@ -51,23 +52,28 @@
         </ul>
         <div style="position:sticky; bottom:0px; text-align-last: center;">
             <a
-                class="btn btn-warning align-content-center mx-3"
+                href="{% url 'manager:index' month=month year=year|add:"-1" %}"
+                class="btn btn-warning align-content-center mx-3 save-position"
                 type="button">
                 <<
               </a>
             <a
+                href="{% url 'manager:index' month=month|add:"-1" year=year %}"
                 href='test.com'
-                class="btn btn-warning align-content-center mx-3"
+                class="btn btn-warning align-content-center mx-3 save-position"
                 type="button">
                 <
               </a>
-            <a
-                class="btn btn-warning align-content-center mx-3"
+              <span>{{month}}/{{year}}</span>
+            <a  
+                href="{% url 'manager:index' month=month|add:"1" year=year %}"
+                class="btn btn-warning align-content-center mx-3 save-position"
                 type="button">
                 >
               </a>
             <a
-                class="btn btn-warning align-content-center mx-3"
+                href="{% url 'manager:index' month=month year=year|add:"1" %}"
+                class="btn btn-warning align-content-center mx-3 save-position"
                 type="button">
                 >>
               </a>
@@ -107,6 +113,20 @@
                     </div>
                 </div>
             </section>
+        </div>
+        <div class="modal fade"
+             id="add-modal"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" id="add-modal-body">
+                        {% include "manager/clients/client_form.html" %}
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

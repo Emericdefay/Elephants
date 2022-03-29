@@ -1,0 +1,67 @@
+{% load static humanize index %}
+
+
+<div class="text-center">
+<pre>
+              
+    <label for="last_name_">Nom</label>
+    <input type="text" name="last_name_" id="id_last_name" value=""/><br>
+    <label for="first_name_">Prenom</label>
+    <input type="text" name="first_name_" id="id_first_name" value=""/><br>
+    <label for="address">Adresse</label>
+    <input type="text" name="address" id="id_address" value=""/><br>
+</pre>
+    <table>
+        <thead>
+            <tr>
+                <th>🥖</th>
+                <th>S</th>
+                <th>E</th>
+                <th>P</th>
+                <th>D</th>
+                <th>🍒</th>
+                <th>YA</th>
+                <th>EK</th>
+                <th>FR</th>
+                <th>LEGS</th>
+            </tr>
+        </thead>
+    {% for default in formDefaultCommand %}
+        <td style="-webkit-writing-mode: vertical-lr;">
+            <input
+                type="checkbox"
+                id="default_morning_command-box_{{client.id.value}}_{{default}}"
+                name="default_morning_command_{{client.id.value}}_{{default}}"
+            {% for box_client in client.default_morning_command.value %}
+                {% if default|striptags == box_client|striptags %}
+                    checked
+                {% endif %}
+            {% endfor %}
+                class="default_box">
+            <input
+                type="checkbox"
+                id="default_evening_command-box_{{client.id.value}}_{{default}}"
+                name="default_evening_command_{{client.id.value}}_{{default}}"
+            {% for box_client in client.default_evening_command.value %}
+                {% if default|striptags == box_client|striptags %}
+                    checked
+                {% endif %}
+            {% endfor %}
+                class="default_box">
+        </td>
+        {% endfor %}
+    </table>
+    <div>
+        <select name="circuit_{{client.id.value}}" id="circuit-select_{{client.id.value}}">
+            {% for circuit in formCircuit %}
+                <option value="{{ circuit.id.value }}" {% if circuit.id.value == client.circuit.value %}selected="selected"{% endif %}> {{ circuit.name.value }} </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <button class="btn btn-primary align-content-center mx-3"
+                type="submit">
+            Enregistrer
+        </button></div>
+
+</div>

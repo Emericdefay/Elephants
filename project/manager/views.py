@@ -2,6 +2,8 @@
 import json
 import operator
 import logging
+from calendar import monthrange
+import locale
 from datetime import timedelta, datetime
 from pickletools import floatnl
 from django.core import serializers
@@ -20,6 +22,9 @@ from django.shortcuts import render
 from .models import Food, Client, Circuit, Command, DefaultCommand, FoodCategory
 from .forms import ClientForm, CircuitForm, DefaultCommandForm, CommandForm
 from .serializers import ClientSerializer, CommandSerializer
+from django.utils import translation
+from django.utils.translation import gettext as _
+translation.activate('fr')
 
 
 class UpdateHomeView(View):
@@ -58,7 +63,6 @@ class HomeView(TemplateView, UpdateView):
         gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
         gradients_colors = {(circuit.id, gradients[index]) for index, circuit in enumerate(circuits)}
         # Planning tab
-        days = list(range(1, 32))
         commands = list(Command.objects.all())
         # Food tab
         foods = Food.objects.all().order_by('category')
@@ -75,12 +79,17 @@ class HomeView(TemplateView, UpdateView):
             # COMMANDS
             'commands': commands,
             # Tools
-            'days': days,
             'foodcategories': foodcategories,
             'gradients': gradients_colors,
             'defaultcommands': (defaultcommands),
         }
         return form
+
+    def set_locale(self, locale_):
+        locale.setlocale(category=locale.LC_ALL, locale=locale_)
+
+    def date_customerprofile(self, context):
+        return [_(datetime(context['year'], context['month'], day).strftime("%A")) for day in context['days']]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -91,21 +100,24 @@ class HomeView(TemplateView, UpdateView):
         context['gradients'] = form['gradients']
         context['year'] = kwargs['year'] if 'year' in kwargs else datetime.now().year
         context['month'] = kwargs['month'] if 'month' in kwargs else datetime.now().month
-        context['days'] = form['days']
+        context['days'] = list(range(1, monthrange(context['year'], context['month'])[1] + 1))
+        context['days_name'] = self.date_customerprofile(context)
         context['foods'] = form['foods']
         context['foodcategories'] = form['foodcategories']
+
 
         existing_clients = Client.objects.all()
 
         for index, client in enumerate(existing_clients):
-            Command.objects.get_or_create(
-                client=client,
-                morning_command=0,
-                evening_command=0,
-                day_date_command=1,
-                month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
-                year_date_command=kwargs['year'] if 'year' in kwargs else datetime.now().year,
-            )
+            for day in context['days']:
+                Command.objects.get_or_create(
+                    client=client,
+                    morning_command=0,
+                    evening_command=0,
+                    day_date_command=day,
+                    month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
+                    year_date_command=kwargs['year'] if 'year' in kwargs else datetime.now().year,
+                )
 
         commands = Command.objects.filter(
             Q(month_date_command=(kwargs['month'] if 'month' in kwargs else datetime.now().month))
@@ -118,13 +130,8 @@ class HomeView(TemplateView, UpdateView):
         }
 
         all_objects = [*Command.objects.all().order_by('client__circuit'), *Client.objects.all()]
-
         data = serializers.serialize('json', all_objects)
-        
-
         context['data'] = commands
-
-        
         return context
 
     def object(self, *args, **kwargs):

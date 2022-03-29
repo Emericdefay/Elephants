@@ -1,5 +1,12 @@
 {% load static humanize index %}
 
+{% comment %} Init some variables {% endcomment %}
+{% now "d" as to_day %}
+{% now "Y" as to_year %}
+{% now "m" as to_month %}
+{% now "d" as todays_date %}
+{% with width_cells=50 %}
+
 <style>
     .meals {
         padding: 0!important;
@@ -12,6 +19,10 @@
         border-bottom: 2px solid;
         border-color: black;
       }
+      .day_cells {
+          width:50px!important;
+          padding:0!important;
+      }
 </style>
 
 <table class="responsive-table-input-matrix table table-light">
@@ -19,15 +30,14 @@
         <tr>
             <th>Nom</th>
             <th>Total</th>
-            <th>Prix U</th>
-            <th>Nb.Repas</th>
+            <th>€/u</th>
+            <th>Nb.<br>Repas</th>
             {% for day in days %}
-                <th>{{day}}</th>
+                <th class="day_cells" {% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}style="background-color:darkorange; width:{{width_cells}}px;"{% elif days_name|index:forloop.counter0|firsts:3 == 'dim' %}style="background-color:darkgrey; width:{{width_cells}}px;"{% endif %}>{{day}}<br>{{days_name|index:forloop.counter0|firsts:3}}</th>
             {% endfor %}
         </tr>
     </thead>    
     <tbody class="overflow-auto">
-        {% now "d" as todays_date %}
         {% regroup data by client as client_list %}
         {% for client, command_list in client_list %}
             {% ifchanged client.circuit.id %}
@@ -46,7 +56,7 @@
                     {% endfor %}
                 ;">
                 
-            <td class="meals meals-details"><strong>{{client.last_name}} {{client.first_name}}</strong></td>
+            <td class="meals meals-details"><strong>{{client.last_name}}<br>{{client.first_name}}</strong></td>
             <td class="meals meals-details"><strong>Total</strong></td>
             <td class="meals meals-details"><strong>Prix U</strong></td>
             <td class="meals meals-details"><strong>Nb. Repas</strong></td>
@@ -64,7 +74,7 @@
                                id="command-morning_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                name="command_morning_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                value={{command_client.morning_command}}
-                               style="width:50px;"
+                               style="width:{{width_cells}}px;"
                                class="default_box">
                             <input
                                type="number"
@@ -72,7 +82,7 @@
                                id="command-evening_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                name="command_evening_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                value={{command_client.evening_command}}
-                               style="width:50px;"
+                               style="width:{{width_cells}}px;"
                                class="default_box">
                             <input
                                type="number"
@@ -81,7 +91,7 @@
                                id="command-day_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                name="command_day_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                value="{{day}}"
-                               style="width:50px;"
+                               style="width:{{width_cells}}px;"
                                class="default_box invisible d-none">
                             <input
                                type="number"
@@ -90,7 +100,7 @@
                                id="command-month_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                name="command_month_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                value="{{month}}"
-                               style="width:50px;"
+                               style="width:{{width_cells}}px;"
                                class="default_box invisible d-none">
                             <input
                                type="number"
@@ -98,23 +108,20 @@
                                id="command-year_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                name="command_year_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
                                value="{{year}}"
-                               style="width:50px;"
+                               style="width:{{width_cells}}px;"
                                class="default_box invisible d-none">
                         </td>
                     {% endwith %}
                 {% else %}
                     <td class="meals" style="
-                           width:1em;
-                           {% if todays_date == day %}
-                              background-color:cyan;
-                           {% endif %}">
+                           width:1em;">
                         <input
                            type="number"
                            min=0
                            id="command-morning_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            name="command_morning_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            value=0
-                           style="width:50px;"
+                           style="width:{{width_cells}}px;"
                            class="default_box">
                         <input
                            type="number"
@@ -122,7 +129,7 @@
                            id="command-evening_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            name="command_evening_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            value=0
-                           style="width:50px;"
+                           style="width:{{width_cells}}px;"
                            class="default_box">
                         <input
                            type="number"
@@ -131,7 +138,7 @@
                            id="command-day_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            name="command_day_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            value="{{day}}"
-                           style="width:50px;"
+                           style="width:{{width_cells}}px;"
                            class="default_box invisible d-none">
                         <input
                            type="number"
@@ -140,7 +147,7 @@
                            id="command-month_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            name="command_month_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            value="{{month}}"
-                           style="width:50px;"
+                           style="width:{{width_cells}}px;"
                            class="default_box invisible d-none">
                         <input
                            type="number"
@@ -148,7 +155,7 @@
                            id="command-year_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            name="command_year_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
                            value="{{year}}"
-                           style="width:50px;"
+                           style="width:{{width_cells}}px;"
                            class="default_box invisible d-none">
                     </td>
                 {% endif %}
@@ -156,3 +163,5 @@
         {% endfor %}
     </tr>
 </table>
+
+{% endwith %}
