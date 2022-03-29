@@ -118,7 +118,6 @@
                 <th>Montant</th>
                 <th>Nb. Repas</th>
                 <th>Export</th>
-                <th>Supprimer</th>
             </tr>
         </thead>
         <tbody class="overflow-auto">
@@ -130,17 +129,27 @@
                 <td><input type="text" name="last_name_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.last_name.value}}"/></td>
                 <td><input type="text" name="first_name_{{client.id.value}}" id="id_id_{{client.id.value}}" value="{{client.first_name.value}}"/></td>
                 {% for default in formDefaultCommand %}
-                    <td>
+                    <td style="-webkit-writing-mode: vertical-lr;">
                         <input
                             type="checkbox"
-                            id="default_command-box_{{client.id.value}}_{{default}}"
-                            name="default_command_{{client.id.value}}_{{default}}"
-                        {% for box_client in client.default_command.value %}
+                            id="default_morning_command-box_{{client.id.value}}_{{default}}"
+                            name="default_morning_command_{{client.id.value}}_{{default}}"
+                        {% for box_client in client.default_morning_command.value %}
                             {% if default|striptags == box_client|striptags %}
                                 checked
                             {% endif %}
                         {% endfor %}
-                        class="default_box">
+                            class="default_box">
+                        <input
+                            type="checkbox"
+                            id="default_evening_command-box_{{client.id.value}}_{{default}}"
+                            name="default_evening_command_{{client.id.value}}_{{default}}"
+                        {% for box_client in client.default_evening_command.value %}
+                            {% if default|striptags == box_client|striptags %}
+                                checked
+                            {% endif %}
+                        {% endfor %}
+                            class="default_box">
                     </td>
                 {% endfor %}
                 <td>
@@ -156,11 +165,6 @@
                   class="btn btn-warning align-content-center mx-3"
                   type="button">
                   Excel à l'unitée
-                </button></td>
-                <td><button
-                  class="btn btn-danger align-content-center mx-3"
-                  type="button">
-                  Supprimer
                 </button></td>
             </tr>
             

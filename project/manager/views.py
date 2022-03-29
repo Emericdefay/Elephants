@@ -106,8 +106,6 @@ class HomeView(TemplateView, UpdateView):
                 month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
                 year_date_command=kwargs['year'] if 'year' in kwargs else datetime.now().year,
             )
-            print(kwargs['year'] if 'year' in kwargs else datetime.now().year)
-            print(kwargs['month'] if 'month' in kwargs else datetime.now().month)
 
         commands = Command.objects.filter(
             Q(month_date_command=(kwargs['month'] if 'month' in kwargs else datetime.now().month))

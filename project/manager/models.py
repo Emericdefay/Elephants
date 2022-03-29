@@ -44,7 +44,8 @@ class Client(models.Model):
     first_name = models.CharField(verbose_name=("Prénom"), max_length=100, blank=False, null=False)
     last_name = models.CharField(verbose_name=("Nom"), max_length=100, blank=False, null=False)
     address = models.CharField(verbose_name=("Adresse"), max_length=1000, blank=False, null=False)
-    default_command = models.ManyToManyField(DefaultCommand)
+    default_morning_command = models.ManyToManyField(DefaultCommand, related_name='default_morning_command')
+    default_evening_command = models.ManyToManyField(DefaultCommand, related_name='default_evening_command')
     circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
 
     class Meta:
@@ -102,7 +103,7 @@ class Command(models.Model):
     day_date_command = models.IntegerField(verbose_name="", blank=False)
     month_date_command = models.IntegerField(verbose_name="", blank=False)
     year_date_command = models.IntegerField(verbose_name="", blank=False)
-    
+
     def __str__(self):
         return f"{self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
 

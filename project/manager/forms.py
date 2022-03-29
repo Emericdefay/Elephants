@@ -26,27 +26,13 @@ class ClientForm(forms.ModelForm):
 	last_name = forms.Field(label="", )
 	address = forms.Field(label="", )
 	circuit = forms.Field(label="", )
-	default_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
+	default_morning_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
+	default_evening_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 	#circuit = forms.MultipleChoiceField(label="", choices=Circuit.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 
 	class Meta:
 		model = Client
-		fields = ['id', 'first_name', 'last_name', 'address', 'default_command', 'circuit']
-		widgets = {
-		    'id': forms.TextInput(attrs={
-		        'placeholder': 'Commande par défaut'}),
-		    'default_command': forms.TextInput(attrs={
-		        'placeholder': 'Commande par défaut'}),
-		    'first_name': forms.TextInput(attrs={
-		        'class': 'form_input',
-		        'placeholder': 'Commande par défaut'}),
-		    'last_name': forms.TextInput(attrs={
-		        'class': 'form_input',
-		        'placeholder': 'Commande par défaut'}),
-		    'address': forms.TextInput(attrs={
-		        'class': 'form_input',
-		        'placeholder': 'Commande par défaut'}),
-		}
+		fields = ['id', 'first_name', 'last_name', 'address', 'default_morning_command', 'default_evening_command', 'circuit']
 
 
 class DefaultCommandForm(forms.ModelForm):
