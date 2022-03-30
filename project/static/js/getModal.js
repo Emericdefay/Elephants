@@ -11,6 +11,32 @@ function openAdModal () {
       $('#add-modal').modal('show');
     });
   }
+
+function openCircuitModal () {
+    // show modal
+    $('#circuit-modal').modal('show');
+  }
+  
+  // close the modal for single ads
+  function hideCircuitModal () {
+    // hide modal
+    $('#circuit-modal').modal('hide').on('shown.bs.modal', () => {
+      $('#circuit-modal').modal('show');
+    });
+  }
+
+function openFoodModal () {
+    // show modal
+    $('#food-modal').modal('show');
+  }
+  
+  // close the modal for single ads
+  function hideFoodModal () {
+    // hide modal
+    $('#food-modal').modal('hide').on('shown.bs.modal', () => {
+      $('#food-modal').modal('show');
+    });
+  }
   
   // get variables from the data collected with ajax
   function getHtml (data) {
@@ -38,8 +64,12 @@ function openAdModal () {
   $(() => {
     $('.unique-add-btn').on('click', function () {
       openAdModal();
-
-        
+    });
+    $('.circuit-add-btn').on('click', function () {
+      openCircuitModal();
+    });
+    $('.food-add-btn').on('click', function () {
+      openFoodModal();
     });
   });
   

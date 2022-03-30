@@ -15,6 +15,7 @@ $(function () {
         $(this).removeClass('d-none');
         $(".save-position").each(function () {
           this.href = `${this.href.split('?tab=#')[0]}?tab=#${base}-tab`;
+          window.history.pushState('page2', 'Title', `?tab=#${base}-tab`);
         })
       }
     })

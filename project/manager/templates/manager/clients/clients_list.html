@@ -1,4 +1,4 @@
-{% load static humanize %}
+{% load static humanize index %}
 
 <style> 
     /* 
@@ -104,16 +104,15 @@
             <tr>
                 <th>Nom</th>
                 <th>Prénom</th>
-                <th>🥖</th>
-                <th>S</th>
-                <th>E</th>
-                <th>P</th>
-                <th>D</th>
-                <th>🍒</th>
-                <th>YA</th>
-                <th>EK</th>
-                <th>FR</th>
-                <th>LEGS</th>
+                {% with foodcategories as foodcategories %}
+                {% for food in foods %}
+                    <th class="verticalTableHeader">
+                        {% with food.category as category %}
+                                {{ foodcategories|index:forloop.counter0|index:1 }}
+                        {% endwith %}
+                    </th>
+                    {% endfor %}
+                {% endwith %}
                 <th>Tournée</th>
                 <th>Montant</th>
                 <th>Nb. Repas</th>

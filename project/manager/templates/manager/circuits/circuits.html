@@ -1,0 +1,163 @@
+{% load static humanize index %}
+
+{% now "d" as to_day %}
+{% now "Y" as to_year %}
+{% now "m" as to_month %}
+{% now "d" as todays_date %}
+
+<style> 
+    /* 
+    Generic Styling, for Desktops/Laptops 
+    */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    /* Zebra striping */
+    tr:nth-of-type(odd) {
+      background: #eee;
+    }
+
+    th {
+      background: #333;
+      color: white;
+      font-weight: bold;
+    }
+
+    td, th {
+      padding: 6px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    /* 
+    Max width before this PARTICULAR table gets nasty
+    This query will take effect for any screen smaller than 760px
+    and also iPads specifically.
+    */
+    @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+      .responsive-table-input-matrix {
+        display: block;
+        position: relative;
+        width: 100%;
+      }
+      .responsive-table-input-matrix:after {
+        clear: both;
+        content: "";
+        display: block;
+        font-size: 0;
+        height: 0;
+        visibility: hidden;
+      }
+      .responsive-table-input-matrix tbody {
+        display: block;
+        overflow-x: auto;
+        position: relative;
+        white-space: nowrap;
+        width: auto;
+      }
+      .responsive-table-input-matrix tbody tr {
+        display: inline-block;
+        vertical-align: top;
+      }
+      .responsive-table-input-matrix tbody tr td {
+        display: block;
+        text-align: center;
+      }
+      .responsive-table-input-matrix tbody tr td:first-child {
+        text-align: center;
+      }
+      .responsive-table-input-matrix thead {
+        display: block;
+        float: left;
+        margin-right: 10px;
+      }
+      .responsive-table-input-matrix thead:after {
+        clear: both;
+        content: "";
+        display: block;
+        font-size: 0;
+        height: 0;
+        visibility: hidden;
+      }
+      .responsive-table-input-matrix thead th:first-of-type {
+        height: 1.4em;
+      }
+      .responsive-table-input-matrix thead th {
+        display: block;
+        text-align: center;
+      }
+      .responsive-table-input-matrix thead th:first-child {
+        text-align: center;
+      }
+    }
+
+    .verticalTableHeader {
+        writing-mode: vertical-lr;
+        vertical-align: middle!important;
+    }
+</style>
+<style>
+    .collapsible-link {
+        width: 100%;
+        position: relative;
+        text-align: left;
+    }
+
+    .collapsible-link::before {
+        content: '\f077';
+        position: absolute;
+        top: 50%;
+        right: 0.8rem;
+        transform: translateY(-50%);
+        display: block;
+        font-family: 'Font Awesome\ 5 Free';
+        font-size: 1.1rem;
+    }
+
+    .collapsible-link[aria-expanded='true']::before {
+        content: '\f078';
+    }
+
+    .collapsible-link:focus{
+    outline: 0 !important;
+    box-shadow: none;
+    text-decoration: none;
+    }
+</style>
+    
+    <h3>
+        Tournées
+        <button
+          class="btn btn-info align-content-center mx-3 circuit-add-btn"
+          type="button"
+          id="createClient"
+          >
+          Ajouter
+        </button>
+    </h3>
+
+    <div class="accordion" id="accordionExample">
+        <!-- Contact Accordion -->
+        {% for circuit in circuits %}
+            <div class="card-header my-1" style="background-color:{{circuits_colors|index:forloop.counter0}}" id="headingOne"  data-toggle="collapse" data-target="#acc-{{circuit.id}}" aria-expanded="true" aria-controls="acc-{{circuit.id}}">
+                <h2 class="m-0 row">
+                    <div class="col-12">
+                        <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-toggle="collapse" data-target="#acc-{{circuit.id}}" aria-expanded="true" aria-controls="acc-{{circuit.id}}">
+                            </i> {{circuit.name}}
+                        </button>
+                    </div>
+                </h2>
+            </div>
+            <div id="acc-{{circuit.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body p-0">
+                    <div class="col-12 btn-toolbar p-0">
+                        <div class="col-12 p-0">
+                            {% include "manager/circuits/circuit_table.html" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>    

@@ -13,7 +13,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-        <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+        <link href="https://use.fontawesome.com/releases/v5.0.1/css/all.css" rel="stylesheet">
+
         <script src="{% static 'js/navbar.js' %}"></script>
         <script src="{% static 'js/getModal.js' %}"></script>
     </head>
@@ -103,6 +104,7 @@
                                     </div>
                                     <div class="tab-pane fade" id="circuit" role="tabpanel" aria-labelledby="circuit-tab">
                                         VISION PLANNING > Nombre de plats par client > Nombre de plats totaux par tournée > | + ajouter tournée | Attribuer nom à la tournée | Exporter planning
+                                        {% include "manager/circuits/circuits.html" %}
                                     </div>
                                     <div class="tab-pane fade" id="bill" role="tabpanel" aria-labelledby="bill-tab">
                                         Factures
@@ -124,6 +126,34 @@
                 <div class="modal-content">
                     <div class="modal-body" id="add-modal-body">
                         {% include "manager/clients/client_form.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade"
+             id="circuit-modal"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" id="circuit-modal-body">
+                        {% include "manager/circuits/circuits_form.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade"
+             id="food-modal"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-body" id="food-modal-body">
+                        {% include "manager/food/food_form.html" %}
                     </div>
                 </div>
             </div>

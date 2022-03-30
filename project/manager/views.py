@@ -20,7 +20,7 @@ from django.views.generic.dates import timezone_today
 from django.shortcuts import render
 # app libs
 from .models import Food, Client, Circuit, Command, DefaultCommand, FoodCategory
-from .forms import ClientForm, CircuitForm, DefaultCommandForm, CommandForm
+from .forms import ClientForm, CircuitForm, DefaultCommandForm, CommandForm, FoodForm
 from .serializers import ClientSerializer, CommandSerializer
 from django.utils import translation
 from django.utils.translation import gettext as _
@@ -104,6 +104,11 @@ class HomeView(TemplateView, UpdateView):
         context['days_name'] = self.date_customerprofile(context)
         context['foods'] = form['foods']
         context['foodcategories'] = form['foodcategories']
+        circuits = Circuit.objects.all().order_by('name')
+        context['circuits'] = circuits
+        gradients = gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
+        context['circuits_colors'] = [(gradients[index]) for index, circuit in enumerate(circuits)]
+        context['morning_evening'] = ["morning", "evening"]
 
 
         existing_clients = Client.objects.all()

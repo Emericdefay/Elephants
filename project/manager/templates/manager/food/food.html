@@ -1,35 +1,67 @@
 {% load static humanize %}
+{% load index %}
 
 <h3>
     Plats
     <button
-      class="btn btn-info align-content-center mx-3"
-      type="button"
-      id="createFood">
-      Ajouter
-    </button>
+    class="btn btn-info align-content-center mx-3 food-add-btn"
+    type="button"
+    id="createClient"
+    >
+    Ajouter
+  </button>
 </h3>
-
 <table class="responsive-table-input-matrix table table-light">
 <thead>
     <tr>
-        <th>Plat</th>
         <th>Catégorie</th>
         <th>Prix</th>
     </tr>
 </thead>
 <tbody class="overflow-auto">
-    {% for food in foods %}
-    <tr>
+    {% comment %} <tr>
         <td><p>{{food.name}}</td>
         <td>
             <select name="food_{{food.id}}" id="food-select_{{food.id}}">
                 {% for category in foodcategories %}
-                    <option value="{{ category.0 }}" {% if food.id|striptags == category.0|striptags %}selected="selected"{% endif %}> {{ category.1 }} </option>
+                    <option value="{{ category.0 }}" {% if food.id|striptags == category.0|striptags %}selected="selected"{% endif %}> {{ category }} </option>
                 {% endfor %}
             </select>
         </td>
         <td><input type="text" name="food_{{food.id.value}}" id="food_id_{{food.id.value}}" value="{{food.price}}"/></td>
-     </tr>
-    {% endfor %}
+     </tr> {% endcomment %}
+    {% with foodcategories as foodcategories %}
+    {% for food in foods %}
+        <tr>
+            {% with food.price as price %}
+            {% with food.category as category %}
+
+            <td>
+                <input
+                    type="text"
+                    min=0
+                    id="food_category"
+                    name="food_category"
+                    value={{ foodcategories|index:forloop.counter0|index:1 }}
+                    style="width:{{width_cells}}px;"
+                    class="default_box">
+            </td>
+            <td>
+                <input
+                    type="number"
+                    min=0
+                    step=0.05
+                    id="food_price"
+                    name="food_price"
+                    value={{price}}
+                    style="width:{{width_cells}}px;"
+                    class="default_box">
+            </td>
+
+            {% endwith %}
+            {% endwith %}
+
+        </tr>
+        {% endfor %}
+    {% endwith %}
 </table>
