@@ -128,6 +128,31 @@
 </style>
     
     <h3>
+        Total
+    </h3>
+    <div class="accordion" id="TotalAccordion">
+      <!-- Contact Accordion -->
+          <div class="card-header my-1" style="background-color:#363742" id="headingTot"  data-toggle="collapse" data-target="#acc-total" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
+              <h2 class="m-0 row">
+                  <div class="col-12">
+                      <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-toggle="collapse" data-target="#acc-total" aria-expanded="false" aria-controls="acc-total">
+                        Voir le Total
+                      </button>
+                  </div>
+              </h2>
+          </div>
+          <div id="acc-total" class="collapse" aria-labelledby="headingTot" data-parent="#TotalAccordion">
+              <div class="card-body p-0">
+                  <div class="col-12 btn-toolbar p-0">
+                      <div class="col-12 p-0">
+                          {% include "manager/circuits/circuits_total.html" %}
+                      </div>
+                  </div>
+              </div>
+          </div>
+  </div>    
+  <br>
+    <h3>
         Tournées
         <button
           class="btn btn-info align-content-center mx-3 circuit-add-btn"
@@ -138,7 +163,7 @@
         </button>
     </h3>
 
-    <div class="accordion" id="accordionExample">
+    <div class="accordion" id="CircuitAccordion">
         <!-- Contact Accordion -->
         {% for circuit in circuits %}
             <div class="card-header my-1" style="background-color:{{circuits_colors|index:forloop.counter0}}" id="headingOne"  data-toggle="collapse" data-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
@@ -150,7 +175,7 @@
                     </div>
                 </h2>
             </div>
-            <div id="acc-{{circuit.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div id="acc-{{circuit.id}}" class="collapse" aria-labelledby="headingOne" data-parent="#CircuitAccordion">
                 <div class="card-body p-0">
                     <div class="col-12 btn-toolbar p-0">
                         <div class="col-12 p-0">
