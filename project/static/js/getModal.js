@@ -1,14 +1,28 @@
 // show the modal for single ads
-function openAdModal () {
+function openClientModal () {
     // show modal
     $('#add-modal').modal('show');
   }
   
   // close the modal for single ads
-  function hideAdModal () {
+  function hideClientModal () {
     // hide modal
     $('#add-modal').modal('hide').on('shown.bs.modal', () => {
       $('#add-modal').modal('show');
+    });
+  }
+
+// show the modal for single ads
+function openAdModal () {
+    // show modal
+    $('#unique-modal').modal('show');
+  }
+  
+  // close the modal for single ads
+  function hideAdModal () {
+    // hide modal
+    $('#unique-modal').modal('hide').on('shown.bs.modal', () => {
+      $('#unique-modal').modal('show');
     });
   }
 
@@ -63,13 +77,16 @@ function openFoodModal () {
   // prepare the modal for it
   $(() => {
     $('.unique-add-btn').on('click', function () {
-      openAdModal();
+      openClientModal();
     });
     $('.circuit-add-btn').on('click', function () {
       openCircuitModal();
     });
     $('.food-add-btn').on('click', function () {
       openFoodModal();
+    });
+    $('.unique-circuit-btn').on('click', function () {
+      openAdModal();
     });
   });
   

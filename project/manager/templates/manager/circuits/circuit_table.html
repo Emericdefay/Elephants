@@ -14,18 +14,22 @@
       
       table thead tr th {
         /* you could also change td instead th depending your html code */
-        background-color: dimgrey;
+        background-color: #363742;
         position: sticky;
         z-index: 100;
         top: 0;
       }
+
+      tr:hover{
+          background-color : rgba(0,0,0,.5) !important;
+      }
 </style>
 
-<table class="responsive-table-input-matrix table table-light">
+<table class="responsive-table-input-matrix table table-light table-hover">
     <thead class="overflow-auto">
         <tr>
             <th></th>
-            <th>Total</th>
+            <th>Clients</th>
             {% with foodcategories as foodcategories %}
             {% for food in foods %}
                 <th class="verticalTableHeader">
@@ -40,7 +44,7 @@
     <tbody class="overflow-auto">
         {% for day in days %}
             {% for time in morning_evening %}
-                <tr class="day_cells" style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px; font-weight:bold;{% elif days_name|index:forloop.parentloop.counter0|firsts:3 == 'dim' %}background-color:darkgrey; width:{{width_cells}}px;{% endif %} text-align:end;">
+                <tr class="day_cells unique-circuit-btn" style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px; font-weight:bold;{% elif days_name|index:forloop.parentloop.counter0|firsts:3 == 'dim' %}background-color:darkgrey; width:{{width_cells}}px;{% endif %} text-align:end;">
                     {% if forloop.counter0 == 0 %}
                         <td rowspan=2 style="vertical-align:middle;">
                             {{days_name|index:forloop.parentloop.counter0}} {{day}} 

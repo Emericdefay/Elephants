@@ -141,10 +141,10 @@
     <div class="accordion" id="accordionExample">
         <!-- Contact Accordion -->
         {% for circuit in circuits %}
-            <div class="card-header my-1" style="background-color:{{circuits_colors|index:forloop.counter0}}" id="headingOne"  data-toggle="collapse" data-target="#acc-{{circuit.id}}" aria-expanded="true" aria-controls="acc-{{circuit.id}}">
+            <div class="card-header my-1" style="background-color:{{circuits_colors|index:forloop.counter0}}" id="headingOne"  data-toggle="collapse" data-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
                 <h2 class="m-0 row">
                     <div class="col-12">
-                        <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-toggle="collapse" data-target="#acc-{{circuit.id}}" aria-expanded="true" aria-controls="acc-{{circuit.id}}">
+                        <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-toggle="collapse" data-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
                             </i> {{circuit.name}}
                         </button>
                     </div>
