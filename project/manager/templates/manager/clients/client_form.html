@@ -10,21 +10,20 @@
     <input type="text" name="first_name_" id="id_first_name" value=""/><br>
     <label for="address">Adresse</label>
     <input type="text" name="address" id="id_address" value=""/><br>
+    <label for="address">Telephone</label>
+    <input type="text" name="address" id="id_address" value=""/><br>
 </pre>
     <table>
         <thead>
-            <tr>
-                <th>🥖</th>
-                <th>S</th>
-                <th>E</th>
-                <th>P</th>
-                <th>D</th>
-                <th>🍒</th>
-                <th>YA</th>
-                <th>EK</th>
-                <th>FR</th>
-                <th>LEGS</th>
-            </tr>
+            {% with foodcategories as foodcategories %}
+            {% for food in foods %}
+                <th class="verticalTableHeader">
+                    {% with food.category as category %}
+                            {{ foodcategories|index:forloop.counter0|index:1 }}
+                    {% endwith %}
+                </th>
+                {% endfor %}
+            {% endwith %}
         </thead>
     {% for default in formDefaultCommand %}
         <td style="-webkit-writing-mode: vertical-lr;">
@@ -37,7 +36,8 @@
                     checked
                 {% endif %}
             {% endfor %}
-                class="default_box">
+                class="default_box"
+                style="vertical-align: -webkit-baseline-middle;">
             <input
                 type="checkbox"
                 id="default_evening_command-box_{{client.id.value}}_{{default}}"
@@ -47,7 +47,8 @@
                     checked
                 {% endif %}
             {% endfor %}
-                class="default_box">
+                class="default_box"
+                style="vertical-align: -webkit-baseline-middle;">
         </td>
         {% endfor %}
     </table>

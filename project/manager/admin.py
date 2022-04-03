@@ -2,7 +2,7 @@
 from turtle import title
 from django.contrib import admin
 # Local Libs:
-from .models import Food, DefaultCommand, Circuit, Client, Day, Month, Year, MorningNumberCommand, EveningNumberCommand, Command
+from .models import Food, DefaultCommand, Circuit, Client, Day, Month, Year, MorningNumberCommand, EveningNumberCommand, Command, WeekRange
 
 
 class CustomFood(admin.ModelAdmin):
@@ -134,7 +134,18 @@ class CustomCommand(admin.ModelAdmin):
 		('day_date_command', {'fields': ['day_date_command']}),
 		('month_date_command', {'fields': ['month_date_command']}),
 		('year_date_command', {'fields': ['year_date_command']}),
-		# ('planning', {'fields': ['planning']}),
+		('morning_meals', {'fields': ['morning_meals']}),
+		('evening_meals', {'fields': ['evening_meals']}),
+		('comment', {'fields': ['comment']}),
 	]
 
 admin.site.register(Command, CustomCommand)
+
+class CustomWeekRange(admin.ModelAdmin):
+	"""Allow to edit Command informations"""
+	# list_display = ('', )
+	fieldsets = [
+		('range', {'fields': ['range']}),
+	]
+
+admin.site.register(WeekRange, CustomWeekRange)

@@ -126,16 +126,20 @@
     text-decoration: none;
     }
 </style>
-    
+    <p>
+      TODO : Fusionner - Lun - Mar/Mer - Jeu/Ven - Sam/Dim
+      TODO : Avoir le sens de la tournée
+      TODO : Avoir un maximum de champs pour les utilisateurs
+    </p>
     <h3>
         Total
     </h3>
     <div class="accordion" id="TotalAccordion">
       <!-- Contact Accordion -->
-          <div class="card-header my-1" style="background-color:#363742" id="headingTot"  data-toggle="collapse" data-target="#acc-total" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
+          <div class="card-header my-1" style="background-color:#363742" id="headingTot"  data-bs-toggle="collapse" data-bs-target="#acc-total" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
               <h2 class="m-0 row">
                   <div class="col-12">
-                      <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-toggle="collapse" data-target="#acc-total" aria-expanded="false" aria-controls="acc-total">
+                      <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-bs-toggle="collapse" data-bs-target="#acc-total" aria-expanded="false" aria-controls="acc-total">
                         Voir le Total
                       </button>
                   </div>
@@ -166,10 +170,10 @@
     <div class="accordion" id="CircuitAccordion">
         <!-- Contact Accordion -->
         {% for circuit in circuits %}
-            <div class="card-header my-1" style="background-color:{{circuits_colors|index:forloop.counter0}}" id="headingOne"  data-toggle="collapse" data-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
+            <div class="card-header my-1" style="background-color:{{gradients|get_value:circuit.id}}" id="headingOne"  data-bs-toggle="collapse" data-bs-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
                 <h2 class="m-0 row">
                     <div class="col-12">
-                        <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-toggle="collapse" data-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
+                        <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-bs-toggle="collapse" data-bs-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
                             </i> {{circuit.name}}
                         </button>
                     </div>

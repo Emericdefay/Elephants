@@ -44,6 +44,8 @@ class Client(models.Model):
     first_name = models.CharField(verbose_name=("Prénom"), max_length=100, blank=False, null=False)
     last_name = models.CharField(verbose_name=("Nom"), max_length=100, blank=False, null=False)
     address = models.CharField(verbose_name=("Adresse"), max_length=1000, blank=False, null=False)
+    cellphone = models.CharField(verbose_name=("Telephone"), max_length=20, blank=False, null=False)
+    description = models.TextField(verbose_name=("Description"), max_length=1000, blank=True, null=True)
     default_morning_command = models.ManyToManyField(DefaultCommand, related_name='default_morning_command')
     default_evening_command = models.ManyToManyField(DefaultCommand, related_name='default_evening_command')
     circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
@@ -103,7 +105,16 @@ class Command(models.Model):
     day_date_command = models.IntegerField(verbose_name="", blank=False)
     month_date_command = models.IntegerField(verbose_name="", blank=False)
     year_date_command = models.IntegerField(verbose_name="", blank=False)
-
+    morning_meals = models.ManyToManyField(DefaultCommand, related_name='morning_meals', )
+    evening_meals = models.ManyToManyField(DefaultCommand, related_name='evening_meals', )
+    comment = models.TextField(verbose_name="")
     def __str__(self):
         return f"{self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
 
+
+class WeekRange(models.Model):
+    """"""
+    range = models.IntegerField(verbose_name="", default=2)
+
+    def __str__(self):
+        return str(self.range)

@@ -1,0 +1,64 @@
+{% load static humanize index %}
+
+{% comment %} Init some variables {% endcomment %}
+{% now "d" as to_day %}
+{% now "Y" as to_year %}
+{% now "m" as to_month %}
+{% now "d" as todays_date %}
+
+
+    <div class="btn-group" role="group">
+        <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary btn-minus" type="button">
+                <i class="fa fa-minus"></i>
+            </button>
+        </div>
+        <input
+            class="form-control btn-check quantity"
+            min="0"
+            type="number"
+            id="command-{{day_time}}_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+            name="command_{{day_time}}_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+            value= {{day_time_command}}
+        >
+        <label class="btn mx-0 p-0 quantity_label" for="command_{{day_time}}_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}">
+            <button type="button" class="btn {% if day_time_command > 0 %}btn-warning{% else %}btn-outline-light{% endif %} dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                {{day_time_command}}
+            </button>
+            <div class="dropdown-menu">
+                <table>
+                    <thead>
+                        {% with foodcategories as foodcategories %}
+                        {% for food in foods %}
+                            <th class="verticalTableHeader">
+                                {% with food.category as category %}
+                                        {{ foodcategories|index:forloop.counter0|index:1 }}
+                                {% endwith %}
+                            </th>
+                            {% endfor %}
+                        {% endwith %}
+                    </thead>
+                {% for default in formDefaultCommand %}
+                    <td style="-webkit-writing-mode: vertical-lr;">
+                        <input
+                            type="checkbox"
+                            id="default_{{day_time}}_command-box_{{client.id.value}}_{{default}}"
+                            name="default_{{day_time}}_command_{{client.id.value}}_{{default}}"
+                        {% for box_client in default_command.all %}
+                            {% if default|striptags == box_client|striptags %}
+                                checked
+                            {% endif %}
+                        {% endfor %}
+                            class="default_box"
+                            style="vertical-align: -webkit-baseline-middle;">
+                    </td>
+                    {% endfor %}
+                </table>
+            </div>
+        </label>
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary btn-plus" type="button">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>

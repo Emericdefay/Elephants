@@ -19,7 +19,7 @@ from django.views.generic import TemplateView, DetailView, UpdateView
 from django.views.generic.dates import timezone_today
 from django.shortcuts import render
 # app libs
-from .models import Food, Client, Circuit, Command, DefaultCommand, FoodCategory
+from .models import Food, Client, Circuit, Command, DefaultCommand, FoodCategory, WeekRange
 from .forms import ClientForm, CircuitForm, DefaultCommandForm, CommandForm, FoodForm
 from .serializers import ClientSerializer, CommandSerializer
 from django.utils import translation
@@ -61,13 +61,14 @@ class HomeView(TemplateView, UpdateView):
         circuits = Circuit.objects.all().order_by('name')
         defaultcommands = DefaultCommand.objects.all().order_by('default')
         gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
-        gradients_colors = {(circuit.id, gradients[index]) for index, circuit in enumerate(circuits)}
+        gradients_colors = dict((circuit.id, gradients[index]) for index, circuit in enumerate(circuits))
         # Planning tab
         commands = list(Command.objects.all())
         # Food tab
         foods = Food.objects.all().order_by('category')
         foodcategories = FoodCategory.choices
         # Tools
+        week_range = WeekRange.objects.get_or_create(id=1)
 
         form = {
             # CLIENTS
@@ -82,6 +83,7 @@ class HomeView(TemplateView, UpdateView):
             'foodcategories': foodcategories,
             'gradients': gradients_colors,
             'defaultcommands': (defaultcommands),
+            'week_range': week_range,
         }
         return form
 
@@ -100,7 +102,7 @@ class HomeView(TemplateView, UpdateView):
         context['gradients'] = form['gradients']
         context['year'] = kwargs['year'] if 'year' in kwargs else datetime.now().year
         context['month'] = kwargs['month'] if 'month' in kwargs else datetime.now().month
-        context['days'] = list(range(1, monthrange(context['year'], context['month'])[1] + 1))
+        context['days'] = list(range(1, 20))#monthrange(context['year'], context['month'])[1] + 1))
         context['days_name'] = self.date_customerprofile(context)
         context['foods'] = form['foods']
         context['foodcategories'] = form['foodcategories']
@@ -109,10 +111,14 @@ class HomeView(TemplateView, UpdateView):
         gradients = gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
         context['circuits_colors'] = [(gradients[index]) for index, circuit in enumerate(circuits)]
         context['morning_evening'] = ["morning", "evening"]
+        context['actual_week'] = 9
 
 
         existing_clients = Client.objects.all()
 
+        # TODO : Optimiser la génération des commandes : ne prendre que les 
+        #        commandes existantes et créer les nouvelles uniquement après
+        #        ajouts de morning/evening commands.
         for index, client in enumerate(existing_clients):
             for day in context['days']:
                 Command.objects.get_or_create(
@@ -124,15 +130,20 @@ class HomeView(TemplateView, UpdateView):
                     year_date_command=kwargs['year'] if 'year' in kwargs else datetime.now().year,
                 )
 
+        context['week_range'] = form['week_range']
+        context['week_range_choices'] = list(range(0, 4))
+
         commands = Command.objects.filter(
             Q(month_date_command=(kwargs['month'] if 'month' in kwargs else datetime.now().month))
             & Q(year_date_command=(kwargs['year'] if 'year' in kwargs else datetime.now().year))
             ).order_by('client')
 
-        print(commands)
         clients_commands = {
             'client':'a'
         }
+
+        clients = Client.objects.all().order_by('circuit')
+        context['clients'] =clients
 
         all_objects = [*Command.objects.all().order_by('client__circuit'), *Client.objects.all()]
         data = serializers.serialize('json', all_objects)
@@ -144,3 +155,20 @@ class HomeView(TemplateView, UpdateView):
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+class UpdateWeekRange(UpdateView):
+
+ 
+    def post(self, request, *args, **kwargs):
+        week_range = WeekRange.objects.get(id=1)
+        print(f"range : {self.request.__dict__}")
+        print(f"range : {self.request._post}")
+        print(self.request._post['week_range_input'])
+        print(args)
+        print(kwargs)
+        week_range.range = self.request._post['week_range_input']
+        week_range.save()
+
+
+        return redirect(reverse('manager:index'))

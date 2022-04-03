@@ -3,7 +3,7 @@
 {% now "Y" as to_year %}
 {% now "m" as to_month %}
 {% now "d" as todays_date %}
-{% with width_cells=120 %}
+{% with width_cells=130 %}
 
 <style>
     table {
@@ -18,18 +18,24 @@
         position: sticky;
         z-index: 100;
         top: 0;
-      }
+    }
 
-      tr:hover{
-          background-color : rgba(0,0,0,.5) !important;
-      }
-      .unique-circuit-btn:hover {
-          cursor:pointer;
-      }
+    tr {
+        opacity: 0.9;
+    }
+
+    tr:hover{
+        {% comment %} background-color : rgba(0,0,0,.5) !important; {% endcomment %}
+        opacity: 1;
+    }
+
+    .unique-circuit-btn:hover {
+        cursor:pointer;
+    }
 </style>
 
-<table class="responsive-table-input-matrix table table-light table-hover">
-    <thead class="overflow-auto">
+<table class="responsive-table-input-matrix table table-hover">
+    <thead class="overflow-auto table-dark">
         <tr>
             <th></th>
             <th>Clients</th>

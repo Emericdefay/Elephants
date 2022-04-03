@@ -1,7 +1,7 @@
 # Django Libs:
 from django import forms
 from .choices import FoodCategory
-from .models import Food, Client, Circuit, DefaultCommand, Command
+from .models import Food, Client, Circuit, DefaultCommand, Command, WeekRange
 from django.utils.safestring import mark_safe
 from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
@@ -25,6 +25,8 @@ class ClientForm(forms.ModelForm):
 	first_name = forms.Field(label="", )
 	last_name = forms.Field(label="", )
 	address = forms.Field(label="", )
+	cellphone = forms.Field(label="", )
+	description = forms.Field(label="", )
 	circuit = forms.Field(label="", )
 	default_morning_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 	default_evening_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
@@ -32,7 +34,7 @@ class ClientForm(forms.ModelForm):
 
 	class Meta:
 		model = Client
-		fields = ['id', 'first_name', 'last_name', 'address', 'default_morning_command', 'default_evening_command', 'circuit']
+		fields = ['id', 'first_name', 'last_name', 'address', 'cellphone', 'description', 'default_morning_command', 'default_evening_command', 'circuit']
 
 
 class DefaultCommandForm(forms.ModelForm):
@@ -68,10 +70,23 @@ class CommandForm(forms.ModelForm):
 	#food               = forms.Field(label="")
 	morning_command    = forms.IntegerField(label="", )
 	evening_command    = forms.IntegerField(label="", )
+	morning_meals = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
+	evening_meals = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
+	comment = forms.Field(label="", )
 	day_date_command   = forms.DateField(label="", widget=forms.Select(choices=DAY_CHOICES)  )
 	year_date_command  = forms.DateField(label="", widget=forms.Select(choices=YEAR_CHOICES) )
 	month_date_command = forms.DateField(label="", widget=forms.Select(choices=MONTH_CHOICES))
 
 	class Meta:
 		model = Command
-		fields = ['morning_command', 'evening_command', 'day_date_command','year_date_command', 'month_date_command', ]
+		fields = ['morning_command', 'evening_command', 'day_date_command','year_date_command', 'month_date_command', 'morning_meals', 'evening_meals', 'comment' ]
+
+
+class WeekRangeForm(forms.ModelForm):
+	"""Surcharge the class Command to put place holder
+	and remove help_text."""
+	range    = forms.IntegerField(label="", )
+
+	class Meta:
+		model = WeekRange
+		fields = ['range', ]

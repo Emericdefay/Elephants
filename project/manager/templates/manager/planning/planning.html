@@ -5,7 +5,7 @@
 {% now "Y" as to_year %}
 {% now "m" as to_month %}
 {% now "d" as todays_date %}
-{% with width_cells=50 %}
+{% with width_cells=150 %}
 
 <style>
     .meals {
@@ -24,11 +24,13 @@
           padding:0!important;
       }
 </style>
+<link href="{% static "css/button.css" %}" rel="stylesheet">
+
 <h3>
     Planning
 </h3>
-<table class="responsive-table-input-matrix table table-light">
-    <thead>
+<table class="responsive-table-input-matrix table">
+    <thead class="overflow-auto table-dark">
         <tr>
             <th>Nom</th>
             <th>Total</th>
@@ -51,41 +53,22 @@
                     {% endif %}
                 {% endifchanged %}
                 <tr class="line" style="margin-bottom: 1rem; border-spacing:0 20px; border-collapse: separate;background-color:
-                    {% for grad in gradients %}
-                        {% if grad.0|striptags == client.circuit.id|striptags %}
-                            {{grad.1}}
-                        {% endif %}
-                    {% endfor %}
+                    {{gradients|get_value:client.circuit.id}}
                 ;">
                 
-            <td class="meals meals-details"><strong>{{client.last_name}}<br>{{client.first_name}}</strong></td>
-            <td class="meals meals-details"><strong>Total</strong></td>
-            <td class="meals meals-details"><strong>Prix U</strong></td>
-            <td class="meals meals-details"><strong>Nb. Repas</strong></td>
+            <td class="meals meals-details" style="min-width:{{width_cells}}px;"><strong>{{client.last_name}}<br>{{client.first_name}}</strong></td>
+            <td class="meals meals-details" style="min-width:{{width_cells}}px;"><strong>Total</strong></td>
+            <td class="meals meals-details" style="min-width:{{width_cells}}px;"><strong>Prix U</strong></td>
+            <td class="meals meals-details" style="min-width:{{width_cells}}px;"><strong>Nb. Repas</strong></td>
             {% for day in days %}
                 {% if day <= command_list|length %}
                     {% with command_list|index1:day as command_client %}
-                        <td class="meals" style="
-                               width:1em;
+                        <td class="meals" style="min-width:{{width_cells}}px;
                                {% if todays_date == day %}
                                   background-color:cyan;
                                {% endif %}">
-                            <input
-                               type="number"
-                               min=0
-                               id="command-morning_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               name="command_morning_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               value={{command_client.morning_command}}
-                               style="width:{{width_cells}}px;"
-                               class="default_box">
-                            <input
-                               type="number"
-                               min=0
-                               id="command-evening_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               name="command_evening_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               value={{command_client.evening_command}}
-                               style="width:{{width_cells}}px;"
-                               class="default_box">
+                               {% include "manager/planning/input_command.html" with day_time="morning" day_time_command=command_client.morning_command default_command=client.default_morning_command%}
+                               {% include "manager/planning/input_command.html" with day_time="evening" day_time_command=command_client.evening_command default_command=client.default_evening_command%}
                             <input
                                type="number"
                                min=1
@@ -167,3 +150,5 @@
 </table>
 
 {% endwith %}
+
+<script src="{% static 'js/button.js' %}"></script>

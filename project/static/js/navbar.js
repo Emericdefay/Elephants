@@ -33,18 +33,22 @@ $(window).on('load', function () {
     const base = $(`#${button.id}`).attr('aria-controls');
     $('.nav-item').each(function () {
       if (!$(this).children().attr('type')) {
+        $(this).children().removeClass('active');
         $(this).removeClass('d-none');
         $('.tab-pane').each(function () {
           if ($(this).attr('id') != base) {
             $(this).addClass('d-none');
           } else {
             $(this).removeClass('d-none');
+            $(this).addClass('active');
+            $(this).addClass('show');
             $(".save-position").each(function () {
               this.href = `${this.href.split('?tab=#')[0]}?tab=#${base}-tab`;
             })
           }
         })
       }
+    $(`#${base}-tab`).addClass('active');  
     }) 
   } catch (error) {
     window.open("http://127.0.0.1:8000/?tab=#client-tab","_self")

@@ -33,3 +33,14 @@ def random_int(a, b=None):
 @register.filter
 def list(obj, a):
     return list(range(a))
+
+
+@register.filter
+def analyse(obj):
+    return type(obj)
+
+@register.filter
+def get_value(obj, key):
+    return obj[key]
+
+
