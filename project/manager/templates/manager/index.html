@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-{% load static i18n %}
+{% load static i18n index %}
 
 <html lang="fr">
     <head>
@@ -23,7 +23,7 @@
         <script src="{% static 'js/getModal.js' %}"></script>
         <script>
             $(window).on('load', function () {
-                const my_element = document.getElementById("week_{{actual_week}}");
+                const my_element = document.getElementById("week_{{actual_year}}_{{actual_week}}");
             
                 try {
                     my_element.scrollIntoView({
@@ -39,14 +39,22 @@
         <script>
             $(document).ready(function(){
                 // Add smooth scrolling to all links
+                let varYear = {{actual_year}};
                 let base_anchor = {{actual_week}};
                 $("a.save-position").on('click', function(event) {
 
                     event.preventDefault();
                     base_anchor = base_anchor + $(this).data('anchor');
-                    console.log(base_anchor);
+                    if (base_anchor <= 1) {
+                        base_anchor = 52;
+                        varYear = varYear - 1;
+                    };
+                    if (base_anchor > 52) {
+                        base_anchor = 1;
+                        varYear += 1;
+                    };
                     try {
-                        const element = document.getElementById(`week_${base_anchor}`);
+                        const element = document.getElementById(`week_${varYear}_${base_anchor}`);
                         element.scrollIntoView({
                             behavior: "smooth",
                             block: "nearest",
@@ -129,14 +137,14 @@
 
         <div style="position:sticky; bottom:0px; text-align-last: center; text-align: -webkit-center; display: flex; place-content: center;">
             <a
-                href="{% url 'manager:index' month=month year=year|add:"-1" %}"
+                href="#"
                 class="btn btn-secondary align-content-center mx-1 save-position"
                 data-anchor="-4"
                 type="button">
                 <<
             </a>
             <a
-                href="{% url 'manager:index' month=month|add:"-1" year=year %}"
+                href="#"
                 href='test.com'
                 class="btn btn-secondary align-content-center mx-1 save-position"
                 data-anchor="-1"
@@ -144,26 +152,19 @@
                 <
             </a>
             <div class="list-group list-group-horizontal text-nowrap overflow-hidden" style="max-width:500px;">
-                <a href="#" id='week_1'class="list-group-item list-group-item-action">Cras justo odio</a>
-                <a href="#" id='week_2'class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-                <a href="#" id='week_3'class="list-group-item list-group-item-action">Morbi leo risus</a>
-                <a href="#" id='week_4'class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-                <a href="#" id='week_5'class="list-group-item list-group-item-action">Vestibulum at eros</a>
-                <a href="#" id='week_6'class="list-group-item list-group-item-action">Vestibulum at eros</a>
-                <a href="#" id='week_7'class="list-group-item list-group-item-action">Vestibulum at eros</a>
-                <a href="#" id='week_8'class="list-group-item list-group-item-action">Vestibulum at eros</a>
-                <a href="#" id='week_9'class="list-group-item list-group-item-action">Vestibulum at eros</a>
-                <a href="#" id='week_10'class="list-group-item list-group-item-action active">Vestibulum at eros</a>
+                {% for weeks in list_weeks %}
+                    <a href="#" id='week_{{weeks|get_year}}_{{weeks|get_week}}'class="list-group-item list-group-item-action {% if weeks|get_week == actual_week and weeks|get_year == actual_year %}active {% elif weeks|get_week in range_weeks and weeks|get_year == actual_year %} bg-info{% endif %}">S {{weeks|get_week}}</a>
+                {% endfor %}
               </div>
             <a  
-                href="{% url 'manager:index' month=month|add:"1" year=year %}"
+                href="#"
                 class="btn btn-secondary align-content-center mx-1 save-position"
                 data-anchor="1"
                 type="button">
                 >
             </a>
             <a
-                href="{% url 'manager:index' month=month year=year|add:"1" %}"
+                href="#"
                 class="btn btn-secondary align-content-center mx-1 save-position"
                 data-anchor="4"
                 type="button">

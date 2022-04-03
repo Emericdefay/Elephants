@@ -48,9 +48,12 @@ class CustomClient(admin.ModelAdmin):
 		('first_name', {'fields': ['first_name']}),
 		('last_name', {'fields': ['last_name']}),
 		('address', {'fields': ['address']}),
+		('cellphone', {'fields': ['cellphone']}),
+		('description', {'fields': ['description']}),
+		('order', {'fields': ['order']}),
+		('circuit', {'fields': ['circuit']}),
 		('default_morning_command', {'fields': ['default_morning_command']}),
 		('default_evening_command', {'fields': ['default_evening_command']}),
-		('circuit', {'fields': ['circuit']}),
 	]
 
 

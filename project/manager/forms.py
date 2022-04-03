@@ -27,6 +27,7 @@ class ClientForm(forms.ModelForm):
 	address = forms.Field(label="", )
 	cellphone = forms.Field(label="", )
 	description = forms.Field(label="", )
+	order = forms.Field(label="", )
 	circuit = forms.Field(label="", )
 	default_morning_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 	default_evening_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
@@ -34,7 +35,7 @@ class ClientForm(forms.ModelForm):
 
 	class Meta:
 		model = Client
-		fields = ['id', 'first_name', 'last_name', 'address', 'cellphone', 'description', 'default_morning_command', 'default_evening_command', 'circuit']
+		fields = ['id', 'first_name', 'last_name', 'address', 'cellphone', 'description', 'order', 'default_morning_command', 'default_evening_command', 'circuit']
 
 
 class DefaultCommandForm(forms.ModelForm):

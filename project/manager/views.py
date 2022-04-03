@@ -5,9 +5,12 @@ import logging
 from calendar import monthrange
 import locale
 from datetime import timedelta, datetime
+import isoweek
+import datetime as datetime_
+from dateutil.relativedelta import relativedelta
 from pickletools import floatnl
-from django.core import serializers
 # django libs
+from django.core import serializers
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Q, OuterRef, Exists
@@ -111,11 +114,14 @@ class HomeView(TemplateView, UpdateView):
         gradients = gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
         context['circuits_colors'] = [(gradients[index]) for index, circuit in enumerate(circuits)]
         context['morning_evening'] = ["morning", "evening"]
-        context['actual_week'] = 9
-
+        context['actual_week'] = datetime_.date(
+            kwargs['year'] if 'year' in kwargs else datetime.now().year,
+            kwargs['month'] if 'month' in kwargs else datetime.now().month,
+            kwargs['day'] if 'day' in kwargs else datetime.now().day,
+            ).isocalendar()[1]
+        context['actual_year'] = kwargs['year'] if 'year' in kwargs else datetime.now().year
 
         existing_clients = Client.objects.all()
-
         # TODO : Optimiser la génération des commandes : ne prendre que les 
         #        commandes existantes et créer les nouvelles uniquement après
         #        ajouts de morning/evening commands.
@@ -137,17 +143,85 @@ class HomeView(TemplateView, UpdateView):
             Q(month_date_command=(kwargs['month'] if 'month' in kwargs else datetime.now().month))
             & Q(year_date_command=(kwargs['year'] if 'year' in kwargs else datetime.now().year))
             ).order_by('client')
+        context['data'] = commands
 
-        clients_commands = {
-            'client':'a'
-        }
-
-        clients = Client.objects.all().order_by('circuit')
+        clients = Client.objects.all().order_by('circuit', 'order')
         context['clients'] =clients
 
-        all_objects = [*Command.objects.all().order_by('client__circuit'), *Client.objects.all()]
-        data = serializers.serialize('json', all_objects)
-        context['data'] = commands
+        week_ = datetime.now().weekday
+        date_origin = datetime_.date(
+            kwargs['year'] if 'year' in kwargs else datetime.now().year,
+            kwargs['month'] if 'month' in kwargs else datetime.now().month,
+            kwargs['day'] if 'day' in kwargs else datetime.now().day
+            )
+        week_range = WeekRange.objects.get(id=1).range
+        date_ending = date_origin + relativedelta(weeks=+week_range)
+        date_start = date_origin
+        if week_range > 2:
+            date_start = date_origin + relativedelta(weeks=-1)
+            date_ending = date_origin + relativedelta(weeks=+(week_range-1))
+        print('============================')
+        print(date_start)
+        print(date_ending)
+        print('============================')
+        range_dates = [date_start + datetime_.timedelta(days=x) for x in range(0, (date_ending - date_start).days + 1)]
+        print(range_dates)
+        context['range_dates'] = range_dates
+        print('============================')
+        actual_commands = Command.objects.none()
+        for index, client in enumerate(existing_clients):
+            for date in range_dates:
+                print(Command.objects.get_or_create(
+                    client=client,
+                    morning_command=0,
+                    evening_command=0,
+                    day_date_command=date.day,
+                    month_date_command=date.month,
+                    year_date_command=date.year,
+                ))
+                actual_commands |= Command.objects.filter(
+                    Q(client=client)&
+                    Q(day_date_command=date.day)&
+                    Q(month_date_command=date.month)&
+                    Q(year_date_command=date.year)
+                )
+        context['actual_commands'] = actual_commands.order_by('client')
+
+        print('============================')
+        years_weeks = dict()
+        for year in range(2020, 2050):
+            years_weeks[year] = list()
+            all_weeks = list({
+                            week
+                            for week in range(0, isoweek.Week.last_week_of_year(year).week + 1)
+                             })
+            years_weeks[year].append(all_weeks)
+        print(years_weeks)
+        print('============================')
+        print(context['actual_year'])
+        print(context['actual_week'])
+        print('============================')
+
+
+        date_origin = datetime_.date(
+            kwargs['year'] if 'year' in kwargs else datetime.now().year,
+            kwargs['month'] if 'month' in kwargs else datetime.now().month,
+            kwargs['day'] if 'day' in kwargs else datetime.now().day
+            )
+        list_weeks = list()
+        for week in range(-52, 53):
+            list_weeks.append(date_origin + relativedelta(weeks=+(week)))
+
+        context['list_weeks'] = list_weeks
+
+        print(list_weeks)
+        print('============================')
+
+        range_weeks = list({x.isocalendar()[1] for x in range_dates})
+        print(range_weeks)
+        context['range_weeks'] = range_weeks
+        print('============================')
+
         return context
 
     def object(self, *args, **kwargs):
@@ -162,11 +236,6 @@ class UpdateWeekRange(UpdateView):
  
     def post(self, request, *args, **kwargs):
         week_range = WeekRange.objects.get(id=1)
-        print(f"range : {self.request.__dict__}")
-        print(f"range : {self.request._post}")
-        print(self.request._post['week_range_input'])
-        print(args)
-        print(kwargs)
         week_range.range = self.request._post['week_range_input']
         week_range.save()
 

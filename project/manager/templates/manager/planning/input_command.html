@@ -17,11 +17,11 @@
             class="form-control btn-check quantity"
             min="0"
             type="number"
-            id="command-{{day_time}}_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-            name="command_{{day_time}}_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
+            id="command-{{day_time}}_{{client.id}}_{{day}}_{{month}}_{{year}}"
+            name="command_{{day_time}}_{{client.id}}_{{day}}_{{month}}_{{year}}"
             value= {{day_time_command}}
         >
-        <label class="btn mx-0 p-0 quantity_label" for="command_{{day_time}}_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}">
+        <label class="btn mx-0 p-0 quantity_label" for="command_{{day_time}}_{{client.id}}_{{day}}_{{month}}_{{year}}">
             <button type="button" class="btn {% if day_time_command > 0 %}btn-warning{% else %}btn-outline-light{% endif %} dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 {{day_time_command}}
             </button>
@@ -42,8 +42,8 @@
                     <td style="-webkit-writing-mode: vertical-lr;">
                         <input
                             type="checkbox"
-                            id="default_{{day_time}}_command-box_{{client.id.value}}_{{default}}"
-                            name="default_{{day_time}}_command_{{client.id.value}}_{{default}}"
+                            id="default_{{day_time}}_command-box_{{client.id}}_{{default}}"
+                            name="default_{{day_time}}_command_{{client.id}}_{{default}}"
                         {% for box_client in default_command.all %}
                             {% if default|striptags == box_client|striptags %}
                                 checked

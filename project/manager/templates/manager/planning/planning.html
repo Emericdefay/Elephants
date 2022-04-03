@@ -5,7 +5,9 @@
 {% now "Y" as to_year %}
 {% now "m" as to_month %}
 {% now "d" as todays_date %}
-{% with width_cells=150 %}
+{% with width_cells=130 %}
+{% with width_text_cells=50 %}
+{% with width_text_cells_max=50 %}
 
 <style>
     .meals {
@@ -32,17 +34,39 @@
 <table class="responsive-table-input-matrix table">
     <thead class="overflow-auto table-dark">
         <tr>
-            <th>Nom</th>
-            <th>Total</th>
-            <th>€/u</th>
-            <th>Nb.<br>Repas</th>
-            {% for day in days %}
-                <th class="day_cells" {% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}style="background-color:darkorange; width:{{width_cells}}px;"{% elif days_name|index:forloop.counter0|firsts:3 == 'dim' %}style="background-color:darkgrey; width:{{width_cells}}px;"{% endif %}>{{day}}<br>{{days_name|index:forloop.counter0|firsts:3}}</th>
+            <th style="width:5%;">Nom</th>
+            <th style="width:5%;">Total</th>
+            <th style="width:5%;">€/u</th>
+            <th style="width:5%;">Nb.<br>Repas</th>
+
+            {% for day in range_dates %}
+                {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
+                    <th class="day_cells" {% if to_day|striptags == day|day|striptags and to_month|nonpadded|striptags == day|month|striptags and to_year|striptags == day|year|striptags %}style="background-color:darkorange; width:{{width_cells}}px;"{% elif day|day_name|firsts:3 == 'sam' %}style="background-color:darkgrey; width:{{width_cells}}px;"{% endif %}>
+                        {% if day|day_name|firsts:3 == 'lun' %}
+                            LUN<br>
+                            {{day|day}}<br>
+                            {{day|month_name}}
+                        {% elif day|day_name|firsts:3 == 'mar' %}
+                            MAR/MER<br>
+                            {{day|day}}- {{day|day_plusone}}<br>
+                            {{day|month_name}}
+                        {% elif day|day_name|firsts:3 == 'jeu' %}
+                            JEU/VEN<br>
+                            {{day|day}}- {{day|day_plusone}}<br>
+                            {{day|month_name}}
+                        {% elif day|day_name|firsts:3 == 'sam' %}
+                            SAM/DIM<br>
+                            {{day|day}}- {{day|day_plusone}}<br>
+                            {{day|month_name}}
+                        {% endif %}
+                    </th>
+                {% endif %}
             {% endfor %}
         </tr>
     </thead>    
     <tbody class="overflow-auto">
-        {% regroup data by client as client_list %}
+        {% comment %} {% regroup data by client as client_list %} {% endcomment %}
+        {% regroup actual_commands by client as client_list %}
         {% for client, command_list in client_list %}
             {% ifchanged client.circuit.id %}
                 {% if forloop.counter0 != 0 %}
@@ -56,72 +80,22 @@
                     {{gradients|get_value:client.circuit.id}}
                 ;">
                 
-            <td class="meals meals-details" style="min-width:{{width_cells}}px;"><strong>{{client.last_name}}<br>{{client.first_name}}</strong></td>
-            <td class="meals meals-details" style="min-width:{{width_cells}}px;"><strong>Total</strong></td>
-            <td class="meals meals-details" style="min-width:{{width_cells}}px;"><strong>Prix U</strong></td>
-            <td class="meals meals-details" style="min-width:{{width_cells}}px;"><strong>Nb. Repas</strong></td>
-            {% for day in days %}
-                {% if day <= command_list|length %}
-                    {% with command_list|index1:day as command_client %}
-                        <td class="meals" style="min-width:{{width_cells}}px;
-                               {% if todays_date == day %}
-                                  background-color:cyan;
-                               {% endif %}">
-                               {% include "manager/planning/input_command.html" with day_time="morning" day_time_command=command_client.morning_command default_command=client.default_morning_command%}
-                               {% include "manager/planning/input_command.html" with day_time="evening" day_time_command=command_client.evening_command default_command=client.default_evening_command%}
-                            <input
-                               type="number"
-                               min=1
-                               max=31
-                               id="command-day_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               name="command_day_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               value="{{day}}"
-                               style="width:{{width_cells}}px;"
-                               class="default_box invisible d-none">
-                            <input
-                               type="number"
-                               min=1
-                               max=12
-                               id="command-month_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               name="command_month_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               value="{{month}}"
-                               style="width:{{width_cells}}px;"
-                               class="default_box invisible d-none">
-                            <input
-                               type="number"
-                               min=2000
-                               id="command-year_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               name="command_year_date_command_{{command_client.client.id}}_{{day}}_{{month}}_{{year}}"
-                               value="{{year}}"
-                               style="width:{{width_cells}}px;"
-                               class="default_box invisible d-none">
-                        </td>
-                    {% endwith %}
-                {% else %}
-                    <td class="meals" style="
-                           width:1em;">
-                        <input
-                           type="number"
-                           min=0
-                           id="command-morning_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
-                           name="command_morning_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
-                           value=0
-                           style="width:{{width_cells}}px;"
-                           class="default_box">
-                        <input
-                           type="number"
-                           min=0
-                           id="command-evening_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
-                           name="command_evening_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
-                           value=0
-                           style="width:{{width_cells}}px;"
-                           class="default_box">
+            <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>{{client.last_name}}<br>{{client.first_name}}</strong></td>
+            <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>Total</strong></td>
+            <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>Prix U</strong></td>
+            <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>Nb. Repas</strong></td>
+            {% for day in range_dates %}
+            {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
+                {% with command_list as command_client %}
+                    <td class="meals" style="min-width:{{width_cells}}px;">
+                        {% include "manager/planning/input_command.html" with day_time="morning" day_time_command=command_client.morning_command default_command=client.default_morning_command%}
+                        {% include "manager/planning/input_command.html" with day_time="evening" day_time_command=command_client.evening_command default_command=client.default_evening_command%}
                         <input
                            type="number"
                            min=1
                            max=31
-                           id="command-day_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
-                           name="command_day_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           id="command-day_date_command_{{client.id}}_{{day}}_{{month}}_{{year}}"
+                           name="command_day_date_command_{{client.id}}_{{day}}_{{month}}_{{year}}"
                            value="{{day}}"
                            style="width:{{width_cells}}px;"
                            class="default_box invisible d-none">
@@ -129,20 +103,21 @@
                            type="number"
                            min=1
                            max=12
-                           id="command-month_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
-                           name="command_month_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           id="command-month_date_command_{{client.id}}_{{day}}_{{month}}_{{year}}"
+                           name="command_month_date_command_{{client.id}}_{{day}}_{{month}}_{{year}}"
                            value="{{month}}"
                            style="width:{{width_cells}}px;"
                            class="default_box invisible d-none">
                         <input
                            type="number"
                            min=2000
-                           id="command-year_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
-                           name="command_year_date_command_{{command.client.id}}_{{day}}_{{month}}_{{year}}"
+                           id="command-year_date_command_{{client.id}}_{{day}}_{{month}}_{{year}}"
+                           name="command_year_date_command_{{client.id}}_{{day}}_{{month}}_{{year}}"
                            value="{{year}}"
                            style="width:{{width_cells}}px;"
                            class="default_box invisible d-none">
                     </td>
+                {% endwith %}
                 {% endif %}
             {% endfor %}
         {% endfor %}
@@ -150,5 +125,9 @@
 </table>
 
 {% endwith %}
+{% endwith %}
+{% endwith %}
+
+<pre>{% debug %}</pre>
 
 <script src="{% static 'js/button.js' %}"></script>

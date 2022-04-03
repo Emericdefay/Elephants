@@ -46,6 +46,7 @@ class Client(models.Model):
     address = models.CharField(verbose_name=("Adresse"), max_length=1000, blank=False, null=False)
     cellphone = models.CharField(verbose_name=("Telephone"), max_length=20, blank=False, null=False)
     description = models.TextField(verbose_name=("Description"), max_length=1000, blank=True, null=True)
+    order =models.IntegerField(verbose_name=("Position de tournée"))
     default_morning_command = models.ManyToManyField(DefaultCommand, related_name='default_morning_command')
     default_evening_command = models.ManyToManyField(DefaultCommand, related_name='default_evening_command')
     circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
