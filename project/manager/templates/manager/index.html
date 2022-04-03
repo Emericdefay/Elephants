@@ -17,9 +17,7 @@
 
         <link href="{% static "css/calendar.css" %}" rel="stylesheet">
 
-
         <script src="{% static 'js/navbar.js' %}"></script>
-        {% comment %} <script src="{% static 'js/calendar.js' %}"></script> {% endcomment %}
         <script src="{% static 'js/getModal.js' %}"></script>
         <script>
             $(window).on('load', function () {
@@ -151,9 +149,9 @@
                 type="button">
                 <
             </a>
-            <div class="list-group list-group-horizontal text-nowrap overflow-hidden" style="max-width:500px;">
+            <div class="list-group list-group-horizontal text-nowrap overflow-hidden" style="max-width:500px;" id="calendarBtn">
                 {% for weeks in list_weeks %}
-                    <a href="#" id='week_{{weeks|get_year}}_{{weeks|get_week}}'class="list-group-item list-group-item-action {% if weeks|get_week == actual_week and weeks|get_year == actual_year %}active {% elif weeks|get_week in range_weeks and weeks|get_year == actual_year %} bg-info{% endif %}">S {{weeks|get_week}}</a>
+                    <a href="{% url "manager:index" %}{{weeks|year}}/{{weeks|month}}/{{weeks|day}}/" id='week_{{weeks|get_year}}_{{weeks|get_week}}'class="list-group-item list-group-item-action {% if weeks|get_week == actual_week and weeks|get_year == actual_year %}active {% elif weeks|get_week in range_weeks and weeks|get_year == actual_year %} bg-info{% endif %}">{{weeks|day|add:"1"}}/{{weeks|month}}/{{weeks|get_year}}</a>
                 {% endfor %}
               </div>
             <a  

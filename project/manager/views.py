@@ -232,12 +232,8 @@ class HomeView(TemplateView, UpdateView):
 
 
 class UpdateWeekRange(UpdateView):
-
- 
     def post(self, request, *args, **kwargs):
         week_range = WeekRange.objects.get(id=1)
         week_range.range = self.request._post['week_range_input']
         week_range.save()
-
-
-        return redirect(reverse('manager:index'))
+        return redirect(reverse('manager:index') + "?tab=#planning-tab")

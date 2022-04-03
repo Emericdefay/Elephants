@@ -14,11 +14,6 @@
       border-collapse: collapse;
     }
 
-    /* Zebra striping */
-    tr:nth-of-type(odd) {
-      background: #eee;
-    }
-
     th {
       background: #333;
       color: white;
@@ -169,7 +164,8 @@
 
     <div class="accordion" id="CircuitAccordion">
         <!-- Contact Accordion -->
-        {% for circuit in circuits %}
+        {% regroup actual_commands by client.circuit as client_list %}
+        {% for circuit, command_list in client_list %}
             <div class="card-header my-1" style="background-color:{{gradients|get_value:circuit.id}}" id="headingOne"  data-bs-toggle="collapse" data-bs-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
                 <h2 class="m-0 row">
                     <div class="col-12">

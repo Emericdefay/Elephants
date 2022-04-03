@@ -1,6 +1,6 @@
 $(function () {
   // debug, re-able to click on links several times
-  $(".nav-item").on('click custom', function (event) {
+  $(".nav-item").on('click custom', async function (event) {
     event.preventDefault();
     const base = $(this).children().attr('aria-controls');
     $('.nav-item').each(function () {
@@ -13,16 +13,16 @@ $(function () {
         $(this).addClass('d-none');
       } else {
         $(this).removeClass('d-none');
-        $(".save-position").each(function () {
+        $("#calendarBtn").children().each(async function () {
           this.href = `${this.href.split('?tab=#')[0]}?tab=#${base}-tab`;
-          window.history.pushState('page2', 'Title', `?tab=#${base}-tab`);
         })
+        window.history.pushState('page2', 'Title', `?tab=#${base}-tab`);
       }
     })
   });
 })
 
-$(window).on('load', function () {
+$(window).on('load',async function () {
   try {
     const link = window.location.href.split('?tab=#')[1];
     const button = document.getElementById(link);
@@ -42,7 +42,7 @@ $(window).on('load', function () {
             $(this).removeClass('d-none');
             $(this).addClass('active');
             $(this).addClass('show');
-            $(".save-position").each(function () {
+            $("#calendarBtn").children().each(async function () {
               this.href = `${this.href.split('?tab=#')[0]}?tab=#${base}-tab`;
             })
           }
@@ -51,6 +51,7 @@ $(window).on('load', function () {
     $(`#${base}-tab`).addClass('active');  
     }) 
   } catch (error) {
+    console.log(error)
     window.open("http://127.0.0.1:8000/?tab=#client-tab","_self")
   }
 

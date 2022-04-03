@@ -81,11 +81,21 @@ def get_week(obj):
 
 @register.filter
 def get_year(obj):
+    print(obj)
+    print(obj.isocalendar())
     return obj.isocalendar()[0]
+
+# @register.filter
+# def get_month(obj):
+#     return obj.isocalendar()[2]
 
 @register.filter
 def max_week(obj):
     return isoweek.Week.last_week_of_year(obj).week
+
+@register.filter
+def test(obj):
+    return obj[0]
 
 
 

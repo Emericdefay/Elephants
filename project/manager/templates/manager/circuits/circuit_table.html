@@ -51,14 +51,33 @@
         </tr>
     </thead>
     <tbody class="overflow-auto">
-        {% for day in days %}
-            {% for time in morning_evening %}
-                <tr class="day_cells unique-circuit-btn" style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px; font-weight:bold;{% elif days_name|index:forloop.parentloop.counter0|firsts:3 == 'dim' %}background-color:darkgrey; width:{{width_cells}}px;{% endif %} text-align:end;">
-                    {% if forloop.counter0 == 0 %}
-                        <td rowspan=2 style="vertical-align:middle;">
-                            {{days_name|index:forloop.parentloop.counter0}} {{day}} 
-                        </td>
-                    {% endif %}
+        {% for day in range_dates %}
+            {% with command_list|get:forloop.counter0 as command_client %}
+            {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
+                <tr 
+                class="day_cells unique-circuit-btn" 
+                style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px; font-weight:bold;{% elif day|day_name|firsts:3 != 'lun' %}background-color:gainsboro; width:{{width_cells}}px;{% elif day|day_name|firsts:3 == 'lun' %}background-color:lightblue; width:{{width_cells}}px;{% endif %} text-align:end;"
+                >
+                    
+                    <td {% if day|day_name|firsts:3 == 'lun' %}rowspan=1{% else %}rowspan=2{% endif %} style="vertical-align:middle;">
+                        {% if day|day_name|firsts:3 == 'lun' %}
+                            LUN<br>
+                            {{day|day}}<br>
+                            {{day|month_name}}
+                        {% elif day|day_name|firsts:3 == 'mar' %}
+                            MAR/MER<br>
+                            {{day|day}}- {{day|day_plusone}}<br>
+                            {{day|month_name}}
+                        {% elif day|day_name|firsts:3 == 'jeu' %}
+                            JEU/VEN<br>
+                            {{day|day}}- {{day|day_plusone}}<br>
+                            {{day|month_name}}
+                        {% elif day|day_name|firsts:3 == 'sam' %}
+                            SAM/DIM<br>
+                            {{day|day}}- {{day|day_plusone}}<br>
+                            {{day|month_name}}
+                        {% endif %}
+                    </td>
                     <td>
                         {% random_int 0 20 %}
                     </td>
@@ -67,8 +86,30 @@
                             {% random_int 0 20 %}
                         </td>
                     {% endfor %}
-                {% endfor %}
-            </tr>
+                </tr>
+            {% elif day|day_name|firsts:3 == 'mer' or day|day_name|firsts:3 == 'ven' or day|day_name|firsts:3 == 'dim' %}
+                <tr 
+                    class="day_cells unique-circuit-btn" 
+                    style="text-align:end;"
+                >
+                {% if day|day_name|firsts:3 == 'dim' and forloop.counter0 == 0 %}
+                    <td rowspan=1 style="vertical-align:middle;">
+                        DIM<br>
+                        {{day|day}}- {{day|day_plusone}}<br>
+                        {{day|month_name}}
+                    </td>
+                {% endif %}
+                    <td>
+                        {% random_int 0 20 %}
+                    </td>
+                    {% for food in foods %}
+                        <td>
+                            {% random_int 0 20 %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endif %}
+            {% endwith %}
         {% endfor %}
 </table>
 {% endwith %}

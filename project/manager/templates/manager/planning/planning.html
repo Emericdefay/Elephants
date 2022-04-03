@@ -86,10 +86,12 @@
             <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>Nb. Repas</strong></td>
             {% for day in range_dates %}
             {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
-                {% with command_list as command_client %}
-                    <td class="meals" style="min-width:{{width_cells}}px;">
+                {% with command_list|get:forloop.counter0 as command_client %}
+                    <td class="meals" style="min-width:{{width_cells}}px; vertical-align: middle;">
                         {% include "manager/planning/input_command.html" with day_time="morning" day_time_command=command_client.morning_command default_command=client.default_morning_command%}
-                        {% include "manager/planning/input_command.html" with day_time="evening" day_time_command=command_client.evening_command default_command=client.default_evening_command%}
+                        {% if day|day_name|firsts:3 != 'lun' %}
+                            {% include "manager/planning/input_command.html" with day_time="evening" day_time_command=command_client.evening_command default_command=client.default_evening_command%}
+                        {% endif %}
                         <input
                            type="number"
                            min=1
@@ -127,7 +129,5 @@
 {% endwith %}
 {% endwith %}
 {% endwith %}
-
-<pre>{% debug %}</pre>
 
 <script src="{% static 'js/button.js' %}"></script>
