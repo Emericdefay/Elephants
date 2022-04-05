@@ -113,7 +113,6 @@ class HomeView(TemplateView, UpdateView):
         context['circuits'] = circuits
         gradients = gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
         context['circuits_colors'] = [(gradients[index]) for index, circuit in enumerate(circuits)]
-        context['morning_evening'] = ["morning", "evening"]
         context['actual_week'] = datetime_.date(
             kwargs['year'] if 'year' in kwargs else datetime.now().year,
             kwargs['month'] if 'month' in kwargs else datetime.now().month,
@@ -129,8 +128,7 @@ class HomeView(TemplateView, UpdateView):
             for day in context['days']:
                 Command.objects.get_or_create(
                     client=client,
-                    morning_command=0,
-                    evening_command=0,
+                    command_command=0,
                     day_date_command=day,
                     month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
                     year_date_command=kwargs['year'] if 'year' in kwargs else datetime.now().year,
@@ -160,25 +158,13 @@ class HomeView(TemplateView, UpdateView):
         if week_range > 2:
             date_start = date_origin + relativedelta(weeks=-1)
             date_ending = date_origin + relativedelta(weeks=+(week_range-1))
-        print('============================')
-        print(date_start)
-        print(date_ending)
-        print('============================')
+        
         range_dates = [date_start + datetime_.timedelta(days=x) for x in range(0, (date_ending - date_start).days + 1)]
-        print(range_dates)
         context['range_dates'] = range_dates
-        print('============================')
+        
         actual_commands = Command.objects.none()
         for index, client in enumerate(existing_clients):
             for date in range_dates:
-                print(Command.objects.get_or_create(
-                    client=client,
-                    morning_command=0,
-                    evening_command=0,
-                    day_date_command=date.day,
-                    month_date_command=date.month,
-                    year_date_command=date.year,
-                ))
                 actual_commands |= Command.objects.filter(
                     Q(client=client)&
                     Q(day_date_command=date.day)&
@@ -187,7 +173,6 @@ class HomeView(TemplateView, UpdateView):
                 )
         context['actual_commands'] = actual_commands.order_by('client')
 
-        print('============================')
         years_weeks = dict()
         for year in range(2020, 2050):
             years_weeks[year] = list()
@@ -196,13 +181,7 @@ class HomeView(TemplateView, UpdateView):
                             for week in range(0, isoweek.Week.last_week_of_year(year).week + 1)
                              })
             years_weeks[year].append(all_weeks)
-        print(years_weeks)
-        print('============================')
-        print(context['actual_year'])
-        print(context['actual_week'])
-        print('============================')
-
-
+        
         date_origin = datetime_.date(
             kwargs['year'] if 'year' in kwargs else datetime.now().year,
             kwargs['month'] if 'month' in kwargs else datetime.now().month,
@@ -214,13 +193,8 @@ class HomeView(TemplateView, UpdateView):
 
         context['list_weeks'] = list_weeks
 
-        print(list_weeks)
-        print('============================')
-
         range_weeks = list({x.isocalendar()[1] for x in range_dates})
-        print(range_weeks)
         context['range_weeks'] = range_weeks
-        print('============================')
 
         return context
 

@@ -29,13 +29,12 @@ class ClientForm(forms.ModelForm):
 	description = forms.Field(label="", )
 	order = forms.Field(label="", )
 	circuit = forms.Field(label="", )
-	default_morning_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
-	default_evening_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
+	client_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 	#circuit = forms.MultipleChoiceField(label="", choices=Circuit.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 
 	class Meta:
 		model = Client
-		fields = ['id', 'first_name', 'last_name', 'address', 'cellphone', 'description', 'order', 'default_morning_command', 'default_evening_command', 'circuit']
+		fields = ['id', 'first_name', 'last_name', 'address', 'cellphone', 'description', 'order', 'client_command', 'circuit']
 
 
 class DefaultCommandForm(forms.ModelForm):
@@ -68,19 +67,17 @@ class CommandForm(forms.ModelForm):
 	YEAR_CHOICES       = [(r, r) for r in range(2020, 2050)]
 	MONTH_CHOICES      = [(r, r) for r in range(1, 13)]
 	DAY_CHOICES        = [(r, r) for r in range(1, 32)]
-	#food               = forms.Field(label="")
-	morning_command    = forms.IntegerField(label="", )
-	evening_command    = forms.IntegerField(label="", )
-	morning_meals = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
-	evening_meals = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
-	comment = forms.Field(label="", )
+	#food              = forms.Field(label="")
+	command_command    = forms.IntegerField(label="", )
+	meals              = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
+	comment            = forms.Field(label="", )
 	day_date_command   = forms.DateField(label="", widget=forms.Select(choices=DAY_CHOICES)  )
 	year_date_command  = forms.DateField(label="", widget=forms.Select(choices=YEAR_CHOICES) )
 	month_date_command = forms.DateField(label="", widget=forms.Select(choices=MONTH_CHOICES))
 
 	class Meta:
 		model = Command
-		fields = ['morning_command', 'evening_command', 'day_date_command','year_date_command', 'month_date_command', 'morning_meals', 'evening_meals', 'comment' ]
+		fields = ['command_command', 'day_date_command','year_date_command', 'month_date_command', 'meals', 'comment' ]
 
 
 class WeekRangeForm(forms.ModelForm):

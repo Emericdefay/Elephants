@@ -151,7 +151,7 @@
             </a>
             <div class="list-group list-group-horizontal text-nowrap overflow-hidden" style="max-width:500px;" id="calendarBtn">
                 {% for weeks in list_weeks %}
-                    <a href="{% url "manager:index" %}{{weeks|year}}/{{weeks|month}}/{{weeks|day}}/" id='week_{{weeks|get_year}}_{{weeks|get_week}}'class="list-group-item list-group-item-action {% if weeks|get_week == actual_week and weeks|get_year == actual_year %}active {% elif weeks|get_week in range_weeks and weeks|get_year == actual_year %} bg-info{% endif %}">{{weeks|day|add:"1"}}/{{weeks|month}}/{{weeks|get_year}}</a>
+                    <a href="{% url "manager:index" %}{{weeks|year}}/{{weeks|month}}/{{weeks|day}}/" id='week_{{weeks|get_year}}_{{weeks|get_week}}'class="list-group-item list-group-item-action {% if weeks|get_week == actual_week and weeks|get_year == actual_year %}active {% elif weeks|get_week in range_weeks and weeks|get_year == actual_year %} bg-info{% endif %}">{{weeks|day}}/{{weeks|month}}/{{weeks|get_year}}</a>
                 {% endfor %}
               </div>
             <a  
@@ -267,10 +267,7 @@
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-body text-center" id="unique-modal-body">
-                        NOM Tournée :<br>
-                        Tournée MATIN / SOIR <br>
-                        DETAIL PLATS par personne<br>
-                        TOTAL PLATS à PRENDRE<br>
+                        {% include "manager/circuits/circuit_modal.html" %}
                     </div>
                     <div class="modal-footer justify-content-center" id="unique-modal-footer">
                         <button class="btn btn-primary">

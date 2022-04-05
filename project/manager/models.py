@@ -47,9 +47,8 @@ class Client(models.Model):
     cellphone = models.CharField(verbose_name=("Telephone"), max_length=20, blank=False, null=False)
     description = models.TextField(verbose_name=("Description"), max_length=1000, blank=True, null=True)
     order =models.IntegerField(verbose_name=("Position de tournée"))
-    default_morning_command = models.ManyToManyField(DefaultCommand, related_name='default_morning_command')
-    default_evening_command = models.ManyToManyField(DefaultCommand, related_name='default_evening_command')
-    circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
+    client_command = models.ManyToManyField(DefaultCommand, related_name='command')
+    circuit = models.ForeignKey(Circuit, on_delete=models.DO_NOTHING)
 
     class Meta:
         ordering = ['circuit', 'last_name', 'first_name']
@@ -81,34 +80,16 @@ class Year(models.Model):
         return f"{self.date}"
 
 
-class MorningNumberCommand(models.Model):
-    """_summary_
-    """
-    number = models.IntegerField(verbose_name=("Nom"), blank=False, null=False)
-    def __str__(self):
-        return f"{self.number}"
-
-
-class EveningNumberCommand(models.Model):
-    """_summary_
-    """
-    number = models.IntegerField(verbose_name=("Nom"), blank=False, null=False)
-    def __str__(self):
-        return f"{self.number}"
-
-
 class Command(models.Model):
     """_summary_
     """
-    client = models.ForeignKey(Client, on_delete=models.PROTECT)
-    morning_command = models.IntegerField(verbose_name="")
-    evening_command = models.IntegerField(verbose_name="")
+    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
+    command_command = models.IntegerField(verbose_name="")
     day_date_command = models.IntegerField(verbose_name="", blank=False)
     month_date_command = models.IntegerField(verbose_name="", blank=False)
     year_date_command = models.IntegerField(verbose_name="", blank=False)
-    morning_meals = models.ManyToManyField(DefaultCommand, related_name='morning_meals', )
-    evening_meals = models.ManyToManyField(DefaultCommand, related_name='evening_meals', )
-    comment = models.TextField(verbose_name="")
+    meals = models.ManyToManyField(DefaultCommand, related_name='meals', blank=True)
+    comment = models.TextField(verbose_name="", blank=True, null=True)
     def __str__(self):
         return f"{self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
 

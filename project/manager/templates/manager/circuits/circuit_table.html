@@ -52,6 +52,8 @@
     </thead>
     <tbody class="overflow-auto">
         {% for day in range_dates %}
+            {% regroup command_list by day_date_command as clients_per_day %}
+
             {% with command_list|get:forloop.counter0 as command_client %}
             {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
                 <tr 
@@ -79,34 +81,50 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% random_int 0 20 %}
-                    </td>
-                    {% for food in foods %}
-                        <td>
-                            {% random_int 0 20 %}
+                        {% comment %} NB Clients {% endcomment %}
+                        {% comment %} {% random_int 0 20 %} {% endcomment %}
+                        {% with day|day as this_day %}
+                        {% with day|month as this_month %}
+                        {% with day|year as this_year %}
+                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_count}}
                         </td>
-                    {% endfor %}
+                        {% for food in foods %}
+                        <td>
+                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_sum_morning:food}}
+                        </td>
+                        {% endfor %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
                 </tr>
             {% elif day|day_name|firsts:3 == 'mer' or day|day_name|firsts:3 == 'ven' or day|day_name|firsts:3 == 'dim' %}
                 <tr 
                     class="day_cells unique-circuit-btn" 
                     style="text-align:end;"
                 >
-                {% if day|day_name|firsts:3 == 'dim' and forloop.counter0 == 0 %}
-                    <td rowspan=1 style="vertical-align:middle;">
-                        DIM<br>
-                        {{day|day}}- {{day|day_plusone}}<br>
-                        {{day|month_name}}
-                    </td>
-                {% endif %}
+                    {% if day|day_name|firsts:3 == 'dim' and forloop.counter0 == 0 %}
+                        <td rowspan=1 style="vertical-align:middle;">
+                            DIM<br>
+                            {{day|day}}<br>
+                            {{day|month_name}}
+                        </td>
+                    {% endif %}
+                    {% with day|day as this_day %}
+                    {% with day|month as this_month %}
+                    {% with day|year as this_year %}
                     <td>
-                        {% random_int 0 20 %}
+                        {% comment %} NB Clients {% endcomment %}
+                        {% comment %} {% random_int 0 20 %} {% endcomment %}
+                        {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_count}}
                     </td>
                     {% for food in foods %}
                         <td>
-                            {% random_int 0 20 %}
+                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_sum_morning:food}}
                         </td>
                     {% endfor %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
                 </tr>
             {% endif %}
             {% endwith %}

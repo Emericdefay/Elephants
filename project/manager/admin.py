@@ -2,7 +2,7 @@
 from turtle import title
 from django.contrib import admin
 # Local Libs:
-from .models import Food, DefaultCommand, Circuit, Client, Day, Month, Year, MorningNumberCommand, EveningNumberCommand, Command, WeekRange
+from .models import Food, DefaultCommand, Circuit, Client, Day, Month, Year, Command, WeekRange
 
 
 class CustomFood(admin.ModelAdmin):
@@ -52,25 +52,12 @@ class CustomClient(admin.ModelAdmin):
 		('description', {'fields': ['description']}),
 		('order', {'fields': ['order']}),
 		('circuit', {'fields': ['circuit']}),
-		('default_morning_command', {'fields': ['default_morning_command']}),
-		('default_evening_command', {'fields': ['default_evening_command']}),
+		('client_command', {'fields': ['client_command']}),
 	]
 
 
 admin.site.register(Client, CustomClient)
 
-
-# class CustomPlanning(admin.ModelAdmin):
-# 	"""Allow to edit Day informations"""
-# 	#list_display = ('', )
-# 	fieldsets = [
-# 		('client', {'fields': ['client']}),
-# 		('command', {'fields': ['command']}),
-# 		('month_date_planning', {'fields': ['month_date_planning']}),
-# 		('year_date_planning', {'fields': ['year_date_planning']}),
-# 	]
-
-# admin.site.register(Planning, CustomPlanning)
 
 class CustomDay(admin.ModelAdmin):
 	"""Allow to edit Month informations"""
@@ -105,40 +92,17 @@ class CustomYear(admin.ModelAdmin):
 admin.site.register(Year, CustomYear)
 
 
-class CustomMorningNumberCommand(admin.ModelAdmin):
-	"""Allow to edit EveningNumberCommand informations"""
-	# list_display = ('', )
-	fieldsets = [
-		('number', {'fields': ['number']}),
-	]
-
-
-admin.site.register(MorningNumberCommand, CustomMorningNumberCommand)
-
-
-class CustomEveningNumberCommand(admin.ModelAdmin):
-	"""Allow to edit Command informations"""
-	# list_display = ('', )
-	fieldsets = [
-		('number', {'fields': ['number']}),
-	]
-
-admin.site.register(EveningNumberCommand, CustomEveningNumberCommand)
-
-
 class CustomCommand(admin.ModelAdmin):
 	"""Allow to edit Command informations"""
 	# list_display = ('', )
 	fieldsets = [
 		#('food', {'fields': ['food']}),
 		('client', {'fields': ['client']}),
-		('morning_command', {'fields': ['morning_command']}),
-		('evening_command', {'fields': ['evening_command']}),
+		('command_command', {'fields': ['command_command']}),
 		('day_date_command', {'fields': ['day_date_command']}),
 		('month_date_command', {'fields': ['month_date_command']}),
 		('year_date_command', {'fields': ['year_date_command']}),
-		('morning_meals', {'fields': ['morning_meals']}),
-		('evening_meals', {'fields': ['evening_meals']}),
+		('meals', {'fields': ['meals']}),
 		('comment', {'fields': ['comment']}),
 	]
 
