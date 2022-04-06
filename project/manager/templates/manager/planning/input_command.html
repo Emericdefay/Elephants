@@ -38,21 +38,51 @@
                             {% endfor %}
                         {% endwith %}
                     </thead>
-                {% for default in formDefaultCommand %}
-                    <td style="-webkit-writing-mode: vertical-lr;">
-                        <input
-                            type="checkbox"
-                            id="default_{{day_time}}_{{client.id}}"
-                            name="default_{{day_time}}_command"
-                        {% for box_client in default_command.all %}
-                            {% if default|striptags == box_client|striptags %}
-                                checked
-                            {% endif %}
-                        {% endfor %}
-                            class="default_box"
-                            style="vertical-align: -webkit-baseline-middle;">
-                    </td>
+                    {% for default in formDefaultCommand %}
+                        <td style="-webkit-writing-mode: vertical-lr;">
+                            <input
+                                type="checkbox"
+                                id="default_{{day_time}}_{{client.id}}"
+                                name="default_{{day_time}}_command"
+                            {% for box_client in default_command.all %}
+                                {% if default|striptags == box_client|striptags %}
+                                    checked
+                                {% endif %}
+                            {% endfor %}
+                                class="default_box"
+                                style="vertical-align: -webkit-baseline-middle;
+                                       transform: scale(2.1);">
+                        </td>
                     {% endfor %}
+                </table>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label class="mx-0 p-0" for="command-free_{{day_time}}_{{client.id}}">Offert</label>
+                                <input
+                                type="checkbox"
+                                   id="command-free_{{day_time}}_{{client.id}}"
+                                   name="command_free_{{day_time}}_{{client.id}}"
+                                   style="width:{{width_cells}}px;"
+                                   class="default_box">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="mx-0 p-0" for="command_reduction_{{day_time}}_{{client.id}}">Réductions</label>
+                                <input
+                                   type="number"
+                                   min=0
+                                   step=0.05
+                                   id="command_reduction_{{day_time}}_{{client.id}}"
+                                   name="command_reduction_{{day_time}}_{{client.id}}"
+                                   value="0"
+                                   style="width:{{width_cells}}px;"
+                                   class="default_box">
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </label>

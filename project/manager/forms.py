@@ -74,6 +74,8 @@ class CommandForm(forms.ModelForm):
 	day_date_command   = forms.DateField(label="", widget=forms.Select(choices=DAY_CHOICES)  )
 	year_date_command  = forms.DateField(label="", widget=forms.Select(choices=YEAR_CHOICES) )
 	month_date_command = forms.DateField(label="", widget=forms.Select(choices=MONTH_CHOICES))
+	reduction          = forms.FloatField(label="",)
+	free               = forms.BooleanField(label="")
 
 	class Meta:
 		model = Command

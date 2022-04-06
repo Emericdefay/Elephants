@@ -104,6 +104,8 @@ class CustomCommand(admin.ModelAdmin):
 		('year_date_command', {'fields': ['year_date_command']}),
 		('meals', {'fields': ['meals']}),
 		('comment', {'fields': ['comment']}),
+		('reduction', {'fields': ['reduction']}),
+		('free', {'fields': ['free']}),
 	]
 
 admin.site.register(Command, CustomCommand)

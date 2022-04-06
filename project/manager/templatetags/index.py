@@ -135,9 +135,12 @@ def query_count(obj):
 
 @register.filter
 def query_sum_morning(obj, f):
-    a = obj.prefetch_related().all()
-    if a :
-        return DefaultCommand.objects.filter(meals__id__in=obj.prefetch_related().all()).filter(default=f.category).count()
+    clients_per_circuit = obj.prefetch_related().all()
+    if clients_per_circuit :
+        sum_food = 0
+        for client in clients_per_circuit:
+            sum_food += client.command_command*DefaultCommand.objects.filter(meals__id=client.id).filter(default=f.category).count()
+        return sum_food
     else:
         return 0
 
