@@ -5,10 +5,12 @@
 {% now "d" as todays_date %}
 {% with width_cells=120 %}
 
+{% with actual_commands as command_list %}
 <table class="responsive-table-input-matrix table table-hover">
     <thead class="overflow-auto table-dark">
         <tr>
             <th></th>
+            <th>Nb Clients</th>
             {% with foodcategories as foodcategories %}
             {% for food in foods %}
                 <th class="verticalTableHeader">
@@ -21,21 +23,82 @@
         </tr>
     </thead>
     <tbody class="overflow-auto">
-        {% for day in days %}
-            {% for time in morning_evening %}
-                <tr class="day_cells unique-circuit-btn" style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px; font-weight:bold;{% elif days_name|index:forloop.parentloop.counter0|firsts:3 == 'dim' %}background-color:darkgrey; width:{{width_cells}}px;{% endif %} text-align:end;">
-                    {% if forloop.counter0 == 0 %}
-                        <td rowspan=2 style="vertical-align:middle;">
-                            {{days_name|index:forloop.parentloop.counter0}} {{day}} 
+        {% for day in range_dates %}
+            {% with command_list|get:forloop.counter0 as command_client %}
+            {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
+                <tr 
+                class="day_cells unique-circuit-btn" 
+                style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px; font-weight:bold;{% elif day|day_name|firsts:3 != 'lun' %}background-color:gainsboro; width:{{width_cells}}px;{% elif day|day_name|firsts:3 == 'lun' %}background-color:lightblue; width:{{width_cells}}px;{% endif %} text-align:end;"
+                >
+                    
+                    <td {% if day|day_name|firsts:3 == 'lun' %}rowspan=1{% else %}rowspan=2{% endif %} style="vertical-align:middle;">
+                        {% if day|day_name|firsts:3 == 'lun' %}
+                            LUN<br>
+                            {{day|day}}<br>
+                            {{day|month_name}}
+                        {% elif day|day_name|firsts:3 == 'mar' %}
+                            MAR/MER<br>
+                            {{day|day}}- {{day|day_plusone}}<br>
+                            {{day|month_name}}
+                        {% elif day|day_name|firsts:3 == 'jeu' %}
+                            JEU/VEN<br>
+                            {{day|day}}- {{day|day_plusone}}<br>
+                            {{day|month_name}}
+                        {% elif day|day_name|firsts:3 == 'sam' %}
+                            SAM/DIM<br>
+                            {{day|day}}- {{day|day_plusone}}<br>
+                            {{day|month_name}}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% comment %} NB Clients {% endcomment %}
+                        {% comment %} {% random_int 0 20 %} {% endcomment %}
+                        {% with day|day as this_day %}
+                        {% with day|month as this_month %}
+                        {% with day|year as this_year %}
+                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count}}
+                        </td>
+                        {% for food in foods %}
+                        <td>
+                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_sum_morning:food}}
+                        </td>
+                        {% endfor %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                </tr>
+            {% elif day|day_name|firsts:3 == 'mer' or day|day_name|firsts:3 == 'ven' or day|day_name|firsts:3 == 'dim' %}
+                <tr 
+                    class="day_cells unique-circuit-btn" 
+                    style="text-align:end;"
+                >
+                    {% if day|day_name|firsts:3 == 'dim' and forloop.counter0 == 0 %}
+                        <td rowspan=1 style="vertical-align:middle;">
+                            DIM<br>
+                            {{day|day}}<br>
+                            {{day|month_name}}
                         </td>
                     {% endif %}
+                    {% with day|day as this_day %}
+                    {% with day|month as this_month %}
+                    {% with day|year as this_year %}
+                    <td>
+                        {% comment %} NB Clients {% endcomment %}
+                        {% comment %} {% random_int 0 20 %} {% endcomment %}
+                        {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count}}
+                    </td>
                     {% for food in foods %}
                         <td>
-                            {% random_int 0 200 %}
+                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_sum_morning:food}}
                         </td>
                     {% endfor %}
-                {% endfor %}
-            </tr>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                </tr>
+            {% endif %}
+            {% endwith %}
         {% endfor %}
 </table>
+{% endwith %}  
 {% endwith %}  

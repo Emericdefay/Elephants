@@ -8,12 +8,11 @@ from .choices import FoodCategory, CommandTimes
 class Food(models.Model):
     """_summary_
     """
-    name = models.CharField(verbose_name=("Nourriture"), max_length=100, blank=False, null=False)
     price = models.CharField(verbose_name=("Prix"), max_length=100, blank=False, null=False)
     category = models.CharField(max_length=2, choices=FoodCategory.choices, db_index=True)
 
     def __str__(self):
-        return FoodCategory(self.category).label
+        return f"{self.category}: {FoodCategory(self.category).label}"
 
 
 class DefaultCommand(models.Model):

@@ -158,15 +158,15 @@
             <tr style="background-color: ; margin-bottom:1rem; background-color:{{gradients|get_value:circuit.id}}">
                 <td class="draggable draggable-grip">
                 </td>
-                <td><input class="order_clients" type="text" name="order_{{client.id}}" id="order_id_{{client.id}}" value="{{forloop.counter0}}"/></td>
-                <td><input type="text" name="last_name_{{client.id}}" id="id_id_{{client.id}}" value="{{client.last_name}}"/></td>
-                <td><input type="text" name="first_name_{{client.id}}" id="id_id_{{client.id}}" value="{{client.first_name}}"/></td>
+                <td><input class="order_clients" type="text" name="order__{{client.id}}" id="order__{{client.id}}" value="{{forloop.counter0}}"/></td>
+                <td><input type="text" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></td>
+                <td><input type="text" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/></td>
                 {% for default in formDefaultCommand %}
                     <td style="-webkit-writing-mode: vertical-lr;">
                         <input
                             type="checkbox"
-                            id="default_command_{{client.id}}"
-                            name="default_command_{{client.id}}"
+                            id="_meals__{{default.id}}__{{client.id}}"
+                            name="_meals__{{default.id}}__{{client.id}}"
                         {% for box_client in client.client_command.all %}
                             {% if default|striptags == box_client|striptags %}
                                 checked
@@ -176,7 +176,7 @@
                     </td>
                 {% endfor %}
                 <td>
-                    <select name="circuit_{{client.id}}" id="circuit-select_{{client.id}}">
+                    <select name="circuit_id__{{client.id}}" id="circuit_id__{{client.id}}">
                         {% for circuit in formCircuit %}
                             <option value="{{ circuit.id.value }}" {% if circuit.id.value == client.circuit.id %}selected="selected"{% endif %}> {{ circuit.name.value }} </option>
                         {% endfor %}

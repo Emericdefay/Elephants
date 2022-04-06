@@ -13,7 +13,6 @@ from django.db import models
 class FoodForm(forms.Form):
 	"""Surcharge the class Food to put place holder
 	and remove help_text."""
-	name = forms.Field(label="food_name"),
 	price = forms.Field(label="food_price"),
 	category = forms.Field(label="food_category"),
 

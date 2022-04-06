@@ -33,6 +33,41 @@ translation.activate('fr')
 class UpdateHomeView(View):
     """ update the status of the synergy """
 
+    def synth_client(self, save):
+        """ INFO CLIENT """
+        targets = ['order', 'last_name', 'first_name', 'circuit_id', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
+                key_values.update({key: value})
+        # detect id
+        ids = set()
+        for i in key_values.keys():
+            ids.add(i.split('__')[1])
+        # regroup by id
+        values_by_id = dict()
+        for id_ in ids:
+            values_by_id[id_] = {key.split('__')[0]:value for key, value in key_values.items() if key.split('__')[1]==id_}
+        # save
+        for client_id, kwargs in values_by_id.items():
+            Client.objects.filter(id=client_id).update(**kwargs)
+        """ MEALS """
+        targets = ['_meals', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets:
+                key_values.update({key: value})
+        # select values
+        values_by_id = dict()
+        for id_ in ids:
+            values_by_id[id_] = [key.split('__')[1] for key in key_values.keys() if key.split('__')[-1] == id_]
+        # checks
+        for id_ in ids:
+            for food in DefaultCommand.objects.all():
+                Client.objects.get(id=id_).client_command.remove(food)
+            for food in DefaultCommand.objects.filter(id__in=values_by_id[id_]):
+                Client.objects.get(id=id_).client_command.add(food)
+
     def post(self, request, *args, **kwargs):
         """_summary_
         """
@@ -40,8 +75,21 @@ class UpdateHomeView(View):
         save2 = self.request.__dict__
         form = request.POST.get('')
         print("---------------")
-        print(save)
+        for key, values in save.items():
+            #print(f"{key} : {values}")
+            pass
         print("---------------")
+        # save client /1
+        self.synth_client(save)
+        print("---------------")
+
+        # Clients
+        # last_name
+        # first_name
+        # client_command
+        # circuit
+        # order
+
         return redirect(reverse('manager:index'))
 
 

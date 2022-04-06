@@ -9,7 +9,6 @@ class CustomFood(admin.ModelAdmin):
 	"""Allow to edit Food informations"""
 	# list_display = ('', )
 	fieldsets = [
-		('name', {'fields': ['name']}),
 		('price', {'fields': ['price']}),
 		('category', {'fields': ['category']}),
 	]
