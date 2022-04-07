@@ -43,10 +43,10 @@ class Client(models.Model):
     first_name = models.CharField(verbose_name=("Prénom"), max_length=100, blank=False, null=False)
     last_name = models.CharField(verbose_name=("Nom"), max_length=100, blank=False, null=False)
     address = models.CharField(verbose_name=("Adresse"), max_length=1000, blank=False, null=False)
-    cellphone = models.CharField(verbose_name=("Telephone"), max_length=20, blank=False, null=False)
+    cellphone = models.CharField(verbose_name=("Telephone"), max_length=20, blank=True, null=True)
     description = models.TextField(verbose_name=("Description"), max_length=1000, blank=True, null=True)
-    order =models.IntegerField(verbose_name=("Position de tournée"))
-    client_command = models.ManyToManyField(DefaultCommand, related_name='command')
+    order =models.IntegerField(verbose_name=("Position de tournée"), default=0)
+    client_command = models.ManyToManyField(DefaultCommand, related_name='command', blank=True)
     circuit = models.ForeignKey(Circuit, on_delete=models.DO_NOTHING)
 
     class Meta:
@@ -83,7 +83,7 @@ class Command(models.Model):
     """_summary_
     """
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
-    command_command = models.IntegerField(verbose_name="")
+    command_command = models.IntegerField(verbose_name="", default=0)
     day_date_command = models.IntegerField(verbose_name="", blank=False)
     month_date_command = models.IntegerField(verbose_name="", blank=False)
     year_date_command = models.IntegerField(verbose_name="", blank=False)

@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='index'),
     path('update', views.UpdateHomeView.as_view(), name='update'),
     path('week_range', views.UpdateWeekRange.as_view(), name='week_range'),
+    path('new_client', views.AddNewClient.as_view(), name='new_client'),
 ]

@@ -20,20 +20,18 @@ class FoodForm(forms.Form):
 class ClientForm(forms.ModelForm):
 	"""Surcharge the class Client to put place holder
 	and remove help_text."""
-	id = forms.Field(label="", widget=forms.TextInput(attrs={'class': 'invisible'}))
-	first_name = forms.Field(label="", )
-	last_name = forms.Field(label="", )
-	address = forms.Field(label="", )
-	cellphone = forms.Field(label="", )
-	description = forms.Field(label="", )
-	order = forms.Field(label="", )
-	circuit = forms.Field(label="", )
-	client_command = forms.MultipleChoiceField(label="", choices=FoodCategory.choices, widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
+	first_name = forms.Field(label="Prénom", )
+	last_name = forms.Field(label="Nom", )
+	address = forms.Field(label="Adresse postale", )
+	cellphone = forms.Field(label="Téléphone", )
+	description = forms.Field(label="Description", )
+	circuit = forms.ModelChoiceField(label='Tournée',empty_label=None, queryset=Circuit.objects.all(), widget=forms.Select)
+	#client_command = forms.MultipleChoiceField(label="Commande générale", choices=Circuit.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 	#circuit = forms.MultipleChoiceField(label="", choices=Circuit.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 
 	class Meta:
 		model = Client
-		fields = ['id', 'first_name', 'last_name', 'address', 'cellphone', 'description', 'order', 'client_command', 'circuit']
+		fields = [ 'first_name', 'last_name', 'address', 'cellphone', 'description', 'circuit']
 
 
 class DefaultCommandForm(forms.ModelForm):

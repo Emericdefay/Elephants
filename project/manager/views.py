@@ -16,9 +16,9 @@ from django.core.mail import send_mail
 from django.db.models import Q, OuterRef, Exists
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, DetailView, UpdateView
+from django.views.generic import TemplateView, DetailView, UpdateView, CreateView
 from django.views.generic.dates import timezone_today
 from django.shortcuts import render
 # app libs
@@ -135,6 +135,7 @@ class HomeView(TemplateView, UpdateView):
             'gradients': gradients_colors,
             'defaultcommands': (defaultcommands),
             'week_range': week_range,
+            'new_client': ClientForm()
         }
         return form
 
@@ -171,12 +172,11 @@ class HomeView(TemplateView, UpdateView):
         existing_clients = Client.objects.all()
         # TODO : Optimiser la génération des commandes : ne prendre que les 
         #        commandes existantes et créer les nouvelles uniquement après
-        #        ajouts de morning/evening commands.
+        #        ajouts de commandes.
         for index, client in enumerate(existing_clients):
             for day in context['days']:
                 Command.objects.get_or_create(
                     client=client,
-                    command_command=0,
                     day_date_command=day,
                     month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
                     year_date_command=kwargs['year'] if 'year' in kwargs else datetime.now().year,
@@ -244,6 +244,8 @@ class HomeView(TemplateView, UpdateView):
         range_weeks = list({x.isocalendar()[1] for x in range_dates})
         context['range_weeks'] = range_weeks
 
+        context['new_client'] = form['new_client']
+
         return context
 
     def object(self, *args, **kwargs):
@@ -259,3 +261,11 @@ class UpdateWeekRange(UpdateView):
         week_range.range = self.request._post['week_range_input']
         week_range.save()
         return redirect(reverse('manager:index') + "?tab=#planning-tab")
+
+class AddNewClient(CreateView):
+    model = Client
+    fields = [
+        'first_name','last_name','address',
+	    'cellphone','description', 'circuit'
+        ]
+    success_url = reverse_lazy('manager:index')

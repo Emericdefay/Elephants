@@ -225,7 +225,10 @@
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-body" id="add-modal-body">
-                        {% include "manager/clients/client_form.html" %}
+                        <form action="{% url 'manager:new_client' %}" method="post" id="new_client">
+                            {% csrf_token %}
+                            {% include "manager/clients/client_form.html" %}
+                        </form>
                     </div>
                 </div>
             </div>
