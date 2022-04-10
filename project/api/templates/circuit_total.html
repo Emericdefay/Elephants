@@ -1,0 +1,20 @@
+{% load static humanize index %}
+{% with width_cells=130 %}
+   <tr 
+    class="day_cells " 
+    >
+        <td>
+        {% if commands %}
+            {{commands.client.circuit}}
+        {% endif %}
+        </td>
+
+            {% for food in foods %}
+                <td>
+                    {% if client_list.commands %}
+                        {{client_list.commands|make_query_all|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:client_list.client.circuit|query_sum_morning:food}}
+                    {% endif %}
+                </td>
+            {% endfor %}
+    </tr>
+{% endwith %}

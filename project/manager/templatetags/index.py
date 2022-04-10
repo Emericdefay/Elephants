@@ -121,6 +121,10 @@ def make_query(obj):
     return obj.__class__.objects.all()
 
 @register.filter
+def make_query_all(obj):
+    return Command.objects.filter(id__in={instance.id for instance in obj})
+
+@register.filter
 def query_filter_day_date_command(obj, f):
     return obj.filter(day_date_command=f)
 
@@ -138,6 +142,7 @@ def query_filter_client__circuit(obj, f):
 
 @register.filter
 def query_filter_command_passed(obj):
+    print(obj)
     return obj.filter(command_command__gt=0)
 
 @register.filter
@@ -151,6 +156,7 @@ def query_count(obj):
 
 @register.filter
 def query_sum_morning(obj, f):
+
     clients_per_circuit = obj.prefetch_related().all()
     if clients_per_circuit :
         sum_food = 0

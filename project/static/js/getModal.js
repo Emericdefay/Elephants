@@ -123,4 +123,33 @@ function openFoodModal () {
     
 
   });
+
+    $('.total-circuit-btn').on('click', function () {
+      const circuit = $(this).data('circuit');
+      const day = $(this).data('day');
+      const month = $(this).data('month');
+      const year = $(this).data('year');
+      const url = 'http://127.0.0.1:8000/api';
+      let urlAd = `${url}/circuit-total/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}&circuit=${circuit}`;
+      openAdModal();
+      $.ajax({
+        url: urlAd,
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: () => {
+        },
+        success: data => {
+          data.results.forEach(function (row) {
+            $('#feedme').append(row.html);
+          })
+        },
+        error: (e) => {
+          const html = getHtml(e.responseText);
+          console.log(e)
+        },
+  
+    });
+    
+
+  });
 });

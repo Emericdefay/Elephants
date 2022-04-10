@@ -90,7 +90,7 @@ class UpdateHomeView(View):
         # circuit
         # order
 
-        return redirect(reverse('manager:index'))
+        return redirect(reverse('manager:index') + "?tab=#client-tab")
 
 
 class DeleteUser(View):

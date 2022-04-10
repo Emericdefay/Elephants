@@ -71,3 +71,25 @@ class DayByDayCommandTotalSerializer(serializers.ModelSerializer):
             'html',
         )
 
+class DayByDayCircuitSerializer(serializers.ModelSerializer):
+    html = serializers.SerializerMethodField()
+
+    def get_html(self, obj):
+        # faire la request ici .filter(...).filter(...)
+        # food = {food1: somme, food2...}
+        data = render_to_string(template_name='circuit_total.html',
+                                context={
+                                    'foods': Food.objects.all().order_by('category'),
+                                    'commands': obj,
+                                    'this_day': Command.objects.first().day_date_command,
+                                    'this_month': Command.objects.first().month_date_command,
+                                    'this_year': Command.objects.first().year_date_command,
+                                })
+        return mark_safe(data)
+
+    class Meta:
+        model = Command
+        fields = (
+            'html',
+        )
+
