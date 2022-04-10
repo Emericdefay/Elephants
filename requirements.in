@@ -1,6 +1,7 @@
 # app
 django==4.0.3
 djangorestframework
+django-filter
 django-import-export
 pyexcel-xlsx
 python-dateutil

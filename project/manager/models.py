@@ -83,6 +83,7 @@ class Command(models.Model):
     """_summary_
     """
     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
+    circuit = models.ForeignKey(Circuit, on_delete=models.DO_NOTHING)
     command_command = models.IntegerField(verbose_name="", default=0)
     day_date_command = models.IntegerField(verbose_name="", blank=False)
     month_date_command = models.IntegerField(verbose_name="", blank=False)

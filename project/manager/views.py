@@ -170,17 +170,6 @@ class HomeView(TemplateView, UpdateView):
         context['actual_year'] = kwargs['year'] if 'year' in kwargs else datetime.now().year
 
         existing_clients = Client.objects.all()
-        # TODO : Optimiser la génération des commandes : ne prendre que les 
-        #        commandes existantes et créer les nouvelles uniquement après
-        #        ajouts de commandes.
-        for index, client in enumerate(existing_clients):
-            for day in context['days']:
-                Command.objects.get_or_create(
-                    client=client,
-                    day_date_command=day,
-                    month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
-                    year_date_command=kwargs['year'] if 'year' in kwargs else datetime.now().year,
-                )
 
         context['week_range'] = form['week_range']
         context['week_range_choices'] = list(range(0, 4))
@@ -209,7 +198,7 @@ class HomeView(TemplateView, UpdateView):
         
         range_dates = [date_start + datetime_.timedelta(days=x) for x in range(0, (date_ending - date_start).days + 1)]
         context['range_dates'] = range_dates
-        
+                
         actual_commands = Command.objects.none()
         for index, client in enumerate(existing_clients):
             for date in range_dates:
@@ -243,6 +232,28 @@ class HomeView(TemplateView, UpdateView):
 
         range_weeks = list({x.isocalendar()[1] for x in range_dates})
         context['range_weeks'] = range_weeks
+
+        # TODO : Optimiser la génération des commandes : ne prendre que les 
+        #        commandes existantes et créer les nouvelles uniquement après
+        #        ajouts de commandes.
+        for index, client in enumerate(existing_clients):
+            for day in range_dates:
+                Command.objects\
+                    .filter(
+                    client=client,
+                    day_date_command=day.day,
+                    month_date_command=day.month,
+                    year_date_command=day.year,
+                    )\
+                    .get_or_create(
+                    defaults={
+                        'client':client,
+                        'circuit':client.circuit,
+                        'day_date_command':day.day,
+                        'month_date_command':day.month,
+                        'year_date_command':day.year,
+                    }
+                )
 
         context['new_client'] = form['new_client']
 

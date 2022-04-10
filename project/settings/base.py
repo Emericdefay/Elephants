@@ -45,10 +45,13 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     "project.manager",
+    "project.api",
 ]
 
 TOOLS_APPS = [
     "import_export",
+    'rest_framework',
+    'django_filters',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + TOOLS_APPS
@@ -84,6 +87,22 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = PROJECT_NAME + '.wsgi.application'
+
+# REST
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [],
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100,
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+}
 
 
 # Database

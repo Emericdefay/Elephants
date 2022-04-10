@@ -107,6 +107,7 @@ def test(obj):
 
 @register.filter
 def make_query(obj):
+    print(obj)
     return obj.__class__.objects.all()
 
 @register.filter
@@ -145,6 +146,9 @@ def query_sum_morning(obj, f):
         return 0
 
 
+@register.filter
+def analyse(obj):
+    return 0
 
 
 

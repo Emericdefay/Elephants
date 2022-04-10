@@ -15,6 +15,7 @@ function openClientModal () {
 // show the modal for single ads
 function openAdModal () {
     // show modal
+    $('#feedme').empty();
     $('#unique-modal').modal('show');
   }
   
@@ -23,19 +24,7 @@ function openAdModal () {
     // hide modal
     $('#unique-modal').modal('hide').on('shown.bs.modal', () => {
       $('#unique-modal').modal('show');
-    });
-  }
-
-function openCircuitModal () {
-    // show modal
-    $('#circuit-modal').modal('show');
-  }
-  
-  // close the modal for single ads
-  function hideCircuitModal () {
-    // hide modal
-    $('#circuit-modal').modal('hide').on('shown.bs.modal', () => {
-      $('#circuit-modal').modal('show');
+      $('#feedme').empty();
     });
   }
 
@@ -58,19 +47,24 @@ function openFoodModal () {
     // const vars = {
     //   html: data.html,
     // };
-    return data.html;
+    return data;
   }
   
-  function displayDjangoMsg () {
-    hideAdModal();
-    return `
-    <script>
-      $(document).ready(function() {
-        toastr["error"]("ACTIF", "${gettext('Error. The ad is unavailable.')}");
-      });
-    </script>
-    `;
+  
+  function openCircuitModal () {
+    // show modal
+    $('#circuit-modal').modal('show');
   }
+
+  // close the modal for single ads
+  function hideCircuitModal () {
+    // hide modal
+    $('#circuit-modal').modal('hide').on('shown.bs.modal', () => {
+      $('#circuit-modal').modal('show');
+    });
+  }
+
+
   
   // get the id of the ad clicked
   // getting data from api
@@ -86,7 +80,30 @@ function openFoodModal () {
       openFoodModal();
     });
     $('.unique-circuit-btn').on('click', function () {
+      const circuit = $(this).data('circuit');
+      const day = $(this).data('day');
+      const month = $(this).data('month');
+      const year = $(this).data('year');
+      const url = 'http://127.0.0.1:8000/api';
+      const urlAd = `${url}/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}&circuit=${circuit}`;
       openAdModal();
+      $.ajax({
+        url: urlAd,
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: () => {
+        },
+        success: data => {
+          data.results.forEach(function (row) {
+            console.log(row.html)
+            $('#feedme').append(row.html);
+          })
+        },
+        error: (e) => {
+          const html = getHtml(e.responseText);
+          console.log(e)
+        },
+  
     });
   });
-  
+});
