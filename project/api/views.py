@@ -24,3 +24,17 @@ class DayByDayCommand(mixins.ListModelMixin, viewsets.GenericViewSet):
         qs = models.Command.objects.all()
 
         return qs.distinct().order_by('circuit')
+
+# Create your views here.
+class DayByDayCommandTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = (permissions.AllowAny,)
+    filter_backends = [DjangoFilterBackend, ]
+    filterset_class = filters.DayByDayCommandFilter
+    serializer_class = serializers.DayByDayCommandTotalSerializer
+    queryset = models.Command.objects.none()
+
+    def get_queryset(self):
+        # get non expired ads
+        qs = models.Command.objects.all()
+
+        return qs.distinct().order_by('circuit')

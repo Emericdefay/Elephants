@@ -5,8 +5,6 @@
 {% now "Y" as to_year %}
 {% now "m" as to_month %}
 {% now "d" as todays_date %}
-
-
     <div class="btn-group" role="group">
         <div class="input-group-prepend">
             <button class="btn btn-outline-dark btn-minus" type="button">
@@ -35,25 +33,44 @@
                                         {{ foodcategories|index:forloop.counter0|index:1 }}
                                 {% endwith %}
                             </th>
-                            {% endfor %}
+                        {% endfor %}
                         {% endwith %}
                     </thead>
-                    {% for default in formDefaultCommand %}
-                        <td style="-webkit-writing-mode: vertical-lr;">
-                            <input
-                                type="checkbox"
-                                id="meals__{{default.category}}__{{day_time}}__{{client.id}}"
-                                name="meals__{{default.category}}__{{day_time}}__{{client.id}}"
-                                {% for box_client in default_command.all %}
-                                    {% if default|striptags == box_client|striptags %}
-                                        checked
-                                    {% endif %}
-                                {% endfor %}
-                                class="default_box"
-                                style="vertical-align: -webkit-baseline-middle;
-                                transform: scale(2.1);">
-                        </td>
-                    {% endfor %}
+                    <tbody>
+                        {% if day_time_command !=  0 %}
+                            {% for food in foods %}
+                                <td>
+                                    <input
+                                    type="checkbox"
+                                    id="meals__{{food.category}}__{{day_time}}__{{client.id}}"
+                                        name="meals__{{food.category}}__{{day_time}}__{{client.id}}"
+                                            {% if command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_id:client.id|query_filter_command_passed|query_sum_morning:food > 0 %}
+                                                checked
+                                            {% endif %}
+                                        class="default_box"
+                                        style="vertical-align: -webkit-baseline-middle;
+                                        transform: scale(2.1);">
+                                </td>
+                            {% endfor %}
+                        {% else %}
+                            {% for default in formDefaultCommand %}
+                                <td style="-webkit-writing-mode: vertical-lr;">
+                                    <input
+                                        type="checkbox"
+                                        id="meals__{{default.category}}__{{day_time}}__{{client.id}}"
+                                        name="meals__{{default.category}}__{{day_time}}__{{client.id}}"
+                                        {% for box_client in default_command.all %}
+                                            {% if default|striptags == box_client|striptags %}
+                                                checked
+                                            {% endif %}
+                                        {% endfor %}
+                                        class="default_box"
+                                        style="vertical-align: -webkit-baseline-middle;
+                                        transform: scale(2.1);">
+                                </td>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
                 </table>
                 <table>
                     <tbody>
@@ -70,27 +87,13 @@
                         </tr>
                         <tr>
                             <td>
-                                <label class="mx-0 p-0" for="reduction__{{day_time}}__{{client.id}}">Réductions</label>
+                                <label class="mx-0 p-0" for="reduction__{{day_time}}__{{client.id}}">Réduction</label>
                                 <input
                                    type="number"
                                    min=0
                                    step=0.05
                                    id="reduction__{{day_time}}__{{client.id}}"
                                    name="reduction__{{day_time}}__{{client.id}}"
-                                   value="0"
-                                   style="width:{{width_cells}}px;"
-                                   class="default_box">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label class="mx-0 p-0" for="comment__{{day_time}}__{{client.id}}">Réductions</label>
-                                <input
-                                   type="number"
-                                   min=0
-                                   step=0.05
-                                   id="comment__{{day_time}}__{{client.id}}"
-                                   name="comment__{{day_time}}__{{client.id}}"
                                    value="0"
                                    style="width:{{width_cells}}px;"
                                    class="default_box">

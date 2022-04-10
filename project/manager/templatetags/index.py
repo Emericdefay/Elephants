@@ -35,20 +35,31 @@ def get(obj, key):
     except IndexError:
         return
 
+@register.filter
+def getattr_(obj, key):
+    try:
+        return getattr(obj, str(key))
+    except IndexError:
+        return
+
 @register.simple_tag
 def random_int(a, b=None):
     if b is None:
         a, b = 0, a
     return random.randint(a, b)
 
+@register.simple_tag
+def update_variable(value):
+    """Allows to update existing variable in template"""
+    return value
+
 @register.filter
 def list_(obj, a):
-    return list_(range(a))
+    return list(range(a))
 
 
 @register.filter
 def analyse(obj):
-    print(obj)
     return (obj)
 
 @register.filter
@@ -107,7 +118,6 @@ def test(obj):
 
 @register.filter
 def make_query(obj):
-    print(obj)
     return obj.__class__.objects.all()
 
 @register.filter
@@ -131,8 +141,13 @@ def query_filter_command_passed(obj):
     return obj.filter(command_command__gt=0)
 
 @register.filter
+def query_id(obj, i):
+    return obj.filter(client__id=i)
+
+@register.filter
 def query_count(obj):
     return obj.count()
+
 
 @register.filter
 def query_sum_morning(obj, f):

@@ -5,7 +5,7 @@
     >
         <td>
         {% if commands %}
-            {{commands.client.last_name}}<br>{{commands.client.first_name}}
+            <strong>Total</strong>
         {% endif %}
         </td>
         {% regroup actual_commands by client.circuit as client_list %}
@@ -14,7 +14,9 @@
             {% for food in foods %}
             <td>
                 {% if commands %}
-                {{command_client|make_query|query_filter_day_date_command:commands.day_date_command|query_filter_month_date_command:commands.month_date_command|query_filter_year_date_command:commands.year_date_command|query_filter_client__circuit:commands.circuit|query_filter_command_passed|query_id:commands.client.id|query_sum_morning:food}}
+                <strong>
+                    {{command_client|make_query|query_filter_day_date_command:commands.day_date_command|query_filter_month_date_command:commands.month_date_command|query_filter_year_date_command:commands.year_date_command|query_filter_client__circuit:commands.circuit|query_filter_command_passed|query_sum_morning:food}}
+                </strong>
                 {% endif %}
             </td>
             {% endfor %}

@@ -208,7 +208,7 @@ class HomeView(TemplateView, UpdateView):
                     Q(month_date_command=date.month)&
                     Q(year_date_command=date.year)
                 )
-        context['actual_commands'] = actual_commands.order_by('client')
+        context['actual_commands'] = actual_commands.order_by( 'client', 'client__order', )
 
         years_weeks = dict()
         for year in range(2020, 2050):

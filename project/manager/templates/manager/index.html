@@ -70,7 +70,7 @@
     </head>
     <body class="overflow-auto" id="reference">
         <!-- Navbar -->
-        <ul class="nav nav-tabs" id="menu" role="tablist">
+        <ul class="nav nav-tabs d-print-none" id="menu" role="tablist">
             <li class="nav-brand h-100">
                 <img src="{% static 'logo.png' %}"
                      alt="Small"
@@ -102,7 +102,7 @@
 
         </ul>
 
-        <div class="quarter-year-header-picker my-1" style="text-align-last:center;">
+        <div class="quarter-year-header-picker my-1 d-print-none" style="text-align-last:center;">
             <form action="{% url "manager:week_range" %}" method="post" id="week_range_id">
                 {% csrf_token %}
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -133,7 +133,7 @@
         </div>
 
 
-        <div style="position:sticky; bottom:0px; text-align-last: center; text-align: -webkit-center; display: flex; place-content: center;">
+        <div class=" d-print-none" style="position:sticky; bottom:0px; text-align-last: center; text-align: -webkit-center; display: flex; place-content: center;">
             <a
                 href="#"
                 class="btn btn-secondary align-content-center mx-1 save-position"
@@ -173,7 +173,7 @@
 
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="wrapper pt-0">
+        <div class="wrapper pt-0 d-print-none">
             <!-- Main content -->
             <section class="content p-0 vh-100">
                 <div class="container-fluid vh-100">
@@ -216,7 +216,7 @@
                 </div>
             </section>
         </div>
-        <div class="modal fade"
+        <div class="modal fade d-print-none"
              id="add-modal"
              tabindex="-1"
              role="dialog"
@@ -273,7 +273,6 @@
                         <table class="responsive-table-input-matrix table table-hover">
                             <thead class="overflow-auto table-dark">
                                 <tr>
-                                    <th></th>
                                     <th>Clients</th>
                                     {% with foodcategories as foodcategories %}
                                     {% for food in foods %}
@@ -291,10 +290,10 @@
                         </table>
                     </div>
                     <div class="modal-footer justify-content-center" id="unique-modal-footer">
-                        <button class="btn btn-primary">
+                        {% comment %} <button class="btn btn-primary">
                             Envoyer
-                        </button>
-                        <button class="btn btn-secondary">
+                        </button> {% endcomment %}
+                        <button class="btn btn-secondary" onclick="PrintElem('unique-modal-body');">
                             Imprimer
                         </button>
                     </div>
@@ -303,3 +302,26 @@
         </div>
     </body>
 </html>
+
+<script>
+    function PrintElem(elem)
+    {
+        var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+    
+        mywindow.document.write('<html><head>');
+        mywindow.document.write(`<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"><link href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" rel="stylesheet"><link href="{% static "css/calendar.css" %}" rel="stylesheet">`)
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(document.getElementById(elem).innerHTML);
+        mywindow.document.write('</body></html>');
+    
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+    
+    
+        setTimeout(function () {
+        mywindow.print();
+        mywindow.close();
+        }, 2000)
+        return true;
+    }
+</script>

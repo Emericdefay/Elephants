@@ -85,7 +85,7 @@ function openFoodModal () {
       const month = $(this).data('month');
       const year = $(this).data('year');
       const url = 'http://127.0.0.1:8000/api';
-      const urlAd = `${url}/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}&circuit=${circuit}`;
+      let urlAd = `${url}/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}&circuit=${circuit}`;
       openAdModal();
       $.ajax({
         url: urlAd,
@@ -95,9 +95,24 @@ function openFoodModal () {
         },
         success: data => {
           data.results.forEach(function (row) {
-            console.log(row.html)
             $('#feedme').append(row.html);
-          })
+          })      
+          urlAd = `${url}/total/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}&circuit=${circuit}`;
+          $.ajax({
+            url: urlAd,
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: () => {
+            },
+            success: data => {
+                $('#feedme').append(data.results[0].html);
+              
+            },
+            error: (e) => {
+              const html = getHtml(e.responseText);
+              console.log(e)
+            },
+          });
         },
         error: (e) => {
           const html = getHtml(e.responseText);
@@ -105,5 +120,7 @@ function openFoodModal () {
         },
   
     });
+    
+
   });
 });
