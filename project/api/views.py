@@ -43,18 +43,10 @@ class DayByDayCommandTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
 class DayByDayCircuitTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = (permissions.AllowAny,)
     filter_backends = [DjangoFilterBackend, ]
+    filterset_class = filters.DayByDayCommandFilter
     serializer_class = serializers.DayByDayCircuitSerializer
     queryset = models.Command.objects.none()
 
     def get_queryset(self):
         # get non expired ads
-        query = models.Command.objects.all().distinct().order_by('circuit')
-        copy1 = []
-        copy2 = []
-        for data in query:
-            if data.circuit not in copy1:
-                copy1.append(data.circuit)
-                copy2.append(data)
-            query = copy2
-        qs = models.Command.objects.filter(id__in={instance.id for instance in query})
-        return qs
+        return models.Command.objects.all().distinct().order_by('circuit')

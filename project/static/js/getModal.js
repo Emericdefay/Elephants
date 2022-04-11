@@ -132,6 +132,7 @@ function openFoodModal () {
       const url = 'http://127.0.0.1:8000/api';
       let urlAd = `${url}/circuit-total/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}&circuit=${circuit}`;
       openAdModal();
+      let arrayIds = new Set();
       $.ajax({
         url: urlAd,
         type: 'GET',
@@ -141,6 +142,11 @@ function openFoodModal () {
         success: data => {
           data.results.forEach(function (row) {
             $('#feedme').append(row.html);
+            arrayIds.add(row.id);
+          })
+
+          $('[id]').each(function () {
+            $('[id="' + this.id + '"]:gt(0)').remove();
           })
         },
         error: (e) => {
@@ -149,7 +155,8 @@ function openFoodModal () {
         },
   
     });
-    
+
+
 
   });
 });

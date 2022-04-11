@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 from rest_framework import serializers
 
 from project.manager.choices import CommandTimes
-from project.manager.models import Command, Food, WeekRange, Client
+from project.manager.models import Command, Food, WeekRange, Client, DefaultCommand
 
 
 class DayByDayCommandSerializer(serializers.ModelSerializer):
@@ -72,18 +72,30 @@ class DayByDayCommandTotalSerializer(serializers.ModelSerializer):
         )
 
 class DayByDayCircuitSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     html = serializers.SerializerMethodField()
 
+    def get_id(self, obj):
+        return f'total-circuit-{obj.circuit.id}'
+
     def get_html(self, obj):
-        # faire la request ici .filter(...).filter(...)
-        # food = {food1: somme, food2...}
+        request = self.context.get('request')
+        existing_clients = Client.objects.filter(circuit=obj.circuit)
+        actual_commands = Command.objects.none()
+        for index, client in enumerate(existing_clients):
+            actual_commands |= Command.objects.filter(
+                Q(client=client)&
+                Q(circuit=obj.circuit)&
+                Q(day_date_command=obj.day_date_command)&
+                Q(month_date_command=obj.month_date_command)&
+                Q(year_date_command=obj.year_date_command)
+            )
+
         data = render_to_string(template_name='circuit_total.html',
                                 context={
-                                    'foods': Food.objects.all().order_by('category'),
                                     'commands': obj,
-                                    'this_day': Command.objects.first().day_date_command,
-                                    'this_month': Command.objects.first().month_date_command,
-                                    'this_year': Command.objects.first().year_date_command,
+                                    'foods': Food.objects.all().order_by('category'),
+                                    'actual_commands': actual_commands.order_by('circuit'),
                                 })
         return mark_safe(data)
 
@@ -91,5 +103,5 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
         model = Command
         fields = (
             'html',
+            'id',
         )
-
