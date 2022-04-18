@@ -15,23 +15,11 @@ class DayByDayCommandSerializer(serializers.ModelSerializer):
     html = serializers.SerializerMethodField()
 
     def get_html(self, obj):
-        request = self.context.get('request')
-        existing_clients = Client.objects.filter(circuit=obj.circuit)
-        actual_commands = Command.objects.none()
-        for index, client in enumerate(existing_clients):
-            actual_commands |= Command.objects.filter(
-                Q(client=client)&
-                Q(circuit=obj.circuit)&
-                Q(day_date_command=obj.day_date_command)&
-                Q(month_date_command=obj.month_date_command)&
-                Q(year_date_command=obj.year_date_command)
-            )
-
         data = render_to_string(template_name='circuit_modal.html',
                                 context={
                                     'commands': obj,
                                     'foods': Food.objects.all().order_by('category'),
-                                    'actual_commands': actual_commands.order_by('client'),
+                                    'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)
 
@@ -43,25 +31,18 @@ class DayByDayCommandSerializer(serializers.ModelSerializer):
 
 class DayByDayCommandTotalSerializer(serializers.ModelSerializer):
     html = serializers.SerializerMethodField()
-
     def get_html(self, obj):
-        request = self.context.get('request')
-        existing_clients = Client.objects.filter(circuit=obj.circuit)
-        actual_commands = Command.objects.none()
-        for index, client in enumerate(existing_clients):
-            actual_commands |= Command.objects.filter(
-                Q(client=client)&
-                Q(circuit=obj.circuit)&
-                Q(day_date_command=obj.day_date_command)&
-                Q(month_date_command=obj.month_date_command)&
-                Q(year_date_command=obj.year_date_command)
-            )
-
+        day_date_command=(self.context['request']._request.GET.get('day_date_command'))
+        month_date_command=(self.context['request']._request.GET.get('month_date_command'))
+        year_date_command=(self.context['request']._request.GET.get('year_date_command'))
         data = render_to_string(template_name='circuit_unit_total.html',
                                 context={
                                     'commands': obj,
                                     'foods': Food.objects.all().order_by('category'),
-                                    'actual_commands': actual_commands.order_by('client'),
+                                    'day': day_date_command,
+                                    'month': month_date_command,
+                                    'year': year_date_command,
+                                    'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)
 
@@ -79,23 +60,11 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
         return f'total-circuit-{obj.circuit.id}'
 
     def get_html(self, obj):
-        request = self.context.get('request')
-        existing_clients = Client.objects.filter(circuit=obj.circuit)
-        actual_commands = Command.objects.none()
-        for index, client in enumerate(existing_clients):
-            actual_commands |= Command.objects.filter(
-                Q(client=client)&
-                Q(circuit=obj.circuit)&
-                Q(day_date_command=obj.day_date_command)&
-                Q(month_date_command=obj.month_date_command)&
-                Q(year_date_command=obj.year_date_command)
-            )
-
         data = render_to_string(template_name='circuit_total.html',
                                 context={
                                     'commands': obj,
                                     'foods': Food.objects.all().order_by('category'),
-                                    'actual_commands': actual_commands.order_by('circuit'),
+                                    'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)
 

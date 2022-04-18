@@ -15,11 +15,11 @@
             class="form-control btn-check quantity"
             min="0"
             type="number"
-            id="command__{{day_time}}__{{client.id}}"
-            name="command__{{day_time}}__{{client.id}}"
-            value= {{day_time_command}}
+            id="command__{{day_time}}__{{command_id}}__{{client.id}}"
+            name="command__{{day_time}}__{{command_id}}__{{client.id}}"
+            value={{day_time_command}}
         >
-        <label class="btn mx-0 p-0 quantity_label" for="command__{{day_time}}__{{client.id}}">
+        <label class="btn mx-0 p-0 quantity_label" for="command__{{day_time}}__{{command_id}}__{{client.id}}">
             <button type="button" class="btn {% if day_time_command > 0 %}btn-warning{% else %}btn-outline-light{% endif %} dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 {{day_time_command}}
             </button>
@@ -27,24 +27,24 @@
                 <table>
                     <thead>
                         {% with foodcategories as foodcategories %}
-                        {% for food in foods %}
+                        {% for food in formDefaultCommand %}
                             <th class="verticalTableHeader">
-                                {% with food.category as category %}
-                                        {{ foodcategories|index:forloop.counter0|index:1 }}
-                                {% endwith %}
+                                {{food.default.category}}
                             </th>
                         {% endfor %}
                         {% endwith %}
                     </thead>
                     <tbody>
                         {% if day_time_command !=  0 %}
-                            {% for food in foods %}
+                            {% for food in formDefaultCommand %}
                                 <td>
                                     <input
                                     type="checkbox"
-                                    id="meals__{{food.category}}__{{day_time}}__{{client.id}}"
-                                        name="meals__{{food.category}}__{{day_time}}__{{client.id}}"
-                                            {% if command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_id:client.id|query_filter_command_passed|query_sum_morning:food > 0 %}
+                                    data-test={{ command_client|make_query|query_command_id:command_id|query_command_food:food }}
+                                    data-id="{{food.id}}"
+                                    id="meals__{{food.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
+                                        name="meals__{{food.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
+                                            {% if command_client|make_query|query_command_id:command_id|query_command_food:food > 0 %}
                                                 checked
                                             {% endif %}
                                         class="default_box"
@@ -57,8 +57,8 @@
                                 <td style="-webkit-writing-mode: vertical-lr;">
                                     <input
                                         type="checkbox"
-                                        id="meals__{{default.category}}__{{day_time}}__{{client.id}}"
-                                        name="meals__{{default.category}}__{{day_time}}__{{client.id}}"
+                                        id="meals__{{default.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
+                                        name="meals__{{default.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
                                         {% for box_client in default_command.all %}
                                             {% if default|striptags == box_client|striptags %}
                                                 checked
@@ -76,27 +76,30 @@
                     <tbody>
                         <tr>
                             <td>
-                                <label class="mx-0 p-0" for="free__{{day_time}}__{{client.id}}">Offert</label>
+                                <label class="mx-0 p-0" for="free__{{day_time}}__{{command_id}}__{{client.id}}">Offert</label>
                                 <input
-                                type="checkbox"
-                                   id="free__{{day_time}}__{{client.id}}"
-                                   name="free__{{day_time}}__{{client.id}}"
-                                   style="width:{{width_cells}}px;"
-                                   class="default_box">
+                                    type="checkbox"
+                                    id="free__{{day_time}}__{{command_id}}__{{client.id}}"
+                                    name="free__{{day_time}}__{{command_id}}__{{client.id}}"
+                                    style="width:{{width_cells}}px;"
+                                    {% if command_opts.free %}
+                                        checked
+                                    {% endif %}
+                                    class="default_box">
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <label class="mx-0 p-0" for="reduction__{{day_time}}__{{client.id}}">Réduction</label>
+                                <label class="mx-0 p-0" for="reduction__{{day_time}}__{{command_id}}__{{client.id}}">Réduction /u</label>
                                 <input
-                                   type="number"
-                                   min=0
-                                   step=0.05
-                                   id="reduction__{{day_time}}__{{client.id}}"
-                                   name="reduction__{{day_time}}__{{client.id}}"
-                                   value="0"
-                                   style="width:{{width_cells}}px;"
-                                   class="default_box">
+                                    type="number"
+                                    min="0"
+                                    step="0.05"
+                                    id="reduction__{{day_time}}__{{command_id}}__{{client.id}}"
+                                    name="reduction__{{day_time}}__{{command_id}}__{{client.id}}"
+                                    value="{{command_opts.reduction|tofloat}}"
+                                    style="width:{{width_cells}}px;"
+                                    class="default_box">
                             </td>
                         </tr>
                     </tbody>

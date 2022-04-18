@@ -119,30 +119,28 @@
     {% regroup clients by circuit as client_list %}
       {% for circuit, clients_by_circuit in client_list %}
         <table class="responsive-table-input-matrix table table-hover board-ordered" id="table-{{forloop.counter0}}">
-          {% if forloop.counter0 == 0 %}
-            <thead class="table-dark">
+          
+            <thead class="table-dark" {% if forloop.counter0 > 0 %} style="visibility:collapse;"{% endif %}>
                 <tr>
                     <th>#</th>
                     <th>#</th>
                     <th>Nom</th>
                     <th>Prénom</th>
                     {% with foodcategories as foodcategories %}
-                    {% for food in foods %}
+                    {% for food in formDefaultCommand %}
                         <th class="verticalTableHeader">
-                            {% with food.category as category %}
-                                    {{ foodcategories|index:forloop.counter0|index:1 }}
-                            {% endwith %}
+                                    {{ food.default.category }}
                         </th>
                         {% endfor %}
                     {% endwith %}
                     <th>Tournée</th>
-                    <th>Montant</th>
                     <th>€/u</th>
                     <th>Nb. Repas</th>
+                    <th>€ ce mois</th>
                     <th>Export</th>
                 </tr>
             </thead>
-          {% endif %}
+          
           <tbody class="overflow-auto">
             {% ifchanged clients_by_circuit.circuit %}
               {% if forloop.counter0 != 0 %}
@@ -154,15 +152,16 @@
             {% endifchanged %}
           {% for client in clients_by_circuit %}
             <tr style="background-color: ; margin-bottom:1rem; background-color:{{gradients|get_value:circuit.id}}">
-                <td class="draggable draggable-grip">
+                <td style="vertical-align: middle;" class="draggable draggable-grip">
                 </td>
-                <td><input class="order_clients" type="text" name="order__{{client.id}}" id="order__{{client.id}}" value="{{forloop.counter0}}"/></td>
-                <td><input type="text" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></td>
-                <td><input type="text" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/></td>
+                <td style="vertical-align: middle;"><input class="order_clients" type="text" name="order__{{client.id}}" id="order__{{client.id}}" value="{{forloop.counter0}}"/></td>
+                <td style="vertical-align: middle;"><input type="text" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></td>
+                <td style="vertical-align: middle;"><input type="text" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/></td>
                 {% for default in formDefaultCommand %}
                     <td style="-webkit-writing-mode: vertical-lr;">
                         <input
                             type="checkbox"
+                            style="transform: scale(2); vertical-align: sub;"
                             id="_meals__{{default.id}}__{{client.id}}"
                             name="_meals__{{default.id}}__{{client.id}}"
                         {% for box_client in client.client_command.all %}
@@ -173,16 +172,34 @@
                             class="default_box">
                     </td>
                 {% endfor %}
-                <td>
+                <td style="vertical-align: middle;">
                     <select name="circuit_id__{{client.id}}" id="circuit_id__{{client.id}}">
-                        {% for circuit in formCircuit %}
-                            <option value="{{ circuit.id.value }}" {% if circuit.id.value == client.circuit.id %}selected="selected"{% endif %}> {{ circuit.name.value }} </option>
+                        {% for circuit in circuits %}
+                            <option value="{{ circuit.id }}" {% if circuit.id == client.circuit.id %}selected="selected"{% endif %}> {{ circuit.name }} </option>
                         {% endfor %}
                     </select>
                 </td>
-                <td>SOMME</td>
-                <td>€/u</td>
-                <td>Nb repas</td>
+                <td style="vertical-align: middle;">
+                  {% if client.client_command.all|make_unit_price %}
+                    {{client.client_command.all|make_unit_price}}
+                  {% else %}
+                    0
+                  {% endif %}
+                </td>
+                {% with actual_day as day %}
+                {% with day|day as this_day %}
+                {% with day|month as this_month %}
+                {% with day|year as this_year %}
+                <td style="vertical-align: middle;">
+                  {{actual_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_meals_this_month}}
+                </td>
+                <td style="vertical-align: middle;">
+                  {{actual_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_price_this_month}}
+                </td>
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
+                {% endwith %}
                 <td><button
                   class="btn btn-warning align-content-center mx-3"
                   type="button">

@@ -6,7 +6,7 @@
     <button
     class="btn btn-info align-content-center mx-3 food-add-btn"
     type="button"
-    id="createClient"
+    id="createFood"
     >
     Ajouter
   </button>
@@ -19,30 +19,20 @@
     </tr>
 </thead>
 <tbody class="overflow-auto">
-    {% comment %} <tr>
-        <td><p>{{food.name}}</td>
-        <td>
-            <select name="food_{{food.id}}" id="food-select_{{food.id}}">
-                {% for category in foodcategories %}
-                    <option value="{{ category.0 }}" {% if food.id|striptags == category.0|striptags %}selected="selected"{% endif %}> {{ category }} </option>
-                {% endfor %}
-            </select>
-        </td>
-        <td><input type="text" name="food_{{food.id.value}}" id="food_id_{{food.id.value}}" value="{{food.price}}"/></td>
-     </tr> {% endcomment %}
     {% with foodcategories as foodcategories %}
-    {% for food in foods %}
+    {% for food in formDefaultCommand %}
         <tr>
-            {% with food.price as price %}
-            {% with food.category as category %}
+            {% with food.id as price %}
+            {% with food.default as id_food %}
 
             <td>
                 <input
                     type="text"
                     min=0
-                    id="category"
-                    name="category"
-                    value={{ foodcategories|index:forloop.counter0|index:1 }}
+                    id="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                    name="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                    {% comment %} value={{ foodcategories|index:forloop.counter0|index:1 }} {% endcomment %}
+                    value={{ formDefaultCommand|query_from_id_get_name:food.id }}
                     style="width:{{width_cells}}px;"
                     class="default_box">
             </td>
@@ -51,17 +41,16 @@
                     type="number"
                     min=0
                     step=0.05
-                    id="price"
-                    name="price"
-                    value={{price}}
+                    id="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                    name="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                    value={{formDefaultCommand|query_from_id_get_price:food.id}}
                     style="width:{{width_cells}}px;"
                     class="default_box">
             </td>
-
             {% endwith %}
             {% endwith %}
-
+            
         </tr>
-    {% endfor %}
+        {% endfor %}
     {% endwith %}
 </table>

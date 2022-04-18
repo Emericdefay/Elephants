@@ -8,31 +8,31 @@ from .choices import FoodCategory, CommandTimes
 class Food(models.Model):
     """_summary_
     """
+    category = models.CharField(max_length=200)
     price = models.CharField(verbose_name=("Prix"), max_length=100, blank=False, null=False)
-    category = models.CharField(max_length=2, choices=FoodCategory.choices, db_index=True)
 
     def __str__(self):
-        return f"{self.category}: {FoodCategory(self.category).label}"
+        return f"{self.pk}: {self.category}"
 
 
 class DefaultCommand(models.Model):
-    default = models.CharField(max_length=10, choices=FoodCategory.choices, verbose_name=("Plats réguliers"), blank=False, null=False)
+    default = models.ForeignKey(Food, on_delete=models.CASCADE, verbose_name=("Plats réguliers"), blank=False, null=False)
 
     def __str__(self):
         for name, member in FoodCategory.__members__.items():
             if member == self.default:
-                return name
-        return self.default
+                return f"{self.pk} - {name}"
+        return f"{self.id} - {self.default}"
 
 
 class Circuit(models.Model):
     """_summary_
     """
     name = models.CharField(verbose_name=("Nom de la tournée"), max_length=200, blank=False, null=False)
-    description = models.CharField(verbose_name=("Description de la tournée"), max_length=200, blank=True, null=True)
+    description_c = models.CharField(verbose_name=("Description de la tournée"), max_length=200, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.pk}-{self.name}"
 
 
 class Client(models.Model):

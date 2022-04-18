@@ -21,9 +21,11 @@ from django.views import View
 from django.views.generic import TemplateView, DetailView, UpdateView, CreateView
 from django.views.generic.dates import timezone_today
 from django.shortcuts import render
+
 # app libs
 from .models import Food, Client, Circuit, Command, DefaultCommand, FoodCategory, WeekRange
 from .forms import ClientForm, CircuitForm, DefaultCommandForm, CommandForm, FoodForm
+from . import forms
 from .serializers import ClientSerializer, CommandSerializer
 from django.utils import translation
 from django.utils.translation import gettext as _
@@ -68,21 +70,120 @@ class UpdateHomeView(View):
             for food in DefaultCommand.objects.filter(id__in=values_by_id[id_]):
                 Client.objects.get(id=id_).client_command.add(food)
 
+    def synth_planning(self, save):
+        """ PLANNING INFO """
+        targets = ['meals', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets:
+                key_values.update({key: value})
+        # print(key_values)
+        # detect id
+        ids = set()
+        for i in key_values.keys():
+            ids.add(i.split('__')[-1])
+        # print(ids)
+        # regroup by id
+        values_by_id = dict()
+        values_by_id = {(key.split('__')[0], key.split('__')[1], key.split('__')[3]):value for key, value in key_values.items()}
+        # save
+        # print(values_by_id)
+        dict_list_food = dict()
+        for key, value in values_by_id.items():
+            dict_list_food[key[-1]] = []
+        for key, value in values_by_id.items():
+            dict_list_food[key[-1]].append(int(key[1]))
+        ids_meals = [food.id for food in DefaultCommand.objects.all()]
+        for key, value in dict_list_food.items():
+            for food in DefaultCommand.objects.all():
+                command = Command.objects\
+                    .get(
+                    id=key
+                    )
+                command.meals.remove(food)
+            for food in DefaultCommand.objects.filter(id__in=value):
+                Command.objects\
+                    .get(
+                    id=key
+                    )\
+                    .meals.add(
+                        food
+                    )
+        targets = ['command', 'free', 'reduction', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets:
+                key_values.update({key: value})
+        # print(key_values)
+        # detect id
+        ids = set()
+        for i in key_values.keys():
+            ids.add(i.split('__')[-1])
+        # print(ids)
+        # regroup by id
+        values_by_id_2 = dict()
+        values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
+
+        # save           
+        for key, value in values_by_id_2.items():
+            command_id = key[-1]
+            variable = key[0] if key[0] != 'command' else 'command_command'
+            up = {variable:value}
+            try:
+                command = Command.objects\
+                                    .get(
+                                        id=command_id,
+                                    )
+
+                command.command_command = value
+                command.reduction = value
+                command.free = True if variable == 'free' else False
+                command.save(update_fields=[variable])
+            except ValueError as e:
+                pass
+
+        # checks
+    def synth_food(self, save):
+        """ INFO CLIENT """
+        targets = ['price', 'category', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
+                key_values.update({key: value})
+        print(key_values)
+        # detect id
+        ids = set()
+        for i in key_values.keys():
+            ids.add(i.split('__')[1])
+        print(ids)
+        # # regroup by id
+        values_by_id = dict()
+        for id_ in ids:
+            values_by_id[id_] = dict()
+
+        for id_ in ids:
+            for key, value in key_values.items():
+                if key.split('__')[1]==id_:
+                    values_by_id[id_].update({key.split('__')[0]: value})
+        print(values_by_id)
+        # save
+        for food_id, kwargs in values_by_id.items():
+            Food.objects.filter(id=food_id).update(**kwargs)
+
+
     def post(self, request, *args, **kwargs):
         """_summary_
         """
         save = self.request._post
         save2 = self.request.__dict__
         form = request.POST.get('')
-        print("---------------")
-        for key, values in save.items():
-            #print(f"{key} : {values}")
-            pass
-        print("---------------")
-        # save client /1
-        self.synth_client(save)
-        print("---------------")
 
+        # save client
+        self.synth_client(save)
+        # save planning
+        self.synth_planning(save)
+        # save food
+        self.synth_food(save)
         # Clients
         # last_name
         # first_name
@@ -135,7 +236,9 @@ class HomeView(TemplateView, UpdateView):
             'gradients': gradients_colors,
             'defaultcommands': (defaultcommands),
             'week_range': week_range,
-            'new_client': ClientForm()
+            'new_client': ClientForm(),
+            'new_food': FoodForm(),
+            'new_circuit': CircuitForm(),
         }
         return form
 
@@ -146,17 +249,26 @@ class HomeView(TemplateView, UpdateView):
         return [_(datetime(context['year'], context['month'], day).strftime("%A")) for day in context['days']]
 
     def get_context_data(self, **kwargs):
+
         context = super().get_context_data(**kwargs)
         form = self.get_form()
         context['formClient'] = form['clients']
         context['formCircuit'] = form['circuits']
-        context['formDefaultCommand'] = form['defaultcommands']
         context['gradients'] = form['gradients']
         context['year'] = kwargs['year'] if 'year' in kwargs else datetime.now().year
         context['month'] = kwargs['month'] if 'month' in kwargs else datetime.now().month
         context['days'] = list(range(1, 20))#monthrange(context['year'], context['month'])[1] + 1))
         context['days_name'] = self.date_customerprofile(context)
-        context['foods'] = form['foods']
+        context['foods'] = Food.objects.all()
+        # realign foods with defaultfood
+        for food in Food.objects.all():
+            DefaultCommand.objects.get_or_create(
+                id=food.id,
+                default=food,
+            )
+
+        context['foods_edit'] = Food.objects.all()
+        context['formDefaultCommand'] = form['defaultcommands']
         context['foodcategories'] = form['foodcategories']
         circuits = Circuit.objects.all().order_by('name')
         context['circuits'] = circuits
@@ -168,6 +280,13 @@ class HomeView(TemplateView, UpdateView):
             kwargs['day'] if 'day' in kwargs else datetime.now().day,
             ).isocalendar()[1]
         context['actual_year'] = kwargs['year'] if 'year' in kwargs else datetime.now().year
+
+        context['actual_day'] = datetime_.date(
+            kwargs['year'] if 'year' in kwargs else datetime.now().year,
+            kwargs['month'] if 'month' in kwargs else datetime.now().month,
+            kwargs['day'] if 'day' in kwargs else datetime.now().day,
+            )
+
 
         existing_clients = Client.objects.all()
 
@@ -256,6 +375,10 @@ class HomeView(TemplateView, UpdateView):
                 )
 
         context['new_client'] = form['new_client']
+        context['new_food'] = form['new_food']
+        context['new_circuit'] = form['new_circuit']
+
+
 
         return context
 
@@ -278,5 +401,19 @@ class AddNewClient(CreateView):
     fields = [
         'first_name','last_name','address',
 	    'cellphone','description', 'circuit'
+        ]
+    success_url = reverse_lazy('manager:index')
+
+class AddNewFood(CreateView):
+    model = Food
+    fields = [
+        'category', 'price'
+        ]
+    success_url = reverse_lazy('manager:index')
+
+class AddNewCircuit(CreateView):
+    model = Circuit
+    fields = [
+        'name', 'description_c',
         ]
     success_url = reverse_lazy('manager:index')

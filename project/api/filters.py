@@ -15,9 +15,8 @@ class DayByDayCommandFilter(filters.FilterSet):
     )
     year_date_command = filters.NumberFilter(
         label="year",
-        
     )
-    circuit = filters.ModelChoiceFilter(
+    circuit_id = filters.ModelChoiceFilter(
         label="circuit",
         queryset=Circuit.objects.all(),
     )
@@ -29,5 +28,5 @@ class DayByDayCommandFilter(filters.FilterSet):
             'day_date_command',
             'month_date_command',
             'year_date_command',
-            'circuit',
+            'circuit_id',
         ]

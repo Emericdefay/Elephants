@@ -1,23 +1,9 @@
 {% load static humanize index %}
 
-
 <div class="text-center">
-              
-    <label for="last_name_">Nom</label>
-    <input type="text" name="last_name_" id="id_last_name" value=""/><br>
-
-<div>
-        <label for="circuit-select_{{client.id.value}}">Nom</label>
-        <select name="circuit_{{client.id.value}}" id="circuit-select_{{client.id.value}}">
-            {% for circuit in formCircuit %}
-                <option value="{{ circuit.id.value }}" {% if circuit.id.value == client.circuit.value %}selected="selected"{% endif %}> {{ circuit.name.value }} </option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
+        {{ new_circuit.as_p }}
         <button class="btn btn-primary align-content-center mx-3"
                 type="submit">
-            Enregistrer
-        </button></div>
-
+                Créer
+        </button>
 </div>

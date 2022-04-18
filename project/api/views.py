@@ -17,13 +17,17 @@ class DayByDayCommand(mixins.ListModelMixin, viewsets.GenericViewSet):
     filter_backends = [DjangoFilterBackend, ]
     filterset_class = filters.DayByDayCommandFilter
     serializer_class = serializers.DayByDayCommandSerializer
-    queryset = models.Command.objects.none()
 
     def get_queryset(self):
         # get non expired ads
-        qs = models.Command.objects.all()
+        qs = models.Command.objects.filter(
+            client__circuit_id=self.request._request.GET.get('circuit'),
+            day_date_command=self.request._request.GET.get('day_date_command'),
+            month_date_command=self.request._request.GET.get('month_date_command'),
+            year_date_command=self.request._request.GET.get('year_date_command'),
+            )
+        return qs
 
-        return qs.distinct().order_by('circuit')
 
 # Create your views here.
 class DayByDayCommandTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -35,9 +39,14 @@ class DayByDayCommandTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     def get_queryset(self):
         # get non expired ads
-        qs = models.Command.objects.all()
+        qs = models.Command.objects.filter(
+            client__circuit_id=self.request._request.GET.get('circuit'),
+            day_date_command=self.request._request.GET.get('day_date_command'),
+            month_date_command=self.request._request.GET.get('month_date_command'),
+            year_date_command=self.request._request.GET.get('year_date_command'),
+            )
 
-        return qs.distinct().order_by('circuit')
+        return qs
 
 # Create your views here.
 class DayByDayCircuitTotal(mixins.ListModelMixin, viewsets.GenericViewSet):

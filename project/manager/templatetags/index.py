@@ -2,7 +2,10 @@ from django import template
 import random
 import locale
 from ..models import Food, Client, Circuit, Command, DefaultCommand, FoodCategory, WeekRange
-from django.db.models import Q, Sum, Prefetch
+from django.db.models import Q, Sum, Prefetch, F, Avg, Case, When, Value
+from django.db.models import FloatField
+from decimal import Decimal
+from django.db.models.functions import Round
 from django.utils.translation import gettext as _
 from datetime import timedelta, datetime
 import isoweek
@@ -13,6 +16,10 @@ register = template.Library()
 @register.filter
 def index1(indexable, i):
     return indexable[i-1]
+
+@register.filter
+def tofloat(str_nbr):
+    return str(str_nbr).replace(',', '.')
 
 @register.filter
 def index(indexable, i):
@@ -118,7 +125,10 @@ def test(obj):
 
 @register.filter
 def make_query(obj):
-    return obj.__class__.objects.all()
+    try:
+        return obj.__class__.objects.all()
+    except AttributeError:
+        return obj
 
 @register.filter
 def make_query_all(obj):
@@ -138,12 +148,47 @@ def query_filter_year_date_command(obj, f):
 
 @register.filter
 def query_filter_client__circuit(obj, f):
-    return obj.filter(client__circuit=f)
+    print(
+        obj
+        )
+    print(f)
+    return obj.filter(client__circuit_id=f)
+
+@register.filter
+def query_filter_client_id(obj, f):
+    return obj.filter(client__id=f)
 
 @register.filter
 def query_filter_command_passed(obj):
-    print(obj)
     return obj.filter(command_command__gt=0)
+
+@register.filter
+def query_command_id(obj, id_):
+    return obj.filter(id=id_)
+
+@register.filter
+def make_unit_price(obj):
+    return Food.objects.filter(id__in=obj.all().values_list('default', flat=True)).aggregate(sum=Round(Sum(F('price')), 2))['sum']
+
+@register.filter
+def query_from_id_get_name(obj, id_):
+    return Food.objects.get(pk=obj.get(id=id_).pk).category
+
+@register.filter
+def query_from_id_get_default_id(obj, id_):
+    return Food.objects.get(pk=obj.get(id=id_).pk).pk
+
+@register.filter
+def query_from_id_get_price(obj, id_):
+    return (Food.objects.get(pk=obj.get(id=id_).pk).price)
+
+@register.filter
+def query_food_id(obj, n):
+    return obj.get(default=n).pk
+
+@register.filter
+def query_command_food(obj, f):
+    return obj.filter(meals=f).count()
 
 @register.filter
 def query_id(obj, i):
@@ -153,6 +198,27 @@ def query_id(obj, i):
 def query_count(obj):
     return obj.count()
 
+@register.filter
+def query_sum_meals_this_month(obj):
+    return obj.aggregate(sum=Sum(F('command_command')))['sum']
+
+@register.filter
+def query_command_is_free(obj):
+    return obj.free
+
+@register.filter
+def query_command_reduction(obj):
+    return obj.reduction
+
+@register.filter
+def query_sum_price_this_month(obj):
+    return obj.aggregate(sum=Sum(
+                                (F('meals__default__price')-F('reduction')) * F('command_command') * Case(When(free=True, then=Value(0)), default=Value(1)),
+                                
+                                output_field=FloatField(),
+                                )
+                       )['sum']
+
 
 @register.filter
 def query_sum_morning(obj, f):
@@ -161,7 +227,7 @@ def query_sum_morning(obj, f):
     if clients_per_circuit :
         sum_food = 0
         for client in clients_per_circuit:
-            sum_food += client.command_command*DefaultCommand.objects.filter(meals__id=client.id).filter(default=f.category).count()
+            sum_food += client.command_command*DefaultCommand.objects.filter(meals__id=client.id).filter(default=f).count()
         return sum_food
     else:
         return 0

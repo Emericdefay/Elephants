@@ -198,7 +198,6 @@
                                         </p>
                                     </div>
                                     <div class="tab-pane fade" id="circuit" role="tabpanel" aria-labelledby="circuit-tab">
-                                        VISION PLANNING > Nombre de plats par client > Nombre de plats totaux par tournée > | + ajouter tournée | Attribuer nom à la tournée | Exporter planning?
                                         <p>
                                             {% include "manager/circuits/circuits.html" %}
                                         </p>
@@ -242,7 +241,10 @@
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-body" id="circuit-modal-body">
-                        {% include "manager/circuits/circuits_form.html" %}
+                        <form action="{% url 'manager:new_circuit' %}" method="post" id="new_circuit">
+                            {% csrf_token %}
+                            {% include "manager/circuits/circuits_form.html" %}
+                        </form>
                     </div>
                 </div>
             </div>
@@ -256,7 +258,10 @@
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-body" id="food-modal-body">
-                        {% include "manager/food/food_form.html" %}
+                        <form action="{% url 'manager:new_food' %}" method="post" id="new_food">
+                            {% csrf_token %}
+                            {% include "manager/food/food_form.html" %}
+                        </form>
                     </div>
                 </div>
             </div>
@@ -274,15 +279,11 @@
                             <thead class="overflow-auto table-dark">
                                 <tr>
                                     <th>Sujet</th>
-                                    {% with foodcategories as foodcategories %}
-                                    {% for food in foods %}
+                                    {% for food in formDefaultCommand %}
                                         <th class="verticalTableHeader">
-                                            {% with food.category as category %}
-                                                    {{ foodcategories|index:forloop.counter0|index:1 }}
-                                            {% endwith %}
+                                            {{ food.default.category }}
                                         </th>
-                                        {% endfor %}
-                                    {% endwith %}
+                                    {% endfor %}
                                 </tr>
                             </thead>
                             <tbody id="feedme">

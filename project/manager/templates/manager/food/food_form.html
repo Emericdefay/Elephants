@@ -1,18 +1,9 @@
 {% load static humanize index %}
 
-
 <div class="text-center">
-<pre>
-              
-    <label for="last_name_">Catégorie</label>
-    <input type="text" name="last_name_" id="id_last_name" value=""/><br>
-    <label for="first_name_">Prix</label>
-    <input type="number" step=0.05 name="first_name_" id="id_first_name" value="1"/><br>
-</pre>
-    <div>
+        {{ new_food.as_p }}
         <button class="btn btn-primary align-content-center mx-3"
                 type="submit">
-            Enregistrer
-        </button></div>
-
+                Créer
+        </button>
 </div>

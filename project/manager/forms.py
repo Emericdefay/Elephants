@@ -6,15 +6,18 @@ from django.utils.safestring import mark_safe
 from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.db import models
-
+from . import models
 
 
 			
-class FoodForm(forms.Form):
+class FoodForm(forms.ModelForm):
 	"""Surcharge the class Food to put place holder
 	and remove help_text."""
-	price = forms.Field(label="food_price"),
-	category = forms.Field(label="food_category"),
+	category = forms.Field(label="Nom du plat", ),
+	price = forms.Field(label="Prix", ),
+	class Meta:
+		model = Food
+		fields = ['category', 'price']
 
 
 class ClientForm(forms.ModelForm):
@@ -44,18 +47,18 @@ class DefaultCommandForm(forms.ModelForm):
 
 	class Meta:
 		model= DefaultCommand
-		fields = ['default']
+		fields = ['default', ]
 
-			
+
 class CircuitForm(forms.ModelForm):
 	"""Surcharge the class Circuit to put place holder
 	and remove help_text."""
-	id = forms.Field(label="", widget=forms.TextInput(attrs={'class': 'invisible'}))
-	name = forms.Field(label="", )
+	name = forms.Field(label="Nom de la tournée", )
+	description_c = forms.Field(label="Description de la tournée", )
 
 	class Meta:
 		model = Circuit
-		fields = ['id', 'name']
+		fields = ['name', 'description_c', ]
 
 
 class CommandForm(forms.ModelForm):

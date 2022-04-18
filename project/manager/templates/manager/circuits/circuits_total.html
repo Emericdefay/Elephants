@@ -12,11 +12,9 @@
             <th></th>
             <th>Nb Clients</th>
             {% with foodcategories as foodcategories %}
-            {% for food in foods %}
+            {% for food in formDefaultCommand %}
                 <th class="verticalTableHeader">
-                    {% with food.category as category %}
-                            {{ foodcategories|index:forloop.counter0|index:1 }}
-                    {% endwith %}
+                    {{food.default.category}}
                 </th>
                 {% endfor %}
             {% endwith %}

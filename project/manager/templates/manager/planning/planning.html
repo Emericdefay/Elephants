@@ -89,9 +89,9 @@
                     {% with command_list|get:forloop.counter0 as command_client %}
                     {% with command_list|get:forloop.counter as command_client_2 %}
                         <td class="meals" style="min-width:{{width_cells}}px; vertical-align: middle;">
-                            {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd day_time_command=command_client.command_command default_command=client.client_command %}
+                            {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd command_id=command_client.id day_time_command=command_client.command_command default_command=client.client_command command_opts=command_client %}
                             {% if day|day_name|firsts:3 != 'lun' %}
-                                {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd_plus_one day_time_command=command_client_2.command_command default_command=client.client_command %}
+                                {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd_plus_one command_id=command_client_2.id day_time_command=command_client_2.command_command default_command=client.client_command command_opts=command_client_2 %}
                             {% endif %}
                             <input
                                type="number"
