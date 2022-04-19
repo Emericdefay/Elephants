@@ -35,9 +35,6 @@
     <thead class="overflow-auto table-dark">
         <tr>
             <th style="width:5%;">Nom</th>
-            <th style="width:5%;">Total</th>
-            <th style="width:5%;">€/u</th>
-            <th style="width:5%;">Nb.<br>Repas</th>
 
             {% for day in range_dates %}
                 {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
@@ -81,9 +78,6 @@
                 ;">
                 
             <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>{{client.last_name}}<br>{{client.first_name}}</strong></td>
-            <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>Total</strong></td>
-            <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>Prix U</strong></td>
-            <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>Nb. Repas</strong></td>
             {% for day in range_dates %}
                 {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
                     {% with command_list|get:forloop.counter0 as command_client %}

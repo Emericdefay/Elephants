@@ -148,10 +148,6 @@ def query_filter_year_date_command(obj, f):
 
 @register.filter
 def query_filter_client__circuit(obj, f):
-    print(
-        obj
-        )
-    print(f)
     return obj.filter(client__circuit_id=f)
 
 @register.filter
@@ -164,7 +160,10 @@ def query_filter_command_passed(obj):
 
 @register.filter
 def query_command_id(obj, id_):
-    return obj.filter(id=id_)
+    try:
+        return obj.filter(id=id_)
+    except ValueError:
+        return obj
 
 @register.filter
 def make_unit_price(obj):

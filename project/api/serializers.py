@@ -8,11 +8,12 @@ from django.utils.safestring import mark_safe
 from rest_framework import serializers
 
 from project.manager.choices import CommandTimes
-from project.manager.models import Command, Food, WeekRange, Client, DefaultCommand
+from project.manager.models import Command, Food, WeekRange, Client, DefaultCommand, Circuit
 
 
 class DayByDayCommandSerializer(serializers.ModelSerializer):
     html = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
 
     def get_html(self, obj):
         data = render_to_string(template_name='circuit_modal.html',
@@ -22,11 +23,15 @@ class DayByDayCommandSerializer(serializers.ModelSerializer):
                                     'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)
+    
+    def get_title(self, obj):
+        return Circuit.objects.get(id=self.context['request']._request.GET.get('circuit')).name
 
     class Meta:
         model = Command
         fields = (
             'html',
+            'title',
         )
 
 class DayByDayCommandTotalSerializer(serializers.ModelSerializer):
@@ -55,6 +60,7 @@ class DayByDayCommandTotalSerializer(serializers.ModelSerializer):
 class DayByDayCircuitSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
     html = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
 
     def get_id(self, obj):
         return f'total-circuit-{obj.circuit.id}'
@@ -67,10 +73,14 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
                                     'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)
+    
+    def get_title(self, obj):
+        return "Récapitulatif"
 
     class Meta:
         model = Command
         fields = (
             'html',
             'id',
+            'title',
         )

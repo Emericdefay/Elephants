@@ -8,7 +8,7 @@ from .choices import FoodCategory, CommandTimes
 class Food(models.Model):
     """_summary_
     """
-    category = models.CharField(max_length=200)
+    category = models.CharField(verbose_name=('Catégorie'), max_length=200)
     price = models.CharField(verbose_name=("Prix"), max_length=100, blank=False, null=False)
 
     def __str__(self):

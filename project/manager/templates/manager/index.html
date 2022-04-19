@@ -19,6 +19,7 @@
 
         <script src="{% static 'js/navbar.js' %}"></script>
         <script src="{% static 'js/getModal.js' %}"></script>
+        <script src="{% static 'js/tableClient.js' %}"></script>
         <script>
             $(window).on('load', function () {
                 const my_element = document.getElementById("week_{{actual_year}}_{{actual_week}}");
@@ -275,10 +276,13 @@
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content" id="loading-text">
                     <div class="modal-body text-center" id="unique-modal-body">
+                        <h1 id="titleCircuit">Circuit</h1>
                         <table class="responsive-table-input-matrix table table-hover">
                             <thead class="overflow-auto table-dark">
                                 <tr>
-                                    <th>Sujet</th>
+                                    <th>Client</th>
+                                    <th>Adresse</th>
+                                    <th>Telephone</th>
                                     {% for food in formDefaultCommand %}
                                         <th class="verticalTableHeader">
                                             {{ food.default.category }}
@@ -291,6 +295,42 @@
                         </table>
                     </div>
                     <div class="modal-footer justify-content-center" id="unique-modal-footer">
+                        {% comment %} <button class="btn btn-primary">
+                            Envoyer
+                        </button> {% endcomment %}
+                        <button class="btn btn-secondary" onclick="PrintElem('unique-modal-body');">
+                            Imprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade"
+             id="unique-modal-total"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content" id="loading-text-total">
+                    <div class="modal-body text-center" id="unique-modal-body-total">
+                        <h1 id="titleCircuitTotal">Circuit</h1>
+                        <table class="responsive-table-input-matrix table table-hover">
+                            <thead class="overflow-auto table-dark">
+                                <tr>
+                                    <th>Tournée</th>
+                                    {% for food in formDefaultCommand %}
+                                        <th class="verticalTableHeader">
+                                            {{ food.default.category }}
+                                        </th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody id="feedmeTotal">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer justify-content-center" id="unique-modal-footer-total">
                         {% comment %} <button class="btn btn-primary">
                             Envoyer
                         </button> {% endcomment %}

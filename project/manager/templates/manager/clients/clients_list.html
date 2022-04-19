@@ -105,6 +105,21 @@
   }
 </style>
 
+<style>
+
+
+  
+  #resizable {
+    resize: horizontal;
+    overflow: auto;
+    min-width: -webkit-fill-available;
+    display: block;
+  
+  }
+  
+
+</style>
+
 
     <h3>
         Clients
@@ -125,7 +140,8 @@
                     <th>#</th>
                     <th>#</th>
                     <th>Nom</th>
-                    <th>Prénom</th>
+                    <th {% if forloop.counter0 == 0 %}id="resizable"{% else %}class="follow-resizing d-block"{% endif %}>Adresse</th>
+                    <th {% if forloop.counter0 == 0 %}id="reference_height"{% endif %}>Tel</th>
                     {% with foodcategories as foodcategories %}
                     {% for food in formDefaultCommand %}
                         <th class="verticalTableHeader">
@@ -155,8 +171,12 @@
                 <td style="vertical-align: middle;" class="draggable draggable-grip">
                 </td>
                 <td style="vertical-align: middle;"><input class="order_clients" type="text" name="order__{{client.id}}" id="order__{{client.id}}" value="{{forloop.counter0}}"/></td>
-                <td style="vertical-align: middle;"><input type="text" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></td>
-                <td style="vertical-align: middle;"><input type="text" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/></td>
+                <td style="vertical-align: middle;">
+                  <input type="text" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></br>
+                  <input type="text" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/>
+                </td>
+                <td style="vertical-align: middle;"><input type="text" style="inline-size: -webkit-fill-available;" name="address__{{client.id}}" id="address__{{client.id}}" value="{{client.address}}"/></td>
+                <td style="vertical-align: middle;"><input type="text" name="cellphone__{{client.id}}" id="cellphone__{{client.id}}" value="{{client.cellphone}}"/></td>
                 {% for default in formDefaultCommand %}
                     <td style="-webkit-writing-mode: vertical-lr;">
                         <input

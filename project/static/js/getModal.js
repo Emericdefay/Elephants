@@ -16,6 +16,7 @@ function openClientModal () {
 function openAdModal () {
     // show modal
     $('#feedme').empty();
+    $('#feedmeTotal').empty();
     $('#unique-modal').modal('show');
   }
   
@@ -25,6 +26,25 @@ function openAdModal () {
     $('#unique-modal').modal('hide').on('shown.bs.modal', () => {
       $('#unique-modal').modal('show');
       $('#feedme').empty();
+      $('#feedmeTotal').empty();
+    });
+  }
+
+// show the modal for single ads
+function openAdTotalModal () {
+    // show modal
+    $('#feedme').empty();
+    $('#feedmeTotal').empty();
+    $('#unique-modal-total').modal('show');
+  }
+  
+  // close the modal for single ads
+  function hideAdTotalModal () {
+    // hide modal
+    $('#unique-modal-total').modal('hide').on('shown.bs.modal', () => {
+      $('#unique-modal-total').modal('show');
+      $('#feedme').empty();
+      $('#feedmeTotal').empty();
     });
   }
 
@@ -94,6 +114,7 @@ function openFoodModal () {
         beforeSend: () => {
         },
         success: data => {
+          $('#titleCircuit').text(data.results[0].title);
           data.results.forEach(function (row) {
             $('#feedme').append(row.html);
           })      
@@ -131,7 +152,7 @@ function openFoodModal () {
       const year = $(this).data('year');
       const url = 'http://127.0.0.1:8000/api';
       let urlAd = `${url}/circuit-total/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}&circuit=${circuit}`;
-      openAdModal();
+      openAdTotalModal();
       let arrayIds = new Set();
       $.ajax({
         url: urlAd,
@@ -140,8 +161,9 @@ function openFoodModal () {
         beforeSend: () => {
         },
         success: data => {
+          $('#titleCircuitTotal').text(data.results[0].title);
           data.results.forEach(function (row) {
-            $('#feedme').append(row.html);
+            $('#feedmeTotal').append(row.html);
             arrayIds.add(row.id);
           })
 
