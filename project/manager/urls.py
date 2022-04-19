@@ -13,4 +13,5 @@ urlpatterns = [
     path('new_client', views.AddNewClient.as_view(), name='new_client'),
     path('new_food', views.AddNewFood.as_view(), name='new_food'),
     path('new_circuit', views.AddNewCircuit.as_view(), name='new_circuit'),
+    path('facture', views.CreateExcel.as_view(), name='facture'),
 ]

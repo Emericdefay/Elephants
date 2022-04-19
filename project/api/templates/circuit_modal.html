@@ -6,17 +6,18 @@
     {% regroup actual_commands by client.circuit as client_list %}
     {% for circuit, command_list in client_list %}
     {% with command_list|get:forloop.counter0 as command_client %}
-    <td>
+    <td style="vertical-align: middle;">
         {{commands.client.last_name}}<br>{{commands.client.first_name}}
     </td>
-    <td>
-        {{commands.client.address}}
+    <td style="vertical-align: middle; overflow-wrap: anywhere; max-width:8em;">
+        {{commands.client.address}}<br>
+        {{commands.client.postcode}}
     </td>
-    <td>
+    <td style="vertical-align: middle;">
         {{commands.client.cellphone}}
     </td>
             {% for food in foods %}
-            <td>
+            <td style="vertical-align: middle;">
                 {% if commands %}
                 {{command_client|make_query|query_filter_day_date_command:commands.day_date_command|query_filter_month_date_command:commands.month_date_command|query_filter_year_date_command:commands.year_date_command|query_filter_client__circuit:commands.client.circuit|query_filter_command_passed|query_id:commands.client.id|query_sum_morning:food}}
                 {% endif %}

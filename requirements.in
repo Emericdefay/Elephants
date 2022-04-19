@@ -6,6 +6,7 @@ django-import-export
 pyexcel-xlsx
 python-dateutil
 isoweek
+openpyxl
 
 # dev
 pip-tools

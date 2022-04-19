@@ -12,7 +12,7 @@
         {% for circuit, command_list in client_list %}
         {% with command_list|get:forloop.counter0 as command_client %}
             {% for food in foods %}
-            <td>
+            <td style="vertical-align: middle;">
                 {% if commands %}
                 <strong>
                     {{command_client|make_query|query_filter_day_date_command:day|query_filter_month_date_command:month|query_filter_year_date_command:year|query_filter_client__circuit:commands.client.circuit|query_filter_command_passed|query_sum_morning:food}}

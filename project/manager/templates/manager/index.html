@@ -98,7 +98,10 @@
                 <button form="myform" class="btn btn-primary align-content-center mx-3" type="submit" style="width:120px; transform: translate(0px, 2px);">Enregistrer</button>
             </li>
             <li class="">
-                <button class="btn btn-secondary align-content-center mx-3" type="button" style="width:120px; transform: translate(0px, 2px);">Exporter</button>
+                <form action="{% url "manager:facture" %}" method="post" id="facture">
+                    {% csrf_token %}
+                    <button class="btn btn-secondary align-content-center mx-3" type="submit" href="{% url 'manager:facture' %}" style="width:120px; transform: translate(0px, 2px);">Exporter</button>
+                </form>
             </li>
 
         </ul>

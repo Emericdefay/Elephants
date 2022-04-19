@@ -43,6 +43,7 @@ class Client(models.Model):
     first_name = models.CharField(verbose_name=("Prénom"), max_length=100, blank=False, null=False)
     last_name = models.CharField(verbose_name=("Nom"), max_length=100, blank=False, null=False)
     address = models.CharField(verbose_name=("Adresse"), max_length=1000, blank=False, null=False)
+    postcode = models.CharField(verbose_name=("00000 Ville"), max_length=1000, blank=False, null=False)
     cellphone = models.CharField(verbose_name=("Telephone"), max_length=20, blank=True, null=True)
     description = models.TextField(verbose_name=("Description"), max_length=1000, blank=True, null=True)
     order =models.IntegerField(verbose_name=("Position de tournée"), default=0)

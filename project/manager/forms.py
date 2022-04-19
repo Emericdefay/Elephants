@@ -26,6 +26,7 @@ class ClientForm(forms.ModelForm):
 	first_name = forms.Field(label="Prénom", )
 	last_name = forms.Field(label="Nom", )
 	address = forms.Field(label="Adresse postale", )
+	postcode = forms.Field(label="00000 Ville", )
 	cellphone = forms.Field(label="Téléphone", )
 	description = forms.Field(label="Description", )
 	circuit = forms.ModelChoiceField(label='Tournée',empty_label=None, queryset=Circuit.objects.all(), widget=forms.Select)
@@ -34,7 +35,7 @@ class ClientForm(forms.ModelForm):
 
 	class Meta:
 		model = Client
-		fields = [ 'first_name', 'last_name', 'address', 'cellphone', 'description', 'circuit']
+		fields = [ 'first_name', 'last_name', 'address', 'postcode', 'cellphone', 'description', 'circuit']
 
 
 class DefaultCommandForm(forms.ModelForm):

@@ -141,6 +141,7 @@
                     <th>#</th>
                     <th>Nom</th>
                     <th {% if forloop.counter0 == 0 %}id="resizable"{% else %}class="follow-resizing d-block"{% endif %}>Adresse</th>
+                    <th>Ville</th>
                     <th {% if forloop.counter0 == 0 %}id="reference_height"{% endif %}>Tel</th>
                     {% with foodcategories as foodcategories %}
                     {% for food in formDefaultCommand %}
@@ -176,6 +177,7 @@
                   <input type="text" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/>
                 </td>
                 <td style="vertical-align: middle;"><input type="text" style="inline-size: -webkit-fill-available;" name="address__{{client.id}}" id="address__{{client.id}}" value="{{client.address}}"/></td>
+                <td style="vertical-align: middle;"><input type="text" style="inline-size: -webkit-fill-available;" name="postcode__{{client.id}}" id="postcode__{{client.id}}" value="{{client.postcode}}"/></td>
                 <td style="vertical-align: middle;"><input type="text" name="cellphone__{{client.id}}" id="cellphone__{{client.id}}" value="{{client.cellphone}}"/></td>
                 {% for default in formDefaultCommand %}
                     <td style="-webkit-writing-mode: vertical-lr;">

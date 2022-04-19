@@ -14,7 +14,7 @@ from django.core import serializers
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Q, OuterRef, Exists
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views import View
@@ -29,6 +29,8 @@ from . import forms
 from .serializers import ClientSerializer, CommandSerializer
 from django.utils import translation
 from django.utils.translation import gettext as _
+from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
 translation.activate('fr')
 
 
@@ -37,7 +39,7 @@ class UpdateHomeView(View):
 
     def synth_client(self, save):
         """ INFO CLIENT """
-        targets = ['order', 'last_name', 'first_name', 'circuit_id', ]
+        targets = ['order', 'last_name', 'first_name', 'circuit_id', 'address', 'postcode', 'cellphone']
         key_values = {}
         for key, value in save.items():
             if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
@@ -95,20 +97,21 @@ class UpdateHomeView(View):
             dict_list_food[key[-1]].append(int(key[1]))
         ids_meals = [food.id for food in DefaultCommand.objects.all()]
         for key, value in dict_list_food.items():
-            for food in DefaultCommand.objects.all():
-                command = Command.objects\
-                    .get(
-                    id=key
-                    )
-                command.meals.remove(food)
-            for food in DefaultCommand.objects.filter(id__in=value):
-                Command.objects\
-                    .get(
-                    id=key
-                    )\
-                    .meals.add(
-                        food
-                    )
+            if key:
+                for food in DefaultCommand.objects.all():
+                    command = Command.objects\
+                        .get(
+                        id=key
+                        )
+                    command.meals.remove(food)
+                for food in DefaultCommand.objects.filter(id__in=value):
+                    Command.objects\
+                        .get(
+                        id=key
+                        )\
+                        .meals.add(
+                            food
+                        )
         targets = ['command', 'free', 'reduction', ]
         key_values = {}
         for key, value in save.items():
@@ -123,7 +126,6 @@ class UpdateHomeView(View):
         # regroup by id
         values_by_id_2 = dict()
         values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
-
         # save           
         for key, value in values_by_id_2.items():
             command_id = key[-1]
@@ -134,7 +136,6 @@ class UpdateHomeView(View):
                                     .get(
                                         id=command_id,
                                     )
-
                 command.command_command = value
                 command.reduction = value
                 command.free = True if variable == 'free' else False
@@ -400,7 +401,7 @@ class AddNewClient(CreateView):
     model = Client
     fields = [
         'first_name','last_name','address',
-	    'cellphone','description', 'circuit'
+	    'cellphone','description', 'postcode', 'circuit'
         ]
     success_url = reverse_lazy('manager:index')
 
@@ -417,3 +418,50 @@ class AddNewCircuit(CreateView):
         'name', 'description_c',
         ]
     success_url = reverse_lazy('manager:index')
+
+
+class CreateExcel(View):
+
+    def init_sheet(self, sheet):
+
+        sheet['D12'] = "Chambéry, le"
+        sheet['E12'] = f"{datetime.now().day}-{datetime.now().month}{datetime.now().year}"
+        sheet['A21'] = "Facture N°"
+        sheet['B21'] = f"{datetime.now().month}"
+        sheet['B23'] = "Nombre de repas"
+        sheet['B25'] = "Prix unitaire ttc"
+        sheet['C28'] = "Total HT"
+        sheet['C29'] = "TVA 5.5%"
+        sheet['C31'] = "Total TTC"
+        sheet['B35'] = "Afin de toujours mieux répondre à vos attentes, nous mettons à"
+        sheet['B36'] = "votre disposition une ligne téléphonique dédiée à vos repas."
+        sheet['D38'] = "07 63 42 08 54"
+        sheet['D41'] = "SARL ELEPHANT"
+        sheet['D42'] = "1 Rue Claude Martin - 73000 CHAMBERY"
+        sheet['D43'] = "SIRET 45149094000017"
+
+
+        return sheet
+
+    def post(self, request, *args, **kwargs):
+        wb = Workbook()
+        month = kwargs.get('month', datetime.now().month)
+        year = kwargs.get('year', datetime.now().year)
+        print(month)
+        print(year)
+        clients = Client.objects.all().order_by('circuit')
+        commands = Command.objects.filter(year_date_command=year, month_date_command=month)
+
+        for client in clients:
+            wb.create_sheet(f"{client.last_name} {client.first_name}")
+            active_sheet = wb[f"{client.last_name} {client.first_name}"]
+            active_sheet = self.init_sheet(active_sheet)
+            active_sheet['E8'] = 'Mr Gelloz'
+            active_sheet['E9'] = '323 Rue de la Martinière'
+            active_sheet['E10'] = '73000 Bassens'
+
+
+        response = HttpResponse(content=save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="Factures_{month}_{year}.xlsx"'
+
+        return response

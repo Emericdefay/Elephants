@@ -47,6 +47,7 @@ class CustomClient(admin.ModelAdmin):
 		('first_name', {'fields': ['first_name']}),
 		('last_name', {'fields': ['last_name']}),
 		('address', {'fields': ['address']}),
+		('postcode', {'fields': ['postcode']}),
 		('cellphone', {'fields': ['cellphone']}),
 		('description', {'fields': ['description']}),
 		('order', {'fields': ['order']}),
