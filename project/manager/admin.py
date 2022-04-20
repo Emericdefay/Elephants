@@ -17,17 +17,6 @@ class CustomFood(admin.ModelAdmin):
 admin.site.register(Food, CustomFood)
 
 
-class CustomDefaultCommand(admin.ModelAdmin):
-	"""Allow to edit DefaultCommand informations"""
-	# list_display = ('', )
-	fieldsets = [
-		('default', {'fields': ['default']}),
-	]
-
-
-admin.site.register(DefaultCommand, CustomDefaultCommand)
-
-
 class CustomCircuit(admin.ModelAdmin):
 	"""Allow to edit Circuit informations"""
 	# list_display = ('', )
@@ -59,39 +48,6 @@ class CustomClient(admin.ModelAdmin):
 admin.site.register(Client, CustomClient)
 
 
-class CustomDay(admin.ModelAdmin):
-	"""Allow to edit Month informations"""
-	# list_display = ('', )
-	fieldsets = [
-		('date', {'fields': ['date']}),
-	]
-
-
-admin.site.register(Day, CustomDay)
-
-
-class CustomMonth(admin.ModelAdmin):
-	"""Allow to edit Year informations"""
-	# list_display = ('', )
-	fieldsets = [
-		('date', {'fields': ['date']}),
-	]
-
-
-admin.site.register(Month, CustomMonth)
-
-
-class CustomYear(admin.ModelAdmin):
-	"""Allow to edit MorningNumberCommand informations"""
-	# list_display = ('', )
-	fieldsets = [
-		('date', {'fields': ['date']}),
-	]
-
-
-admin.site.register(Year, CustomYear)
-
-
 class CustomCommand(admin.ModelAdmin):
 	"""Allow to edit Command informations"""
 	# list_display = ('', )
@@ -109,12 +65,3 @@ class CustomCommand(admin.ModelAdmin):
 	]
 
 admin.site.register(Command, CustomCommand)
-
-class CustomWeekRange(admin.ModelAdmin):
-	"""Allow to edit Command informations"""
-	# list_display = ('', )
-	fieldsets = [
-		('range', {'fields': ['range']}),
-	]
-
-admin.site.register(WeekRange, CustomWeekRange)

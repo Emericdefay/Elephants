@@ -207,7 +207,7 @@
                   {% if client.client_command.all|make_unit_price %}
                     <strong>{{client.client_command.all|make_unit_price}}</strong>
                   {% else %}
-                    0
+                    <strong>0</strong>
                   {% endif %}
                 </td>
                 {% with actual_day as day %}
@@ -218,7 +218,11 @@
                   <strong>{{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_meals_this_month}}</strong>
                 </td>
                 <td style="vertical-align: middle;">
-                  <strong>{{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_price_this_month}}</strong>
+                  {% if month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_price_this_month %}
+                    <strong>{{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_price_this_month}}</strong>
+                  {% else %}
+                    <strong>0</strong>
+                  {% endif %}
                 </td>
                 {% endwith %}
                 {% endwith %}
