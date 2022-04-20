@@ -94,14 +94,25 @@
             <li class="nav-item">
                 <a class="nav-link" id="bill-tab" data-bs-toggle="tab" href="#bill" role="tab" aria-controls="bill" aria-selected="false">Factures</a>
             </li>
-            <li class=" ms-auto">
+            <li class="ms-auto">
                 <button form="myform" class="btn btn-primary align-content-center mx-3" type="submit" style="width:120px; transform: translate(0px, 2px);">Enregistrer</button>
             </li>
-            <li class="">
-                <form action="{% url "manager:facture" %}" method="post" id="facture">
-                    {% csrf_token %}
-                    <button class="btn btn-secondary align-content-center mx-3" type="submit" href="{% url 'manager:facture' %}" style="width:120px; transform: translate(0px, 2px);">Exporter</button>
-                </form>
+            <li class="" style="align-self: center;">
+                    <button type="button" class="btn dropdown-toggle bg-secondary align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
+                        Exporter
+                    </button>
+                    <form class="dropdown-menu text-center" style="text-align-last: center; width: min-content;" action="{% url "manager:facture" %}" method="post" id="facture">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="month_export" class="form-label">Mois</label>
+                            <input style="width: -webkit-fill-available;" type="number" min="1" max="12" step="1"  name="month" id="month" value="{{actual_month}}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="year_export" class="form-label">Année</label>
+                            <input style="width: -webkit-fill-available;" type="number" min="2020" step="1"  name="year" id="year" value="{{actual_year}}">
+                        </div>
+                        <button class="btn btn-secondary" type="submit" href="{% url 'manager:facture' %}" style="width:120px; transform: translate(0px, 2px);">Exporter</button>
+                    </form>
             </li>
 
         </ul>

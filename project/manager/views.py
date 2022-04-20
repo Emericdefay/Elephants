@@ -1,4 +1,5 @@
 # Local libs
+import os
 import json
 import operator
 import logging
@@ -25,12 +26,16 @@ from django.shortcuts import render
 # app libs
 from .models import Food, Client, Circuit, Command, DefaultCommand, FoodCategory, WeekRange
 from .forms import ClientForm, CircuitForm, DefaultCommandForm, CommandForm, FoodForm
+
+from django.db.models import FloatField
+from django.db.models import Q, Sum, Prefetch, F, Avg, Case, When, Value
 from . import forms
 from .serializers import ClientSerializer, CommandSerializer
 from django.utils import translation
 from django.utils.translation import gettext as _
-from openpyxl import Workbook
+from openpyxl import Workbook, drawing
 from openpyxl.writer.excel import save_virtual_workbook
+from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 translation.activate('fr')
 
 
@@ -281,6 +286,7 @@ class HomeView(TemplateView, UpdateView):
             kwargs['day'] if 'day' in kwargs else datetime.now().day,
             ).isocalendar()[1]
         context['actual_year'] = kwargs['year'] if 'year' in kwargs else datetime.now().year
+        context['actual_month'] = kwargs['month'] if 'month' in kwargs else datetime.now().month
 
         context['actual_day'] = datetime_.date(
             kwargs['year'] if 'year' in kwargs else datetime.now().year,
@@ -378,6 +384,10 @@ class HomeView(TemplateView, UpdateView):
         context['new_client'] = form['new_client']
         context['new_food'] = form['new_food']
         context['new_circuit'] = form['new_circuit']
+        context['month_commands'] = Command.objects.filter(
+            year_date_command=kwargs['year'] if 'year' in kwargs else datetime.now().year,
+            month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
+            )
 
 
 
@@ -422,44 +432,183 @@ class AddNewCircuit(CreateView):
 
 class CreateExcel(View):
 
-    def init_sheet(self, sheet):
+    def font_h1(self):
+        return Font(name='Times New Roman',
+                    size=14,
+                    bold=True,
+                    italic=False,
+                    vertAlign=None,
+                    underline='none',
+                    strike=False,
+                    color='FF000000')
 
-        sheet['D12'] = "Chambéry, le"
-        sheet['E12'] = f"{datetime.now().day}-{datetime.now().month}{datetime.now().year}"
-        sheet['A21'] = "Facture N°"
-        sheet['B21'] = f"{datetime.now().month}"
-        sheet['B23'] = "Nombre de repas"
-        sheet['B25'] = "Prix unitaire ttc"
-        sheet['C28'] = "Total HT"
-        sheet['C29'] = "TVA 5.5%"
-        sheet['C31'] = "Total TTC"
-        sheet['B35'] = "Afin de toujours mieux répondre à vos attentes, nous mettons à"
-        sheet['B36'] = "votre disposition une ligne téléphonique dédiée à vos repas."
-        sheet['D38'] = "07 63 42 08 54"
-        sheet['D41'] = "SARL ELEPHANT"
-        sheet['D42'] = "1 Rue Claude Martin - 73000 CHAMBERY"
-        sheet['D43'] = "SIRET 45149094000017"
+    def font_h2(self):
+        return Font(name='Times New Roman',
+                    size=12,
+                    bold=True,
+                    italic=False,
+                    vertAlign=None,
+                    underline='none',
+                    strike=False,
+                    color='FF000000')
+
+    def font_p1(self):
+        return Font(name='Times New Roman',
+                    size=14,
+                    bold=False,
+                    italic=False,
+                    vertAlign=None,
+                    underline='none',
+                    strike=False,
+                    color='FF000000')
+    def font_p2(self):
+        return Font(name='Times New Roman',
+                    size=12,
+                    bold=False,
+                    italic=False,
+                    vertAlign=None,
+                    underline='none',
+                    strike=False,
+                    color='FF000000')
+
+    def font_foot(self):
+        return Font(name='Times New Roman',
+                    size=12,
+                    bold=True,
+                    italic=False,
+                    vertAlign=None,
+                    underline='none',
+                    strike=False,
+                    color='FF363742')
+
+    def init_sheet(self, sheet):
+        # h1
+        sheet['D24'] = "Total TTC"
+        sheet['D24'].font = self.font_h1()
+        sheet['E31'] = "07 63 42 08 54"
+        sheet['E31'].font = self.font_h1()
+        sheet['E31'].alignment = Alignment(horizontal="center")
+        # h2
+        sheet['E12'] = "Chambéry, le"
+        sheet['E12'].font = self.font_h2()
+        sheet['F12'] = f"{datetime.now().day}-{datetime.now().month}-{datetime.now().year}"
+        sheet['F12'].font = self.font_h2()
+        sheet['C14'] = f"{datetime.now().month}"
+        sheet['C14'].font = self.font_h2()
+        sheet['C16'] = "Nombre de repas"
+        sheet['C16'].font = self.font_h2()
+        sheet['C18'] = "Prix unitaire ttc"
+        sheet['C18'].font = self.font_h2()
+        # p1
+        sheet['B14'] = "Facture N°"
+        sheet['B14'].font = self.font_p1()
+        sheet['D21'] = "Total HT"
+        sheet['D21'].font = self.font_p1()
+        sheet['D22'] = "TVA 5.5%"
+        sheet['D22'].font = self.font_p1()
+        # p2
+        sheet['E28'] = "Afin de toujours mieux répondre à vos attentes, nous mettons à"
+        sheet['E28'].font = self.font_p2()
+        sheet['E28'].alignment = Alignment(horizontal="center")
+        sheet['E29'] = "votre disposition une ligne téléphonique dédiée à vos repas."
+        sheet['E29'].font = self.font_p2()
+        sheet['E29'].alignment = Alignment(horizontal="center")
+        # foot
+        sheet['E34'] = "SARL ELEPHANT"
+        sheet['E34'].font = self.font_foot()
+        sheet['E34'].alignment = Alignment(horizontal="center")
+        sheet['E35'] = "1 Rue Claude Martin - 73000 CHAMBERY"
+        sheet['E35'].font = self.font_foot()
+        sheet['E35'].alignment = Alignment(horizontal="center")
+        sheet['E36'] = "SIRET 45149094000017"
+        sheet['E36'].font = self.font_foot()
+        sheet['E36'].alignment = Alignment(horizontal="center")
 
 
         return sheet
 
     def post(self, request, *args, **kwargs):
         wb = Workbook()
-        month = kwargs.get('month', datetime.now().month)
-        year = kwargs.get('year', datetime.now().year)
-        print(month)
-        print(year)
+        month = self.request.POST.get('month', datetime.now().month)
+        year = self.request.POST.get('year', datetime.now().year)
         clients = Client.objects.all().order_by('circuit')
         commands = Command.objects.filter(year_date_command=year, month_date_command=month)
 
+
         for client in clients:
+            img = drawing.image.Image(os.path.join(os.getcwd(), 'project', 'static', 'img_elephant.png'))
+            img.anchor = 'C3'
+            img.height = 148
+            img.width  = 115 
             wb.create_sheet(f"{client.last_name} {client.first_name}")
             active_sheet = wb[f"{client.last_name} {client.first_name}"]
             active_sheet = self.init_sheet(active_sheet)
-            active_sheet['E8'] = 'Mr Gelloz'
-            active_sheet['E9'] = '323 Rue de la Martinière'
-            active_sheet['E10'] = '73000 Bassens'
+            # Insert image
+            active_sheet.add_image(img)
+            # set clients address
+            active_sheet['H8'] = f"{client.last_name} {client.first_name}"
+            active_sheet['H8'].font = self.font_h1()
 
+            active_sheet['H9'] = f"{client.address}"
+            active_sheet['H10'] = f"{client.postcode}"
+            active_sheet['H9'].alignment = Alignment(wrap_text=True, shrink_to_fit=False)
+            # Number of meals
+            number_of_meals = commands.filter(client=client, command_command__gt=0).aggregate(sum=Sum(F('command_command')))['sum']
+            active_sheet['F16'] = number_of_meals if number_of_meals else 0
+            active_sheet['F16'].font = self.font_h2()
+            #
+            TTC = commands.filter(client=client)\
+                    .aggregate(sum=Sum(
+                        (F('meals__default__price') - F('reduction')) * F('command_command') * Case(When(free=True, then=Value(0)), default=Value(1)),
+                        output_field=FloatField(),
+                        )
+                    )['sum']
+            if not TTC:
+                TTC = 0.0
+
+            
+
+
+            active_sheet['F21'] = TTC * (100-5.5) / 100
+            active_sheet['F21'].font = self.font_h2()
+            active_sheet['F22'] = TTC * 5.5 / 100
+            active_sheet['F22'].font = self.font_h2()
+            active_sheet['F24'] = TTC
+            active_sheet['F24'].font = self.font_h2()
+
+            active_sheet['F21'].number_format = '#,##0.00€' 
+            active_sheet['F22'].number_format = '#,##0.00€' 
+            active_sheet['F24'].number_format = '#,##0.00€' 
+
+            # dimensions
+            dims = {
+                'A': 5,
+                'B': 13,
+                'C': 4,
+                'D': 10,
+                'E': 14,
+                'F': 8,
+                'G': 4,
+                'H': 30,
+            }
+            for col, value in dims.items():
+                active_sheet.column_dimensions[col].width = value
+            
+            thin = Side(border_style="double")
+            for number in range(21, 25):
+                active_sheet[f'C{number}'].border = Border(left=thin)
+                active_sheet[f'G{number}'].border = Border(right=thin)
+            for letter in ['D', 'E', 'F']:
+                active_sheet[f'{letter}20'].border = Border(top=thin)
+                active_sheet[f'{letter}25'].border = Border(bottom=thin)
+            active_sheet[f'C20'].border = Border(top=thin, left=thin)
+            active_sheet[f'G20'].border = Border(top=thin, right=thin)
+            active_sheet[f'C25'].border = Border(bottom=thin, left=thin)
+            active_sheet[f'G25'].border = Border(bottom=thin, right=thin)
+        
+        std = wb.get_sheet_by_name('Sheet')
+
+        wb.remove_sheet(std)
 
         response = HttpResponse(content=save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename="Factures_{month}_{year}.xlsx"'
