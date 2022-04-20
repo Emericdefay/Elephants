@@ -197,6 +197,8 @@
                             <div class="tab-content" id="menuContent">
                                 <form action="{% url "manager:update" %}" method="post" id="myform">
                                     {% csrf_token %}
+                                    <input type="text" class="d-none" id="save_link" name="save_link" value="">
+
                                     <div class="tab-pane fade show active" id="client" role="tabpanel" aria-labelledby="client-tab">
                                         <p>
                                             {% include "manager/clients/clients_list.html" %}
@@ -215,12 +217,6 @@
                                     <div class="tab-pane fade" id="circuit" role="tabpanel" aria-labelledby="circuit-tab">
                                         <p>
                                             {% include "manager/circuits/circuits.html" %}
-                                        </p>
-                                    </div>
-                                    <div class="tab-pane fade" id="bill" role="tabpanel" aria-labelledby="bill-tab">
-                                        Factures
-                                        <p>
-                                            Factures?
                                         </p>
                                     </div>
                                 </form>

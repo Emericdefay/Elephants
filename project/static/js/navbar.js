@@ -16,6 +16,7 @@ $(function () {
         $("#calendarBtn").children().each(async function () {
           this.href = `${this.href.split('?tab=#')[0]}?tab=#${base}-tab`;
         })
+        $("#save_link").val(`?tab=#${base}-tab`)
         window.history.pushState('page2', 'Title', `?tab=#${base}-tab`);
       }
     })
@@ -45,6 +46,7 @@ $(window).on('load',async function () {
             $("#calendarBtn").children().each(async function () {
               this.href = `${this.href.split('?tab=#')[0]}?tab=#${base}-tab`;
             })
+            $("#save_link").val(`?tab=#${base}-tab`)
           }
         })
       }

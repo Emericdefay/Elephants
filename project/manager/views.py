@@ -108,9 +108,20 @@ class UpdateHomeView(View):
             dict_list_food[key[-1]] = []
         for key, value in values_by_id.items():
             dict_list_food[key[-1]].append(int(key[1]))
-        for id_ in dict_list_food.keys():
+        dict_list_food_2 = dict()
+        for key in list(Command.objects.filter(command_command__gt=0).values_list('id', flat=True)):
+            try:
+                dict_list_food_2.update(
+                    {
+                        str(key): dict_list_food[str(key)]
+                    }
+                )
+            except:
+                pass
+        #print({ key: dict_list_food[key] for keykey in  })
+        for id_ in dict_list_food_2.keys():
             for food in DefaultCommand.objects.all():
-                if food.id in dict_list_food[id_]:
+                if food.id in dict_list_food_2[id_]:
                     if Command.objects.filter(id=id_).filter(meals__in=[food]):
                         continue
                     Command.objects.get(id=id_).meals.add(food)
@@ -191,8 +202,7 @@ class UpdateHomeView(View):
         self.synth_food(save)
         print(".", end=" ")
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
-
-        return redirect(reverse('manager:index') + "?tab=#client-tab")
+        return redirect(reverse('manager:index') + save['save_link'])
 
 
 class DeleteUser(View):
