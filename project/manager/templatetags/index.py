@@ -19,7 +19,10 @@ def index1(indexable, i):
 
 @register.filter
 def tofloat(str_nbr):
-    return str(str_nbr).replace(',', '.')
+    if str_nbr:
+        return str(str_nbr).replace(',', '.')
+    else:
+        return 0
 
 @register.filter
 def index(indexable, i):
@@ -202,20 +205,18 @@ def query_sum_meals_this_month(obj):
     return obj.aggregate(sum=Sum(F('command_command')))['sum']
 
 @register.filter
-def query_command_is_free(obj):
-    return obj.free
-
-@register.filter
 def query_command_reduction(obj):
     return obj.reduction
 
 @register.filter
 def query_sum_price_this_month(obj):
-    return obj.aggregate(sum=Sum(
-                                (F('meals__default__price')-F('reduction')) * F('command_command') * Case(When(free=True, then=Value(0)), default=Value(1)),
-                                
-                                output_field=FloatField(),
-                                )
+    return obj.aggregate(sum=Round(
+                                Sum(
+                                    (F('meals__default__price')-F('reduction')) * F('command_command'),
+
+                                    output_field=FloatField(),
+                                    )
+                                ,2)
                        )['sum']
 
 

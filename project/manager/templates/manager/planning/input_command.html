@@ -76,20 +76,6 @@
                     <tbody>
                         <tr>
                             <td>
-                                <label class="mx-0 p-0" for="free__{{day_time}}__{{command_id}}__{{client.id}}">Offert</label>
-                                <input
-                                    type="checkbox"
-                                    id="free__{{day_time}}__{{command_id}}__{{client.id}}"
-                                    name="free__{{day_time}}__{{command_id}}__{{client.id}}"
-                                    style="width:{{width_cells}}px;"
-                                    {% if command_opts.free %}
-                                        checked
-                                    {% endif %}
-                                    class="default_box">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
                                 <label class="mx-0 p-0" for="reduction__{{day_time}}__{{command_id}}__{{client.id}}">Réduction /u</label>
                                 <input
                                     type="number"

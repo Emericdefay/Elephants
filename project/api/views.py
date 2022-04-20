@@ -25,7 +25,7 @@ class DayByDayCommand(mixins.ListModelMixin, viewsets.GenericViewSet):
             day_date_command=self.request._request.GET.get('day_date_command'),
             month_date_command=self.request._request.GET.get('month_date_command'),
             year_date_command=self.request._request.GET.get('year_date_command'),
-            )
+            ).order_by('client__order')
         return qs
 
 

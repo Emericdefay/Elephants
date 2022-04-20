@@ -127,7 +127,7 @@ class UpdateHomeView(View):
                     Command.objects.get(id=id_).meals.add(food)
                     continue
                 Command.objects.get(id=id_).meals.remove(food)
-        targets = ['command', 'free', 'reduction', ]
+        targets = ['command', 'reduction', ]
         key_values = {}
         for key, value in save.items():
             if str(key).split('__')[0] in targets:
@@ -153,7 +153,6 @@ class UpdateHomeView(View):
                                     )
                 command.command_command = value
                 command.reduction = value
-                command.free = True if variable == 'free' else False
                 command.save(update_fields=[variable])
             except ValueError as e:
                 pass
@@ -570,7 +569,7 @@ class CreateExcel(View):
             # TTC calc
             TTC = commands.filter(client=client)\
                     .aggregate(sum=Sum(
-                        (F('meals__default__price') - F('reduction')) * F('command_command') * Case(When(free=True, then=Value(0)), default=Value(1)),
+                        (F('meals__default__price') - F('reduction')) * F('command_command'),
                         output_field=FloatField(),
                         )
                     )['sum']
