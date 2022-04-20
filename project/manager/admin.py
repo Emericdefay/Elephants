@@ -22,7 +22,7 @@ class CustomCircuit(admin.ModelAdmin):
 	# list_display = ('', )
 	fieldsets = [
 		('name', {'fields': ['name']}),
-		('description', {'fields': ['description']}),
+		('description_c', {'fields': ['description_c']}),
 	]
 
 

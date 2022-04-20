@@ -48,6 +48,7 @@ class Client(models.Model):
     description = models.TextField(verbose_name=("Description"), max_length=1000, blank=True, null=True)
     order =models.IntegerField(verbose_name=("Position de tournée"), default=0)
     client_command = models.ManyToManyField(DefaultCommand, related_name='command', blank=True)
+    # TODO : models.SET(get_standart_circuit)
     circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
 
     class Meta:
@@ -84,6 +85,7 @@ class Command(models.Model):
     """_summary_
     """
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    # TODO : models.SET(get_standart_circuit)
     circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
     command_command = models.IntegerField(verbose_name="", default=0)
     day_date_command = models.IntegerField(verbose_name="", blank=False)
