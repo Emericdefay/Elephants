@@ -8,6 +8,7 @@ import locale
 from datetime import timedelta, datetime
 import isoweek
 import datetime as datetime_
+import time
 from dateutil.relativedelta import relativedelta
 from pickletools import floatnl
 # django libs
@@ -57,10 +58,12 @@ class UpdateHomeView(View):
         values_by_id = dict()
         for id_ in ids:
             values_by_id[id_] = {key.split('__')[0]:value for key, value in key_values.items() if key.split('__')[1]==id_}
+        #start_time = time.time()
         # save
         for client_id, kwargs in values_by_id.items():
             Client.objects.filter(id=client_id).update(**kwargs)
         """ MEALS """
+        #print("--- %s seconds save1---" % (time.time() - start_time))
         targets = ['_meals', ]
         key_values = {}
         for key, value in save.items():
@@ -70,12 +73,17 @@ class UpdateHomeView(View):
         values_by_id = dict()
         for id_ in ids:
             values_by_id[id_] = [key.split('__')[1] for key in key_values.keys() if key.split('__')[-1] == id_]
+        #
         # checks
         for id_ in ids:
             for food in DefaultCommand.objects.all():
+                if str(food.id) in values_by_id[id_]:
+                    if Client.objects.filter(id=id_).filter(client_command__in=[food]):
+                        continue
+                    Client.objects.get(id=id_).client_command.add(food)
+                    continue
                 Client.objects.get(id=id_).client_command.remove(food)
-            for food in DefaultCommand.objects.filter(id__in=values_by_id[id_]):
-                Client.objects.get(id=id_).client_command.add(food)
+        #print("--- %s seconds save2---" % (time.time() - start_time))
 
     def synth_planning(self, save):
         """ PLANNING INFO """
@@ -100,23 +108,14 @@ class UpdateHomeView(View):
             dict_list_food[key[-1]] = []
         for key, value in values_by_id.items():
             dict_list_food[key[-1]].append(int(key[1]))
-        ids_meals = [food.id for food in DefaultCommand.objects.all()]
-        for key, value in dict_list_food.items():
-            if key:
-                for food in DefaultCommand.objects.all():
-                    command = Command.objects\
-                        .get(
-                        id=key
-                        )
-                    command.meals.remove(food)
-                for food in DefaultCommand.objects.filter(id__in=value):
-                    Command.objects\
-                        .get(
-                        id=key
-                        )\
-                        .meals.add(
-                            food
-                        )
+        for id_ in dict_list_food.keys():
+            for food in DefaultCommand.objects.all():
+                if food.id in dict_list_food[id_]:
+                    if Command.objects.filter(id=id_).filter(meals__in=[food]):
+                        continue
+                    Command.objects.get(id=id_).meals.add(food)
+                    continue
+                Command.objects.get(id=id_).meals.remove(food)
         targets = ['command', 'free', 'reduction', ]
         key_values = {}
         for key, value in save.items():
@@ -131,7 +130,7 @@ class UpdateHomeView(View):
         # regroup by id
         values_by_id_2 = dict()
         values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
-        # save           
+        # save
         for key, value in values_by_id_2.items():
             command_id = key[-1]
             variable = key[0] if key[0] != 'command' else 'command_command'
@@ -156,12 +155,10 @@ class UpdateHomeView(View):
         for key, value in save.items():
             if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
                 key_values.update({key: value})
-        print(key_values)
         # detect id
         ids = set()
         for i in key_values.keys():
             ids.add(i.split('__')[1])
-        print(ids)
         # # regroup by id
         values_by_id = dict()
         for id_ in ids:
@@ -171,7 +168,6 @@ class UpdateHomeView(View):
             for key, value in key_values.items():
                 if key.split('__')[1]==id_:
                     values_by_id[id_].update({key.split('__')[0]: value})
-        print(values_by_id)
         # save
         for food_id, kwargs in values_by_id.items():
             Food.objects.filter(id=food_id).update(**kwargs)
@@ -180,22 +176,21 @@ class UpdateHomeView(View):
     def post(self, request, *args, **kwargs):
         """_summary_
         """
+        print("\nSauvegarde", end="")
+        start_time = time.time()
+        # Getting saves
         save = self.request._post
-        save2 = self.request.__dict__
-        form = request.POST.get('')
-
+        print(".", end="")
         # save client
         self.synth_client(save)
+        print(".", end="")
         # save planning
         self.synth_planning(save)
+        print(".", end="")
         # save food
         self.synth_food(save)
-        # Clients
-        # last_name
-        # first_name
-        # client_command
-        # circuit
-        # order
+        print(".", end=" ")
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
 
         return redirect(reverse('manager:index') + "?tab=#client-tab")
 
@@ -389,8 +384,6 @@ class HomeView(TemplateView, UpdateView):
             month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
             )
 
-
-
         return context
 
     def object(self, *args, **kwargs):
@@ -407,6 +400,7 @@ class UpdateWeekRange(UpdateView):
         week_range.save()
         return redirect(reverse('manager:index') + "?tab=#planning-tab")
 
+
 class AddNewClient(CreateView):
     model = Client
     fields = [
@@ -415,12 +409,14 @@ class AddNewClient(CreateView):
         ]
     success_url = reverse_lazy('manager:index')
 
+
 class AddNewFood(CreateView):
     model = Food
     fields = [
         'category', 'price'
         ]
     success_url = reverse_lazy('manager:index')
+
 
 class AddNewCircuit(CreateView):
     model = Circuit
@@ -524,39 +520,44 @@ class CreateExcel(View):
         sheet['E36'].font = self.font_foot()
         sheet['E36'].alignment = Alignment(horizontal="center")
 
-
         return sheet
 
     def post(self, request, *args, **kwargs):
+        # init
         wb = Workbook()
         month = self.request.POST.get('month', datetime.now().month)
         year = self.request.POST.get('year', datetime.now().year)
         clients = Client.objects.all().order_by('circuit')
         commands = Command.objects.filter(year_date_command=year, month_date_command=month)
 
-
         for client in clients:
+            # Elephant img added
             img = drawing.image.Image(os.path.join(os.getcwd(), 'project', 'static', 'img_elephant.png'))
             img.anchor = 'C3'
             img.height = 148
-            img.width  = 115 
+            img.width  = 115
+
+            # Create sheet
             wb.create_sheet(f"{client.last_name} {client.first_name}")
             active_sheet = wb[f"{client.last_name} {client.first_name}"]
             active_sheet = self.init_sheet(active_sheet)
+
             # Insert image
             active_sheet.add_image(img)
+
             # set clients address
             active_sheet['H8'] = f"{client.last_name} {client.first_name}"
             active_sheet['H8'].font = self.font_h1()
-
             active_sheet['H9'] = f"{client.address}"
             active_sheet['H10'] = f"{client.postcode}"
             active_sheet['H9'].alignment = Alignment(wrap_text=True, shrink_to_fit=False)
+
             # Number of meals
             number_of_meals = commands.filter(client=client, command_command__gt=0).aggregate(sum=Sum(F('command_command')))['sum']
             active_sheet['F16'] = number_of_meals if number_of_meals else 0
             active_sheet['F16'].font = self.font_h2()
-            #
+
+            # TTC calc
             TTC = commands.filter(client=client)\
                     .aggregate(sum=Sum(
                         (F('meals__default__price') - F('reduction')) * F('command_command') * Case(When(free=True, then=Value(0)), default=Value(1)),
@@ -565,10 +566,6 @@ class CreateExcel(View):
                     )['sum']
             if not TTC:
                 TTC = 0.0
-
-            
-
-
             active_sheet['F21'] = TTC * (100-5.5) / 100
             active_sheet['F21'].font = self.font_h2()
             active_sheet['F22'] = TTC * 5.5 / 100
@@ -576,6 +573,7 @@ class CreateExcel(View):
             active_sheet['F24'] = TTC
             active_sheet['F24'].font = self.font_h2()
 
+            # format €
             active_sheet['F21'].number_format = '#,##0.00€' 
             active_sheet['F22'].number_format = '#,##0.00€' 
             active_sheet['F24'].number_format = '#,##0.00€' 
@@ -593,7 +591,7 @@ class CreateExcel(View):
             }
             for col, value in dims.items():
                 active_sheet.column_dimensions[col].width = value
-            
+            # Border on prices
             thin = Side(border_style="double")
             for number in range(21, 25):
                 active_sheet[f'C{number}'].border = Border(left=thin)
@@ -605,11 +603,11 @@ class CreateExcel(View):
             active_sheet[f'G20'].border = Border(top=thin, right=thin)
             active_sheet[f'C25'].border = Border(bottom=thin, left=thin)
             active_sheet[f'G25'].border = Border(bottom=thin, right=thin)
-        
+        # Delete std Sheet
         std = wb.get_sheet_by_name('Sheet')
-
         wb.remove_sheet(std)
 
+        # Export
         response = HttpResponse(content=save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename="Factures_{month}_{year}.xlsx"'
 
