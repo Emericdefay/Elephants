@@ -19,7 +19,7 @@ class DayByDayCommandSerializer(serializers.ModelSerializer):
         data = render_to_string(template_name='circuit_modal.html',
                                 context={
                                     'commands': obj,
-                                    'foods': Food.objects.all().order_by('category'),
+                                    'foods': Food.objects.all().order_by('id'),
                                     'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)
@@ -43,7 +43,7 @@ class DayByDayCommandTotalSerializer(serializers.ModelSerializer):
         data = render_to_string(template_name='circuit_unit_total.html',
                                 context={
                                     'commands': obj,
-                                    'foods': Food.objects.all().order_by('category'),
+                                    'foods': Food.objects.all().order_by('id'),
                                     'day': day_date_command,
                                     'month': month_date_command,
                                     'year': year_date_command,
@@ -69,7 +69,7 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
         data = render_to_string(template_name='circuit_total.html',
                                 context={
                                     'commands': obj,
-                                    'foods': Food.objects.all().order_by('category'),
+                                    'foods': Food.objects.all().order_by('id'),
                                     'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)

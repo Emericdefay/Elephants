@@ -154,7 +154,7 @@
                     <th>€/u</th>
                     <th>Nb. Repas</th>
                     <th>€ ce mois</th>
-                    <th>Export</th>
+                    {% comment %} <th>Export</th> {% endcomment %}
                 </tr>
             </thead>
           
@@ -205,7 +205,7 @@
                 </td>
                 <td style="vertical-align: middle;">
                   {% if client.client_command.all|make_unit_price %}
-                    {{client.client_command.all|make_unit_price}}
+                    <strong>{{client.client_command.all|make_unit_price}}</strong>
                   {% else %}
                     0
                   {% endif %}
@@ -215,20 +215,20 @@
                 {% with day|month as this_month %}
                 {% with day|year as this_year %}
                 <td style="vertical-align: middle;">
-                  {{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_meals_this_month}}
+                  <strong>{{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_meals_this_month}}</strong>
                 </td>
                 <td style="vertical-align: middle;">
-                  {{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_price_this_month}}
+                  <strong>{{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_price_this_month}}</strong>
                 </td>
                 {% endwith %}
                 {% endwith %}
                 {% endwith %}
                 {% endwith %}
-                <td><button
+                {% comment %} <td><button
                   class="btn btn-warning align-content-center mx-3"
                   type="button">
                   Excel à l'unitée
-                </button></td>
+                </button></td> {% endcomment %}
             </tr>
             {% endfor %}
           </table>
