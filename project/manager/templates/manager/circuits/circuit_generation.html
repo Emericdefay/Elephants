@@ -1,0 +1,23 @@
+{% load static humanize index %}
+
+{% regroup actual_commands by client.circuit as client_list %}
+{% for circuit, command_list in client_list %}
+    <div class="card-header my-1" style="background-color:{{gradients|get_value:circuit.id}}" id="heading-{{circuit.id}}"  data-bs-toggle="collapse" data-bs-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
+        <h2 class="m-0 row">
+            <div class="col-12">
+                <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-bs-toggle="collapse" data-bs-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
+                    </i> {{circuit.name}}
+                </button>
+            </div>
+        </h2>
+    </div>
+    <div id="acc-{{circuit.id}}" class="collapse" aria-labelledby="heading-{{circuit.id}}" data-parent="#CircuitAccordion">
+        <div class="card-body p-0">
+            <div class="col-12 btn-toolbar p-0">
+                <div class="col-12 p-0">
+                    {% include "manager/circuits/circuit_table.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

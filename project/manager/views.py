@@ -624,7 +624,7 @@ class CreateExcel(View):
                 'E': 14,
                 'F': 8,
                 'G': 4,
-                'H': 30,
+                'H': 20,
             }
             for col, value in dims.items():
                 active_sheet.column_dimensions[col].width = value
