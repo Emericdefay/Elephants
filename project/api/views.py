@@ -45,7 +45,6 @@ class DayByDayCommandTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
             month_date_command=self.request._request.GET.get('month_date_command'),
             year_date_command=self.request._request.GET.get('year_date_command'),
             )
-
         return qs
 
 # Create your views here.

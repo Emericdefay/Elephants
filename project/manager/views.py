@@ -87,6 +87,35 @@ class UpdateHomeView(View):
 
     def synth_planning(self, save):
         """ PLANNING INFO """
+        targets = ['command', 'reduction', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets:
+                key_values.update({key: value})
+        # print(key_values)
+        # detect id
+        ids = set()
+        for i in key_values.keys():
+            ids.add(i.split('__')[-1])
+        # print(ids)
+        # regroup by id
+        values_by_id_2 = dict()
+        values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
+        # save
+        for key, value in values_by_id_2.items():
+            command_id = key[-1]
+            variable = key[0] if key[0] != 'command' else 'command_command'
+            up = {variable:value}
+            try:
+                command = Command.objects\
+                                    .get(
+                                        id=command_id,
+                                    )
+                command.command_command = value
+                command.reduction = value
+                command.save(update_fields=[variable])
+            except ValueError as e:
+                pass
         targets = ['meals', ]
         key_values = {}
         for key, value in save.items():
@@ -127,35 +156,7 @@ class UpdateHomeView(View):
                     Command.objects.get(id=id_).meals.add(food)
                     continue
                 Command.objects.get(id=id_).meals.remove(food)
-        targets = ['command', 'reduction', ]
-        key_values = {}
-        for key, value in save.items():
-            if str(key).split('__')[0] in targets:
-                key_values.update({key: value})
-        # print(key_values)
-        # detect id
-        ids = set()
-        for i in key_values.keys():
-            ids.add(i.split('__')[-1])
-        # print(ids)
-        # regroup by id
-        values_by_id_2 = dict()
-        values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
-        # save
-        for key, value in values_by_id_2.items():
-            command_id = key[-1]
-            variable = key[0] if key[0] != 'command' else 'command_command'
-            up = {variable:value}
-            try:
-                command = Command.objects\
-                                    .get(
-                                        id=command_id,
-                                    )
-                command.command_command = value
-                command.reduction = value
-                command.save(update_fields=[variable])
-            except ValueError as e:
-                pass
+
 
         # checks
     def synth_food(self, save):
@@ -259,6 +260,8 @@ class HomeView(TemplateView, UpdateView):
         return [_(datetime(context['year'], context['month'], day).strftime("%A")) for day in context['days']]
 
     def get_context_data(self, **kwargs):
+        print("Phase 1 :", end=" ")
+        start_time = time.time()
 
         context = super().get_context_data(**kwargs)
         form = self.get_form()
@@ -276,7 +279,6 @@ class HomeView(TemplateView, UpdateView):
                 id=food.id,
                 default=food,
             )
-
         context['foods_edit'] = Food.objects.all()
         context['formDefaultCommand'] = form['defaultcommands']
         context['foodcategories'] = form['foodcategories']
@@ -299,7 +301,7 @@ class HomeView(TemplateView, UpdateView):
             )
 
 
-        existing_clients = Client.objects.all()
+        existing_clients = Client.objects.all().order_by('circuit', 'order').values_list('id', flat=True)
 
         context['week_range'] = form['week_range']
         context['week_range_choices'] = list(range(0, 4))
@@ -326,19 +328,35 @@ class HomeView(TemplateView, UpdateView):
             date_start = date_origin + relativedelta(weeks=-1)
             date_ending = date_origin + relativedelta(weeks=+(week_range-1))
         
-        range_dates = [date_start + datetime_.timedelta(days=x) for x in range(0, (date_ending - date_start).days + 1)]
+        range_dates = [date_start + datetime_.timedelta(days=x) for x in range(0, (date_ending - date_start).days + 2)]
         context['range_dates'] = range_dates
-                
+        range_days = [date.day for date in range_dates]
+        
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
+        print("Phase 2 :", end=" ")
+        start_time = time.time()
+
+        cut_actual_commands = []
         actual_commands = Command.objects.none()
-        for index, client in enumerate(existing_clients):
+        for client_id in list(existing_clients):
+            if actual_commands.count() > 400:
+                cut_actual_commands.append(actual_commands.order_by( 'client', 'client__order', ))
+                actual_commands = Command.objects.none()
             for date in range_dates:
                 actual_commands |= Command.objects.filter(
-                    Q(client=client)&
-                    Q(day_date_command=date.day)&
+                    Q(client_id=client_id)&
+                    Q(day_date_command__in=range_days)&
                     Q(month_date_command=date.month)&
                     Q(year_date_command=date.year)
                 )
+        if actual_commands.count() > 0:
+            cut_actual_commands.append(actual_commands.order_by( 'client', 'client__order', ))
         context['actual_commands'] = actual_commands.order_by( 'client', 'client__order', )
+        context['cut_actual_commands'] = cut_actual_commands
+
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
+        print("Phase 3 :", end=" ")
+        start_time = time.time()
 
         years_weeks = dict()
         for year in range(2020, 2050):
@@ -362,29 +380,33 @@ class HomeView(TemplateView, UpdateView):
 
         range_weeks = list({x.isocalendar()[1] for x in range_dates})
         context['range_weeks'] = range_weeks
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
 
         # TODO : Optimiser la génération des commandes : ne prendre que les 
         #        commandes existantes et créer les nouvelles uniquement après
         #        ajouts de commandes.
-        for index, client in enumerate(existing_clients):
+        print("Phase 4 :", end=" ")
+        start_time = time.time()
+
+        for client_id in list(existing_clients):
             for day in range_dates:
                 Command.objects\
                     .filter(
-                    client=client,
+                    client_id=client_id,
                     day_date_command=day.day,
                     month_date_command=day.month,
                     year_date_command=day.year,
                     )\
                     .get_or_create(
                     defaults={
-                        'client':client,
-                        'circuit':client.circuit,
+                        'client':Client.objects.get(id=client_id),
+                        'circuit':Client.objects.get(id=client_id).circuit,
                         'day_date_command':day.day,
                         'month_date_command':day.month,
                         'year_date_command':day.year,
                     }
                 )
-
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
         context['new_client'] = form['new_client']
         context['new_food'] = form['new_food']
         context['new_circuit'] = form['new_circuit']
@@ -565,6 +587,12 @@ class CreateExcel(View):
             number_of_meals = commands.filter(client=client, command_command__gt=0).aggregate(sum=Sum(F('command_command')))['sum']
             active_sheet['F16'] = number_of_meals if number_of_meals else 0
             active_sheet['F16'].font = self.font_h2()
+
+            
+            unit_price = Food.objects.filter(id__in=client.client_command.all()).aggregate(sum=(Sum(F('price'))))['sum']
+            active_sheet['F18'] = unit_price if unit_price else 0
+            active_sheet['F18'].font = self.font_h2()
+            active_sheet['F18'].number_format = '#,##0.00€' 
 
             # TTC calc
             TTC = commands.filter(client=client)\

@@ -201,6 +201,13 @@ def query_count(obj):
     return obj.count()
 
 @register.filter
+def len_list(obj):
+    if len(obj) > 1:
+        return True
+    else:
+        return False
+
+@register.filter
 def query_sum_meals_this_month(obj):
     return obj.aggregate(sum=Sum(F('command_command')))['sum']
 

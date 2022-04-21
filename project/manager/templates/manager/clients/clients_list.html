@@ -136,7 +136,7 @@
       {% for circuit, clients_by_circuit in client_list %}
         <table class="responsive-table-input-matrix table table-hover board-ordered" id="table-{{forloop.counter0}}">
           
-            <thead class="table-dark" {% if forloop.counter0 > 0 %} style="visibility:collapse;"{% endif %}>
+            <thead class="table-dark position-relative" {% if forloop.counter0 > 0 %} style="visibility:collapse;"{% else %}style="z-index:1; opacity:1;"{% endif %}>
                 <tr>
                     <th>#</th>
                     <th>#</th>

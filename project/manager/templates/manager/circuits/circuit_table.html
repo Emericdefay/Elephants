@@ -122,7 +122,19 @@
                     {% endwith %}
                     {% endwith %}
                 >
-                    {% if day|day_name|firsts:3 == 'dim' and forloop.counter0 == 0 %}
+                    {% if day|day_name|firsts:3 == 'mer' and forloop.counter0 == 0 %}
+                        <td rowspan=1 style="vertical-align:middle;">
+                            MER<br>
+                            {{day|day}}<br>
+                            {{day|month_name}}
+                        </td>
+                    {% elif day|day_name|firsts:3 == 'ven' and forloop.counter0 == 0 %}
+                        <td rowspan=1 style="vertical-align:middle;">
+                            VEN<br>
+                            {{day|day}}<br>
+                            {{day|month_name}}
+                        </td>
+                    {% elif day|day_name|firsts:3 == 'dim' and forloop.counter0 == 0 %}
                         <td rowspan=1 style="vertical-align:middle;">
                             DIM<br>
                             {{day|day}}<br>

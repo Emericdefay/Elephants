@@ -63,13 +63,17 @@
                         {% with day|day as this_day %}
                         {% with day|month as this_month %}
                         {% with day|year as this_year %}
+                        {% if command_client %}
                             {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count}}
+                        {% endif %}
                         </td>
-                        {% for food in foods %}
-                        <td>
-                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_sum_morning:food}}
-                        </td>
-                        {% endfor %}
+                        {% if command_client %}
+                            {% for food in foods %}
+                                <td>
+                                    {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_sum_morning:food}}
+                                </td>
+                            {% endfor %}
+                        {% endif %}
                         {% endwith %}
                         {% endwith %}
                         {% endwith %}
@@ -101,13 +105,17 @@
                     <td>
                         {% comment %} NB Clients {% endcomment %}
                         {% comment %} {% random_int 0 20 %} {% endcomment %}
-                        {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count}}
+                        {% if command_client %}
+                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count}}
+                        {% endif %}
                     </td>
-                    {% for food in foods %}
+                    {% if command_client %}
+                        {% for food in foods %}
                         <td>
                             {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_sum_morning:food}}
                         </td>
                     {% endfor %}
+                    {% endif %}
                     {% endwith %}
                     {% endwith %}
                     {% endwith %}
