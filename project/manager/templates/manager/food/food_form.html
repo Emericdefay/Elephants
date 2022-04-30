@@ -1,8 +1,23 @@
 {% load static humanize index %}
 
-<div class="text-center">
-        {{ new_food.as_p }}
-        <button class="btn btn-primary align-content-center mx-3"
+<style>
+  #food_form label {
+          text-align:start;
+  }
+  #food-modal-body {
+          background-color: lavender;
+  }
+
+</style>
+
+<div class="text-center"
+     id="food_form"
+     style="display: grid;
+            justify-items: stretch;
+            font-weight: bold;"
+>
+        {{ new_food }}
+        <button class="btn btn-primary align-content-center mx-3 mt-3"
                 type="submit">
                 Créer
         </button>

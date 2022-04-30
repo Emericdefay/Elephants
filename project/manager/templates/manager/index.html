@@ -15,7 +15,7 @@
 
         <link href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" rel="stylesheet">
 
-        <link href="{% static "css/calendar.css" %}" rel="stylesheet">
+        <link href="{% static "css/main.css" %}" rel="stylesheet">
 
         <script src="{% static 'js/navbar.js' %}"></script>
         <script src="{% static 'js/getModal.js' %}"></script>
@@ -64,7 +64,6 @@
                         console.log(error);
                         base_anchor = base_anchor - $(this).data('anchor');
                     }
-                    
                 })
             });
         </script>
@@ -243,6 +242,7 @@
              aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
+                    <div class="modal-header justify-content-center">🙋‍♀️ Ajouter un client 🙋‍♂️</div>
                     <div class="modal-body" id="add-modal-body">
                         <form action="{% url 'manager:new_client' %}" method="post" id="new_client">
                             {% csrf_token %}
@@ -261,6 +261,7 @@
              aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
+                    <div class="modal-header justify-content-center">🚐 Ajouter une tournée 🛵</div>
                     <div class="modal-body" id="circuit-modal-body">
                         <form action="{% url 'manager:new_circuit' %}" method="post" id="new_circuit">
                             {% csrf_token %}
@@ -279,6 +280,7 @@
              aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
+                    <div class="modal-header justify-content-center">🍱 Ajouter un plat 🥗</div>
                     <div class="modal-body" id="food-modal-body">
                         <form action="{% url 'manager:new_food' %}" method="post" id="new_food">
                             {% csrf_token %}

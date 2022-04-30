@@ -447,7 +447,7 @@ class UpdateWeekRange(UpdateView):
 class AddNewClient(CreateView):
     model = Client
     fields = [
-        'first_name','last_name','address',
+        'first_name','last_name','address', 'address_details',
 	    'cellphone','description', 'postcode', 'circuit'
         ]
     success_url = reverse_lazy('manager:index')

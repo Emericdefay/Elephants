@@ -1,9 +1,25 @@
 {% load static humanize index %}
 
-<div class="text-center">
-        {{ new_circuit.as_p }}
-        <button class="btn btn-primary align-content-center mx-3"
-                type="submit">
-                Créer
-        </button>
+<style>
+    #circuit_form label {
+            text-align:start;
+    }
+
+    #circuit-modal-body {
+            background-color: lavender;
+    }
+</style>
+      
+<div class="text-center"
+     id="circuit_form"
+     style="display: grid;
+            justify-items: stretch;
+            font-weight: bold;"
+>
+    {{ new_circuit }}
+
+    <button class="btn btn-primary align-content-center mx-3 mt-3"
+            type="submit">
+            Créer
+    </button>
 </div>
