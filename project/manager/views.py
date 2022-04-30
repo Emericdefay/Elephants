@@ -45,7 +45,7 @@ class UpdateHomeView(View):
 
     def synth_client(self, save):
         """ INFO CLIENT """
-        targets = ['order', 'last_name', 'first_name', 'circuit_id', 'address', 'postcode', 'cellphone']
+        targets = ['order', 'last_name', 'first_name', 'circuit_id', 'address', 'postcode', 'cellphone', 'cellphone2']
         key_values = {}
         for key, value in save.items():
             if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
@@ -87,7 +87,7 @@ class UpdateHomeView(View):
 
     def synth_planning(self, save):
         """ PLANNING INFO """
-        targets = ['command', 'reduction', ]
+        targets = ['command_command', 'comment', ]
         key_values = {}
         for key, value in save.items():
             if str(key).split('__')[0] in targets:
@@ -103,19 +103,18 @@ class UpdateHomeView(View):
         values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
         # save
         for key, value in values_by_id_2.items():
-            command_id = key[-1]
-            variable = key[0] if key[0] != 'command' else 'command_command'
-            up = {variable:value}
-            try:
-                command = Command.objects\
-                                    .get(
-                                        id=command_id,
-                                    )
-                command.command_command = value
-                command.reduction = value
-                command.save(update_fields=[variable])
-            except ValueError as e:
-                pass
+            if value != '' or value != None:
+                command_id = key[-1]
+                try:
+                    command = Command.objects\
+                                        .get(
+                                            id=command_id,
+                                        )
+                    command.command_command = value
+                    command.comment = value
+                    command.save(update_fields=[key[0]])
+                except ValueError as e:
+                    pass
         targets = ['meals', ]
         key_values = {}
         for key, value in save.items():
@@ -157,8 +156,6 @@ class UpdateHomeView(View):
                     continue
                 Command.objects.get(id=id_).meals.remove(food)
 
-
-        # checks
     def synth_food(self, save):
         """ INFO CLIENT """
         targets = ['price', 'category', ]
@@ -202,7 +199,7 @@ class UpdateHomeView(View):
         self.synth_food(save)
         print(".", end=" ")
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
-        return redirect(reverse('manager:index') + save['save_link'])
+        return redirect(reverse('manager:index') + save['date_link'][1:] + save['save_link'])
 
 
 class DeleteUser(View):
@@ -597,7 +594,7 @@ class CreateExcel(View):
             # TTC calc
             TTC = commands.filter(client=client)\
                     .aggregate(sum=Sum(
-                        (F('meals__default__price') - F('reduction')) * F('command_command'),
+                        (F('meals__default__price')) * F('command_command'),
                         output_field=FloatField(),
                         )
                     )['sum']

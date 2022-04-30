@@ -5,6 +5,5 @@ $('.btn-plus, .btn-minus').on('click', function(e) {
     if (input.is('input')) {
       input[0][isNegative ? 'stepDown' : 'stepUp']();
       $(label).children(":first").text(input[0].value);
-      console.log(input[0].value);
     }
   })

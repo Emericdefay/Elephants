@@ -25,6 +25,9 @@
           width:50px!important;
           padding:0!important;
       }
+    .customer-comment-btn:hover {
+        cursor:pointer;
+    }
 </style>
 <link href="{% static "css/button.css" %}" rel="stylesheet">
 
@@ -32,13 +35,20 @@
     Planning
 </h3>
 <table class="responsive-table-input-matrix table">
-    <thead class="overflow-auto table-dark position-relative">
+    <thead class="overflow-auto table-dark position-relative" style="z-index:1;">
         <tr>
             <th style="width:5%;">Nom</th>
 
             {% for day in range_dates %}
                 {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
-                    <th class="day_cells" {% if to_day|striptags == day|day|striptags and to_month|nonpadded|striptags == day|month|striptags and to_year|striptags == day|year|striptags %}style="background-color:darkorange; width:{{width_cells}}px;"{% elif day|day_name|firsts:3 == 'sam' %}style="background-color:darkgrey; width:{{width_cells}}px;"{% endif %}>
+                    <th 
+                        class="day_cells" 
+                        {% if to_day|striptags == day|day|striptags and to_month|nonpadded|striptags == day|month|striptags and to_year|striptags == day|year|striptags %}
+                            style="background-color:darkorange; width:{{width_cells}}px;"
+                        {% elif day|day_name|firsts:3 == 'sam' %}
+                            style="background-color:darkgrey; width:{{width_cells}}px;"
+                        {% endif %}
+                    >
                         {% if day|day_name|firsts:3 == 'lun' %}
                             LUN<br>
                             {{day|day}}<br>

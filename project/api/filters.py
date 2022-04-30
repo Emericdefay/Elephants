@@ -2,7 +2,7 @@ from email.policy import default
 from django.utils.translation import gettext_lazy as _
 from django_filters import rest_framework as filters
 
-from project.manager.models import Command, Circuit
+from project.manager.models import Command, Circuit, Client
 
 
 class DayByDayCommandFilter(filters.FilterSet):
@@ -29,4 +29,19 @@ class DayByDayCommandFilter(filters.FilterSet):
             'month_date_command',
             'year_date_command',
             'circuit_id',
+        ]
+
+
+class CommandCustomerFilter(filters.FilterSet):
+
+    client_id = filters.ModelChoiceFilter(
+        label="circuit",
+        queryset=Client.objects.all(),
+    )
+
+
+    class Meta:
+        model = Command
+        fields = [
+            'client_id',
         ]

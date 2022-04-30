@@ -212,14 +212,10 @@ def query_sum_meals_this_month(obj):
     return obj.aggregate(sum=Sum(F('command_command')))['sum']
 
 @register.filter
-def query_command_reduction(obj):
-    return obj.reduction
-
-@register.filter
 def query_sum_price_this_month(obj):
     return obj.aggregate(sum=Round(
                                 Sum(
-                                    (F('meals__default__price')-F('reduction')) * F('command_command'),
+                                    (F('meals__default__price')) * F('command_command'),
 
                                     output_field=FloatField(),
                                     )

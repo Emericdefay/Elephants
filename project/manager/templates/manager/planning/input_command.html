@@ -15,12 +15,25 @@
             class="form-control btn-check quantity"
             min="0"
             type="number"
-            id="command__{{day_time}}__{{command_id}}__{{client.id}}"
-            name="command__{{day_time}}__{{command_id}}__{{client.id}}"
+            id="command_command__{{day_time}}__{{command_id}}__{{client.id}}"
+            name="command_command__{{day_time}}__{{command_id}}__{{client.id}}"
             value={{day_time_command}}
         >
-        <label class="btn mx-0 p-0 quantity_label" for="command__{{day_time}}__{{command_id}}__{{client.id}}">
-            <button type="button" class="btn {% if day_time_command > 0 %}btn-warning{% else %}btn-outline-light{% endif %} dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <label class="btn mx-0 p-0 quantity_label" for="command_command__{{day_time}}__{{command_id}}__{{client.id}}">
+            <button 
+                type="button" 
+                class="btn 
+                {% if command_opts.comment and command_opts.comment != '' and command_opts.comment != 'None' %}
+                    btn-danger
+                {% elif day_time_command > 0 %}
+                    btn-warning
+                {% else %}
+                    btn-outline-light
+                {% endif %}
+                dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
                 {{day_time_command}}
             </button>
             <div class="dropdown-menu">
@@ -76,14 +89,14 @@
                     <tbody>
                         <tr>
                             <td>
-                                <label class="mx-0 p-0" for="reduction__{{day_time}}__{{command_id}}__{{client.id}}">Réduction /u</label>
+                                <label class="mx-0 p-0" for="comment__{{day_time}}__{{command_id}}__{{client.id}}">Commentaire</label>
                                 <input
-                                    type="number"
+                                    type="text"
                                     min="0"
                                     step="0.05"
-                                    id="reduction__{{day_time}}__{{command_id}}__{{client.id}}"
-                                    name="reduction__{{day_time}}__{{command_id}}__{{client.id}}"
-                                    value="{{command_opts.reduction|tofloat}}"
+                                    id="comment__{{day_time}}__{{command_id}}__{{client.id}}"
+                                    name="comment__{{day_time}}__{{command_id}}__{{client.id}}"
+                                    value="{% if command_opts.comment %}{{command_opts.comment}}{% endif %}"
                                     style="width:{{width_cells}}px;"
                                     class="default_box">
                             </td>

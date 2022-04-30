@@ -37,8 +37,9 @@ class CustomClient(admin.ModelAdmin):
 		('last_name', {'fields': ['last_name']}),
 		('address', {'fields': ['address']}),
 		('postcode', {'fields': ['postcode']}),
+		('address_details', {'fields': ['address_details']}),
 		('cellphone', {'fields': ['cellphone']}),
-		('description', {'fields': ['description']}),
+		('cellphone2', {'fields': ['cellphone2']}),
 		('order', {'fields': ['order']}),
 		('circuit', {'fields': ['circuit']}),
 		('client_command', {'fields': ['client_command']}),
@@ -60,7 +61,6 @@ class CustomCommand(admin.ModelAdmin):
 		('year_date_command', {'fields': ['year_date_command']}),
 		('meals', {'fields': ['meals']}),
 		('comment', {'fields': ['comment']}),
-		('reduction', {'fields': ['reduction']}),
 		('free', {'fields': ['free']}),
 	]
 

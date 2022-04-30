@@ -48,6 +48,22 @@ function openAdTotalModal () {
     });
   }
 
+// show the modal for comments
+function openCommentModal () {
+    // show modal
+    $('#feedmecomment').empty();
+    $('#unique-modal-customer').modal('show');
+  }
+  
+  // close the modal for comments
+  function hideCommentModal () {
+    // hide modal
+    $('#unique-modal-total').modal('hide').on('shown.bs.modal', () => {
+      $('#unique-modal-customer').modal('show');
+      $('#feedmecomment').empty();
+    });
+  }
+
 function openFoodModal () {
     // show modal
     $('#food-modal').modal('show');
@@ -175,10 +191,31 @@ function openFoodModal () {
           const html = getHtml(e.responseText);
           console.log(e)
         },
-  
     });
+  });
 
-
-
+    $('.customer-comment-btn').on('click', function () {
+      console.log("lla");
+      const client = $(this).data('client');
+      const url = 'http://127.0.0.1:8000/api';
+      let urlAd = `${url}/comments/?client_id=${client}`;
+      openCommentModal();
+      $.ajax({
+        url: urlAd,
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: () => {
+        },
+        success: data => {
+          $('#titleCustomerCommentName').text(data.results[0].client_name);
+          data.results.forEach(function (row) {
+            $('#feedmecomment').append(row.html);
+          })
+        },
+        error: (e) => {
+          const html = getHtml(e.responseText);
+          console.log(e)
+        },
+    });
   });
 });

@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.DayByDayCommand.as_view({'get':'list'}), name='api'),
     path('total/', views.DayByDayCommandTotal.as_view({'get':'list'}), name='api'),
     path('circuit-total/', views.DayByDayCircuitTotal.as_view({'get':'list'}), name='api'),
+    path('comments/', views.AllCommentsOfCustomer.as_view({'get':'list'}), name='api'),
 ]

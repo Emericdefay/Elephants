@@ -1,9 +1,24 @@
 {% load static humanize index %}
 
-<div class="text-center">
-        {{ new_client.as_p }}
-        <button class="btn btn-primary align-content-center mx-3"
-                type="submit">
-                Créer
-        </button>
+<style>
+  #client_form label {
+          text-align:start;
+  }
+  #add-modal-body {
+          background-color: lavender;
+  }
+
+</style>
+
+<div class="text-center"
+     id="client_form"
+     style="display: grid;
+            justify-items: stretch;
+            font-weight: bold;"
+>
+    {{ new_client }}
+    <button class="btn btn-primary align-content-center mx-3 mt-3"
+            type="submit">
+            Créer
+    </button>
 </div>

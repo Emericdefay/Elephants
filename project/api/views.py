@@ -11,7 +11,6 @@ from project.manager import models
 from . import serializers, filters
 
 
-# Create your views here.
 class DayByDayCommand(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = (permissions.AllowAny,)
     filter_backends = [DjangoFilterBackend, ]
@@ -21,6 +20,7 @@ class DayByDayCommand(mixins.ListModelMixin, viewsets.GenericViewSet):
     def get_queryset(self):
         # get non expired ads
         qs = models.Command.objects.filter(
+            command_command__gt=0,
             client__circuit_id=self.request._request.GET.get('circuit'),
             day_date_command=self.request._request.GET.get('day_date_command'),
             month_date_command=self.request._request.GET.get('month_date_command'),
@@ -29,7 +29,6 @@ class DayByDayCommand(mixins.ListModelMixin, viewsets.GenericViewSet):
         return qs
 
 
-# Create your views here.
 class DayByDayCommandTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = (permissions.AllowAny,)
     filter_backends = [DjangoFilterBackend, ]
@@ -47,7 +46,7 @@ class DayByDayCommandTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
             )
         return qs
 
-# Create your views here.
+
 class DayByDayCircuitTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = (permissions.AllowAny,)
     filter_backends = [DjangoFilterBackend, ]
@@ -58,3 +57,28 @@ class DayByDayCircuitTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
     def get_queryset(self):
         # get non expired ads
         return models.Command.objects.all().distinct().order_by('circuit')
+
+
+class AllCommentsOfCustomer(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = (permissions.AllowAny,)
+    filter_backends = [DjangoFilterBackend, ]
+    filterset_class = filters.CommandCustomerFilter
+    serializer_class = serializers.AllCommentsOfCustomerSerializer
+    queryset = models.Command.objects.none()
+
+    def get_queryset(self):
+        # get non expired ads
+        print(self.request._request.GET.get('client_id'))
+        return models.Command.objects\
+            .filter(client_id=self.request._request.GET.get('client_id'))\
+            .distinct()\
+            .exclude(
+                    comment='',
+                    )\
+            .exclude(
+                    comment=None,
+                    )\
+            .exclude(
+                    comment='None',
+                    )\
+            .order_by('year_date_command', 'month_date_command', 'day_date_command')

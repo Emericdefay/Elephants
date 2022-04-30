@@ -195,6 +195,7 @@
                                 <form action="{% url "manager:update" %}" method="post" id="myform">
                                     {% csrf_token %}
                                     <input type="text" class="d-none" id="save_link" name="save_link" value="">
+                                    <input type="text" class="d-none" id="date_link" name="date_link" value="">
 
                                     <div class="tab-pane fade show active" id="client" role="tabpanel" aria-labelledby="client-tab">
                                         <p>
@@ -223,6 +224,7 @@
                 </div>
             </section>
         </div>
+        <!-- Add Client -->
         <div class="modal fade d-print-none"
              id="add-modal"
              tabindex="-1"
@@ -240,6 +242,7 @@
                 </div>
             </div>
         </div>
+        <!-- Add Circuit -->
         <div class="modal fade"
              id="circuit-modal"
              tabindex="-1"
@@ -257,6 +260,7 @@
                 </div>
             </div>
         </div>
+        <!-- Add Food -->
         <div class="modal fade"
              id="food-modal"
              tabindex="-1"
@@ -274,6 +278,7 @@
                 </div>
             </div>
         </div>
+        <!-- Circuit -->
         <div class="modal fade"
              id="unique-modal"
              tabindex="-1"
@@ -312,6 +317,7 @@
                 </div>
             </div>
         </div>
+        <!-- Circuit TOTAL -->
         <div class="modal fade"
              id="unique-modal-total"
              tabindex="-1"
@@ -338,6 +344,40 @@
                         </table>
                     </div>
                     <div class="modal-footer justify-content-center" id="unique-modal-footer-total">
+                        {% comment %} <button class="btn btn-primary">
+                            Envoyer
+                        </button> {% endcomment %}
+                        <button class="btn btn-secondary" onclick="PrintElem('unique-modal-body');">
+                            Imprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Customers Comment -->
+        <div class="modal fade"
+             id="unique-modal-customer"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content" id="loading-text-customer">
+                    <div class="modal-body text-center" id="unique-modal-body-customer">
+                        <h1 id="titleCustomerComment">Historique des commentaires</h1>
+                        <h2 id="titleCustomerCommentName"></h2>
+                        <table class="responsive-table-input-matrix table table-hover">
+                            <thead class="overflow-auto table-dark">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Commentaires</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feedmecomment">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer justify-content-center" id="unique-modal-footer-customer">
                         {% comment %} <button class="btn btn-primary">
                             Envoyer
                         </button> {% endcomment %}

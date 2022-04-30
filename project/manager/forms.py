@@ -1,4 +1,5 @@
 # Django Libs:
+from logging import PlaceHolder
 from django import forms
 from .choices import FoodCategory
 from .models import Food, Client, Circuit, DefaultCommand, Command, WeekRange
@@ -23,19 +24,18 @@ class FoodForm(forms.ModelForm):
 class ClientForm(forms.ModelForm):
 	"""Surcharge the class Client to put place holder
 	and remove help_text."""
-	first_name = forms.Field(label="Prénom", )
-	last_name = forms.Field(label="Nom", )
-	address = forms.Field(label="Adresse postale", )
-	postcode = forms.Field(label="00000 Ville", )
-	cellphone = forms.Field(label="Téléphone", )
-	description = forms.Field(label="Description", )
+	first_name = forms.Field(label="Prénom", widget=forms.TextInput(attrs={'placeholder': 'Prénom'}))
+	last_name = forms.Field(label="Nom", widget=forms.TextInput(attrs={'placeholder': 'Nom'}))
+	address = forms.Field(label="Adresse postale", widget=forms.TextInput(attrs={'placeholder': '5, Rue Salteur'}))
+	postcode = forms.Field(label="00000 Ville", widget=forms.TextInput(attrs={'placeholder': '73000 Chambery'}))
+	address_details = forms.Field(label="Détails", widget=forms.TextInput(attrs={'placeholder': 'Digicode, au troisième, Chez "un tel"'}))
+	cellphone = forms.Field(label="Téléphone", widget=forms.TextInput(attrs={'placeholder': '0600000000'}))
+	cellphone2 = forms.Field(label="Téléphone secondaire", widget=forms.TextInput(attrs={'placeholder': "De l'un de ses enfants?"}))
 	circuit = forms.ModelChoiceField(label='Tournée',empty_label=None, queryset=Circuit.objects.all(), widget=forms.Select)
-	#client_command = forms.MultipleChoiceField(label="Commande générale", choices=Circuit.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
-	#circuit = forms.MultipleChoiceField(label="", choices=Circuit.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-inline'}))
 
 	class Meta:
 		model = Client
-		fields = [ 'first_name', 'last_name', 'address', 'postcode', 'cellphone', 'description', 'circuit']
+		fields = [ 'first_name', 'last_name', 'address', 'postcode', 'cellphone', 'cellphone2', 'circuit']
 
 
 class DefaultCommandForm(forms.ModelForm):
@@ -75,7 +75,6 @@ class CommandForm(forms.ModelForm):
 	day_date_command   = forms.DateField(label="", widget=forms.Select(choices=DAY_CHOICES)  )
 	year_date_command  = forms.DateField(label="", widget=forms.Select(choices=YEAR_CHOICES) )
 	month_date_command = forms.DateField(label="", widget=forms.Select(choices=MONTH_CHOICES))
-	reduction          = forms.FloatField(label="",)
 	free               = forms.BooleanField(label="")
 
 	class Meta:

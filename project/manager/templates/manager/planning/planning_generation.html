@@ -20,7 +20,7 @@
                     {{gradients|get_value:client.circuit.id}}
                 ;">
                 
-            <td class="meals meals-details" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>{{client.last_name}}<br>{{client.first_name}}</strong></td>
+            <td class="meals meals-details customer-comment-btn" data-client="{{client.id}}" style="min-width:{{width_text_cells}}px; max-width:{{width_text_cells_max}}px;"><strong>{{client.last_name}}<br>{{client.first_name}}</strong></td>
             {% for day in range_dates %}
                 {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
                     {% with command_list|get:forloop.counter0 as command_client %}

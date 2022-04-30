@@ -34,6 +34,7 @@ class DayByDayCommandSerializer(serializers.ModelSerializer):
             'title',
         )
 
+
 class DayByDayCommandTotalSerializer(serializers.ModelSerializer):
     html = serializers.SerializerMethodField()
     def get_html(self, obj):
@@ -56,6 +57,7 @@ class DayByDayCommandTotalSerializer(serializers.ModelSerializer):
         fields = (
             'html',
         )
+
 
 class DayByDayCircuitSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
@@ -83,4 +85,26 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
             'html',
             'id',
             'title',
+        )
+
+
+class AllCommentsOfCustomerSerializer(serializers.ModelSerializer):
+    html = serializers.SerializerMethodField()
+    client_name = serializers.SerializerMethodField()
+
+    def get_html(self, obj):
+        data = render_to_string(template_name='customer_comment.html',
+                                context={
+                                    'commands': obj,
+                                })
+        return mark_safe(data)
+
+    def get_client_name(self, obj):
+        return f"{obj.client.last_name} {obj.client.first_name}"
+
+    class Meta:
+        model = Command
+        fields = (
+            'html',
+            'client_name',
         )

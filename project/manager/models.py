@@ -44,8 +44,9 @@ class Client(models.Model):
     last_name = models.CharField(verbose_name=("Nom"), max_length=100, blank=False, null=False)
     address = models.CharField(verbose_name=("Adresse"), max_length=1000, blank=False, null=False)
     postcode = models.CharField(verbose_name=("00000 Ville"), max_length=1000, blank=False, null=False)
+    address_details = models.CharField(verbose_name=("Details"), max_length=1000, blank=True, null=True)
     cellphone = models.CharField(verbose_name=("Telephone"), max_length=20, blank=True, null=True)
-    description = models.TextField(verbose_name=("Description"), max_length=1000, blank=True, null=True)
+    cellphone2 = models.CharField(verbose_name=("Telephone secondaire"), max_length=20, blank=True, null=True)
     order =models.IntegerField(verbose_name=("Position de tournée"), default=0)
     client_command = models.ManyToManyField(DefaultCommand, related_name='command', blank=True)
     # TODO : models.SET(get_standart_circuit)
@@ -93,7 +94,6 @@ class Command(models.Model):
     year_date_command = models.IntegerField(verbose_name="", blank=False)
     meals = models.ManyToManyField(DefaultCommand, related_name='meals', blank=True)
     comment = models.TextField(verbose_name="", blank=True, null=True)
-    reduction = models.FloatField(verbose_name="", blank=True, null=True)
     def __str__(self):
         return f"{self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
 

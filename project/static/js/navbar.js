@@ -1,7 +1,9 @@
 $(function () {
+  $("#date_link").val(window.location.href.split('?tab=#')[0].split('8000')[1]);
   // debug, re-able to click on links several times
   $(".nav-item").on('click custom', async function (event) {
     event.preventDefault();
+    console.log(window.location.href.split('?tab=#')[0].split('8000')[1]);
     const base = $(this).children().attr('aria-controls');
     $('.nav-item').each(function () {
       if (!$(this).children().attr('type')) {
@@ -16,7 +18,7 @@ $(function () {
         $("#calendarBtn").children().each(async function () {
           this.href = `${this.href.split('?tab=#')[0]}?tab=#${base}-tab`;
         })
-        $("#save_link").val(`?tab=#${base}-tab`)
+        $("#save_link").val(`?tab=#${base}-tab`);
         window.history.pushState('page2', 'Title', `?tab=#${base}-tab`);
       }
     })
@@ -46,15 +48,15 @@ $(window).on('load',async function () {
             $("#calendarBtn").children().each(async function () {
               this.href = `${this.href.split('?tab=#')[0]}?tab=#${base}-tab`;
             })
-            $("#save_link").val(`?tab=#${base}-tab`)
+            $("#save_link").val(`?tab=#${base}-tab`);
           }
         })
       }
     $(`#${base}-tab`).addClass('active');  
     }) 
   } catch (error) {
-    console.log(error)
-    window.open("http://127.0.0.1:8000/?tab=#client-tab","_self")
+    console.log(error);
+    window.open("http://127.0.0.1:8000/?tab=#client-tab","_self");
   }
 
   
