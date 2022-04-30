@@ -82,3 +82,20 @@ class AllCommentsOfCustomer(mixins.ListModelMixin, viewsets.GenericViewSet):
                     comment='None',
                     )\
             .order_by('year_date_command', 'month_date_command', 'day_date_command')
+
+
+class CommandCommentUpdate(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return models.Command.objects.get(pk=pk)
+        except models.Command.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk, format=None):
+        command = self.get_object(pk)
+        command.comment = ""
+        command.save()
+        return Response()

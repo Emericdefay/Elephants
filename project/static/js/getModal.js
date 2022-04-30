@@ -195,7 +195,6 @@ function openFoodModal () {
   });
 
     $('.customer-comment-btn').on('click', function () {
-      console.log("lla");
       const client = $(this).data('client');
       const url = 'http://127.0.0.1:8000/api';
       let urlAd = `${url}/comments/?client_id=${client}`;
@@ -211,9 +210,26 @@ function openFoodModal () {
           data.results.forEach(function (row) {
             $('#feedmecomment').append(row.html);
           })
+          $('.delete-comment').on('click', function () {
+            command = $(this).data('command');
+            const url = 'http://127.0.0.1:8000/api';
+            let urlAd = `${url}/comment-delete/${command}/`;
+            $.ajax({
+              url: urlAd,
+              type: 'PUT',
+              dataType: 'json',
+              beforeSend: () => {
+              },
+              success: data => {
+                $(`.row-${command}`).css( "background-color", "darkgray" );
+              },
+              error: (e) => {
+                $(`.row-${command}`).css( "background-color", "darkgray" );
+              },
+            });
+          });
         },
         error: (e) => {
-          const html = getHtml(e.responseText);
           console.log(e)
         },
     });

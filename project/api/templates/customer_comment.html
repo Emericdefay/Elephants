@@ -1,8 +1,13 @@
 {% load static humanize index %}
 
-<tr>
+<tr class="row-{{commands.id}}">
     <td>{{commands.day_date_command}}/{{commands.month_date_command}}/{{ commands.year_date_command}}</td>
     <td>
         {{commands.comment}}
+    </td>
+    <td>
+        <button class="delete-comment btn btn-danger" data-command="{{commands.id}}">
+            ❌
+        </button>
     </td>
 </tr>
