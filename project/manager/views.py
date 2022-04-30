@@ -25,7 +25,7 @@ from django.views.generic.dates import timezone_today
 from django.shortcuts import render
 
 # app libs
-from .models import Food, Client, Circuit, Command, DefaultCommand, FoodCategory, WeekRange
+from .models import Food, Client, Circuit, Command, DefaultCommand, FoodCategory, WeekRange, Company
 from .forms import ClientForm, CircuitForm, DefaultCommandForm, CommandForm, FoodForm
 
 from django.db.models import FloatField
@@ -180,6 +180,16 @@ class UpdateHomeView(View):
         for food_id, kwargs in values_by_id.items():
             Food.objects.filter(id=food_id).update(**kwargs)
 
+    def synth_company(self, save):
+        """ INFO COMPANY """
+        targets = ['comment_comp', 'cellphone_comp', 'company_comp', 'address_comp', 'siret_comp', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key) in targets:
+                key_values.update({key: value})
+        # save
+        Company.objects.filter(id=1).update(**key_values)
+
 
     def post(self, request, *args, **kwargs):
         """_summary_
@@ -197,6 +207,9 @@ class UpdateHomeView(View):
         print(".", end="")
         # save food
         self.synth_food(save)
+        print(".", end="")
+        # save company
+        self.synth_company(save)
         print(".", end=" ")
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
         return redirect(reverse('manager:index') + save['date_link'][1:] + save['save_link'])
@@ -412,6 +425,8 @@ class HomeView(TemplateView, UpdateView):
             month_date_command=kwargs['month'] if 'month' in kwargs else datetime.now().month,
             )
 
+        context['company'] = Company.objects.get_or_create(id=1)[0]
+
         return context
 
     def object(self, *args, **kwargs):
@@ -506,17 +521,16 @@ class CreateExcel(View):
                     color='FF363742')
 
     def init_sheet(self, sheet):
+        company = Company.objects.get(id=1)
         # h1
         sheet['D24'] = "Total TTC"
         sheet['D24'].font = self.font_h1()
-        sheet['E31'] = "07 63 42 08 54"
+        sheet['E31'] = company.cellphone_comp
         sheet['E31'].font = self.font_h1()
         sheet['E31'].alignment = Alignment(horizontal="center")
         # h2
-        sheet['E12'] = "Chambéry, le"
-        sheet['E12'].font = self.font_h2()
-        sheet['F12'] = f"{datetime.now().day}-{datetime.now().month}-{datetime.now().year}"
-        sheet['F12'].font = self.font_h2()
+        sheet['D12'] = "Chambéry, le"
+        sheet['D12'].font = self.font_h2()
         sheet['C14'] = f"{datetime.now().month}"
         sheet['C14'].font = self.font_h2()
         sheet['C16'] = "Nombre de repas"
@@ -531,20 +545,28 @@ class CreateExcel(View):
         sheet['D22'] = "TVA 5.5%"
         sheet['D22'].font = self.font_p1()
         # p2
-        sheet['E28'] = "Afin de toujours mieux répondre à vos attentes, nous mettons à"
-        sheet['E28'].font = self.font_p2()
-        sheet['E28'].alignment = Alignment(horizontal="center")
-        sheet['E29'] = "votre disposition une ligne téléphonique dédiée à vos repas."
-        sheet['E29'].font = self.font_p2()
-        sheet['E29'].alignment = Alignment(horizontal="center")
+        text = company.comment_comp
+        number_of_lines = len(text) // 80 + 1
+        initial_row = 28
+        put_to_other_line = ''
+        for row_offset in range(number_of_lines):
+            text_line = put_to_other_line + text[row_offset * 80:(row_offset + 1) * 80]
+            put_to_other_line = ''
+            if text_line[-1] != ' ' and row_offset != number_of_lines - 1:
+                put_to_other_line = text_line.split(' ')[-1]
+                text_line = ' '.join(text_line.split(' ')[:-1])
+
+            sheet[f'E{initial_row + row_offset}'] = text_line
+            sheet[f'E{initial_row + row_offset}'].font = self.font_p2()
+            sheet[f'E{initial_row + row_offset}'].alignment = Alignment(horizontal="center")
         # foot
-        sheet['E34'] = "SARL ELEPHANT"
+        sheet['E34'] = company.company_comp
         sheet['E34'].font = self.font_foot()
         sheet['E34'].alignment = Alignment(horizontal="center")
-        sheet['E35'] = "1 Rue Claude Martin - 73000 CHAMBERY"
+        sheet['E35'] = company.address_comp
         sheet['E35'].font = self.font_foot()
         sheet['E35'].alignment = Alignment(horizontal="center")
-        sheet['E36'] = "SIRET 45149094000017"
+        sheet['E36'] = company.siret_comp
         sheet['E36'].font = self.font_foot()
         sheet['E36'].alignment = Alignment(horizontal="center")
 
@@ -555,6 +577,14 @@ class CreateExcel(View):
         wb = Workbook()
         month = self.request.POST.get('month', datetime.now().month)
         year = self.request.POST.get('year', datetime.now().year)
+        date_posted = self.request.POST.get('date', "")
+        print(f" date posted : {date_posted}")
+        print(date_posted != "")
+        if date_posted != "":
+            dates = date_posted.split('-')
+            date = '-'.join([dates[-1], dates[1], dates[0]])
+        else:
+            date = f"{datetime.now().year}-{datetime.now().month}-{datetime.now().day}"
         clients = Client.objects.all().order_by('circuit')
         commands = Command.objects.filter(year_date_command=year, month_date_command=month)
 
@@ -572,6 +602,10 @@ class CreateExcel(View):
 
             # Insert image
             active_sheet.add_image(img)
+
+            # Insert date
+            active_sheet['F12'] = date
+            active_sheet['F12'].font = self.font_h2()
 
             # set clients address
             active_sheet['H8'] = f"{client.last_name} {client.first_name}"
@@ -600,12 +634,12 @@ class CreateExcel(View):
                     )['sum']
             if not TTC:
                 TTC = 0.0
-            active_sheet['F21'] = TTC * (100-5.5) / 100
-            active_sheet['F21'].font = self.font_h2()
-            active_sheet['F22'] = TTC * 5.5 / 100
-            active_sheet['F22'].font = self.font_h2()
             active_sheet['F24'] = TTC
             active_sheet['F24'].font = self.font_h2()
+            active_sheet['F21'] = "=F24*(1-0.055)"
+            active_sheet['F21'].font = self.font_h2()
+            active_sheet['F22'] = "=F24*0.055"
+            active_sheet['F22'].font = self.font_h2()
 
             # format €
             active_sheet['F21'].number_format = '#,##0.00€' 
@@ -618,10 +652,10 @@ class CreateExcel(View):
                 'B': 13,
                 'C': 4,
                 'D': 10,
-                'E': 14,
-                'F': 8,
+                'E': 5,
+                'F': 10,
                 'G': 4,
-                'H': 20,
+                'H': 25,
             }
             for col, value in dims.items():
                 active_sheet.column_dimensions[col].width = value

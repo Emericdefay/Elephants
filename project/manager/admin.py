@@ -2,7 +2,7 @@
 from turtle import title
 from django.contrib import admin
 # Local Libs:
-from .models import Food, DefaultCommand, Circuit, Client, Day, Month, Year, Command, WeekRange
+from .models import Food, DefaultCommand, Circuit, Client, Day, Month, Year, Command, WeekRange, Company
 
 
 class CustomFood(admin.ModelAdmin):
@@ -65,3 +65,17 @@ class CustomCommand(admin.ModelAdmin):
 	]
 
 admin.site.register(Command, CustomCommand)
+
+
+class CustomCompany(admin.ModelAdmin):
+	"""Allow to edit Company informations"""
+	# list_display = ('', )
+	fieldsets = [
+		('comment_comp', {'fields': ['comment_comp']}),
+		('cellphone_comp', {'fields': ['cellphone_comp']}),
+		('company_comp', {'fields': ['company_comp']}),
+		('address_comp', {'fields': ['address_comp']}),
+		('siret_comp', {'fields': ['siret_comp']}),
+	]
+
+admin.site.register(Company, CustomCompany)

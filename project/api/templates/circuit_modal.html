@@ -10,13 +10,13 @@
         {{commands.client.last_name}}<br>{{commands.client.first_name}}
     </td>
     <td style="vertical-align: middle; overflow-wrap: anywhere; max-width:8em;">
-        ◾{{commands.client.address}}<br>
-        ◾{{commands.client.postcode}}<br>
-        ◾{{commands.client.address_details}}<br>
+        {{commands.client.address}}<br>
+        {{commands.client.postcode}}
+        {% if commands.client.address_details %}<br>{{commands.client.address_details}}{% endif %}
     </td>
     <td style="vertical-align: middle;">
-        ◾{{commands.client.cellphone}}<br>
-        ◾{{commands.client.cellphone2}}
+        {{commands.client.cellphone}}
+        {% if commands.client.cellphone2 %}<br>{{commands.client.cellphone2}}{% endif %}
     </td>
             {% for food in foods %}
             <td style="vertical-align: middle;">

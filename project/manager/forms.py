@@ -2,7 +2,7 @@
 from logging import PlaceHolder
 from django import forms
 from .choices import FoodCategory
-from .models import Food, Client, Circuit, DefaultCommand, Command, WeekRange
+from .models import Food, Client, Circuit, DefaultCommand, Command, WeekRange, Company
 from django.utils.safestring import mark_safe
 from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
@@ -75,7 +75,6 @@ class CommandForm(forms.ModelForm):
 	day_date_command   = forms.DateField(label="", widget=forms.Select(choices=DAY_CHOICES)  )
 	year_date_command  = forms.DateField(label="", widget=forms.Select(choices=YEAR_CHOICES) )
 	month_date_command = forms.DateField(label="", widget=forms.Select(choices=MONTH_CHOICES))
-	free               = forms.BooleanField(label="")
 
 	class Meta:
 		model = Command
@@ -85,8 +84,24 @@ class CommandForm(forms.ModelForm):
 class WeekRangeForm(forms.ModelForm):
 	"""Surcharge the class Command to put place holder
 	and remove help_text."""
-	range    = forms.IntegerField(label="", )
+	range = forms.IntegerField(label="", )
 
 	class Meta:
 		model = WeekRange
 		fields = ['range', ]
+
+
+# class CompanyForm(forms.ModelForm):
+# 	"""
+# 	Surcharge the class Company to put place holder
+# 	and remove help_text.
+# 	"""
+# 	comment   = forms.Field(label="aa", )
+# address   = forms.Field(label="zz", )
+# company   = forms.Field(label="za", )
+# siret     = forms.Field(label="vv", )
+# cellphone = forms.Field(label="zz", )
+
+# class Meta:
+# 	model = Company
+# 	fields = ['comment', 'cellphone', 'company', 'address', 'siret']

@@ -54,6 +54,7 @@ class Client(models.Model):
 
     class Meta:
         ordering = ['circuit', 'last_name', 'first_name']
+
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
 
@@ -62,6 +63,7 @@ class Day(models.Model):
     """_summary_
     """
     date = models.IntegerField(verbose_name=("Jour"), blank=False, null=False)
+
     def __str__(self):
         return f"{self.date}"
 
@@ -70,6 +72,7 @@ class Month(models.Model):
     """_summary_
     """
     date = models.IntegerField(verbose_name=("Mois"), blank=False, null=False)
+
     def __str__(self):
         return f"{self.date}"
 
@@ -78,6 +81,7 @@ class Year(models.Model):
     """_summary_
     """
     date = models.IntegerField(verbose_name=("Année"), blank=False, null=False)
+
     def __str__(self):
         return f"{self.date}"
 
@@ -94,8 +98,22 @@ class Command(models.Model):
     year_date_command = models.IntegerField(verbose_name="", blank=False)
     meals = models.ManyToManyField(DefaultCommand, related_name='meals', blank=True)
     comment = models.TextField(verbose_name="", blank=True, null=True)
+
     def __str__(self):
         return f"{self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
+
+
+class Company(models.Model):
+    """_summary_
+    """
+    comment_comp = models.TextField(verbose_name="Commentaire sous TTC", max_length=240, blank=True, null=True)
+    cellphone_comp = models.TextField(verbose_name="Telephone Les Elephants", blank=True, null=True)
+    company_comp = models.TextField(verbose_name="Nom de l'entreprise", blank=True, null=True)
+    address_comp = models.TextField(verbose_name="Adresse de l'entreprise", blank=True, null=True)
+    siret_comp = models.TextField(verbose_name="Numéro SIRET", blank=True, null=True)
+
+    def __str__(self):
+        return "Modèle de facture"
 
 
 class WeekRange(models.Model):
