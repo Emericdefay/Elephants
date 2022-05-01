@@ -57,7 +57,7 @@
             {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
                 <tr 
                 class="day_cells unique-circuit-btn" 
-                style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px;{% else %}background-color:blanchedalmond; width:{{width_cells}}px;{% endif %} text-align:end; font-weight:bold;"
+                style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px;{% else %}background-color:sandybrown; width:{{width_cells}}px;{% endif %} text-align:end; font-weight:bold;"
                 data-year={{this_year}}
                 data-month={{this_month}}
                 data-day={{this_day}}

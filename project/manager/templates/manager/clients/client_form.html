@@ -1,15 +1,5 @@
 {% load static humanize index %}
 
-<style>
-  #client_form label {
-          text-align:start;
-  }
-  #add-modal-body {
-          background-color: lavender;
-  }
-
-</style>
-
 <div class="text-center"
      id="client_form"
      style="display: grid;
@@ -17,6 +7,8 @@
             font-weight: bold;"
 >
     {{ new_client }}
+
+    <div class="text-danger mt-3">Avant de créer ce client, pensez à enregistrer vos modifications.</div>
     <button class="btn btn-primary align-content-center mx-3 mt-3"
             type="submit">
             Créer

@@ -1,5 +1,32 @@
 .modal-header {
-    background-color: skyblue;
+    background-color: darksalmon;
     font-family: cursive;
     font-size: x-large;
+}
+
+body {
+    background-color: antiquewhite;
+}
+#menu {
+    background-color: bisque;
+}
+
+#food-modal-body {
+    background-color: bisque;
+}
+#circuit-modal-body {
+    background-color: bisque;
+}
+#add-modal-body {
+    background-color: bisque;
+}
+
+#food_form label {
+    text-align:start;
+}
+#client_form label {
+    text-align:start;
+}
+#circuit_form label {
+    text-align:start;
 }

@@ -4,17 +4,17 @@
 
    <tr 
     class="day_cells"
+    style="border-top: 2px solid black;"
     id="total-circuit-{{circuit.id}}" 
     >
-        <td>
+        <td style="background-color: lightgrey;
+                   font-weight: bold;">
                 Total
         </td>
             {% for food in foods %}
-            <td>
+            <td style="font-weight: bold;background-color: lightgrey;">
                 {% if command_client %}
-                <strong>
                     {{command_client|make_query|query_filter_search:search|query_sum_morning2:food}}
-                </strong>
                 {% endif %}
             </td>
             {% endfor %}

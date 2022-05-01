@@ -1,56 +1,58 @@
 {% load static humanize %}
 {% load index %}
 
-<h3>
-    Plats
-    <button
-    class="btn btn-info align-content-center mx-3 food-add-btn"
-    type="button"
-    id="createFood"
-    >
-    Ajouter
-  </button>
-</h3>
-<table class="responsive-table-input-matrix table">
-<thead class="overflow-auto table-dark">
-    <tr>
-        <th>Catégorie</th>
-        <th>Prix</th>
-    </tr>
-</thead>
-<tbody class="overflow-auto">
-    {% with foodcategories as foodcategories %}
-    {% for food in formDefaultCommand %}
+<div style="text-align: -webkit-center;">
+    <h3 style="padding-right: 17%;">
+        Plats
+        <button
+        class="btn btn-success align-content-center mx-3 food-add-btn"
+        type="button"
+        id="createFood"
+        >
+        Ajouter
+      </button>
+    </h3>
+    <table class="responsive-table-input-matrix table w-auto">
+    <thead class="overflow-auto table-dark">
         <tr>
-            {% with food.id as price %}
-            {% with food.default as id_food %}
-
-            <td>
-                <input
-                    type="text"
-                    min=0
-                    id="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                    name="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                    {% comment %} value={{ foodcategories|index:forloop.counter0|index:1 }} {% endcomment %}
-                    value={{ formDefaultCommand|query_from_id_get_name:food.id }}
-                    style="width:{{width_cells}}px;"
-                    class="default_box">
-            </td>
-            <td>
-                <input
-                    type="number"
-                    min=0
-                    step=0.05
-                    id="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                    name="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                    value={{formDefaultCommand|query_from_id_get_price:food.id}}
-                    style="width:{{width_cells}}px;"
-                    class="default_box">
-            </td>
-            {% endwith %}
-            {% endwith %}
-            
+            <th>Catégorie</th>
+            <th>Prix</th>
         </tr>
-        {% endfor %}
-    {% endwith %}
-</table>
+    </thead>
+    <tbody class="overflow-auto" style="background-color: wheat;">
+        {% with foodcategories as foodcategories %}
+        {% for food in formDefaultCommand %}
+            <tr>
+                {% with food.id as price %}
+                {% with food.default as id_food %}
+    
+                <td>
+                    <input
+                        type="text"
+                        min=0
+                        id="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                        name="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                        {% comment %} value={{ foodcategories|index:forloop.counter0|index:1 }} {% endcomment %}
+                        value={{ formDefaultCommand|query_from_id_get_name:food.id }}
+                        style="width:{{width_cells}}px;"
+                        class="default_box">
+                </td>
+                <td>
+                    <input
+                        type="number"
+                        min=0
+                        step=0.05
+                        id="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                        name="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                        value={{formDefaultCommand|query_from_id_get_price:food.id}}
+                        style="width:{{width_cells}}px;"
+                        class="default_box">
+                </td>
+                {% endwith %}
+                {% endwith %}
+                
+            </tr>
+            {% endfor %}
+        {% endwith %}
+    </table>
+</div>
