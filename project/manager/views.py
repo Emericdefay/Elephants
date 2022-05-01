@@ -668,8 +668,8 @@ class CreateExcel(View):
             img.width  = 115
 
             # Create sheet
-            wb.create_sheet(f"{client.id} - {client.last_name} {client.first_name} ")
-            active_sheet = wb[f"{client.last_name} {client.first_name}"]
+            wb.create_sheet(f"{client.id} - {client.last_name} {client.first_name}")
+            active_sheet = wb[f"{client.id} - {client.last_name} {client.first_name}"]
             active_sheet = self.init_sheet(active_sheet, month)
 
             # Insert image
