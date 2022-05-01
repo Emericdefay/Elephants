@@ -16,7 +16,7 @@
             {% for food in foods %}
             <td style="vertical-align: middle; font-weight: bold; background-color: lightgrey;">
                 {% if commands %}
-                        {{command_client|make_query|query_filter_search:search|query_filter_client__circuit:commands.client.circuit|query_sum_morning2:food}}
+                        {{command_client|make_query|query_filter_search:search|query_filter_client__circuit:commands.client.circuit|query_sum_morning:food}}
                 {% endif %}
             </td>
             {% endfor %}

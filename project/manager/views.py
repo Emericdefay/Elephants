@@ -2,6 +2,7 @@
 import os
 import json
 import operator
+from itertools import islice
 import logging
 from calendar import monthrange
 import locale
@@ -87,7 +88,7 @@ class UpdateHomeView(View):
 
     def synth_planning(self, save):
         """ PLANNING INFO """
-        targets = ['command_command', 'comment', ]
+        targets = ['command_command', ]
         key_values = {}
         for key, value in save.items():
             if str(key).split('__')[0] in targets:
@@ -102,6 +103,9 @@ class UpdateHomeView(View):
         values_by_id_2 = dict()
         values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
         # save
+        print("--- save commands  ", end=" ")
+        start_time = time.time()
+        objs = []
         for key, value in values_by_id_2.items():
             if value != '' or value != None:
                 command_id = key[-1]
@@ -111,10 +115,45 @@ class UpdateHomeView(View):
                                             id=command_id,
                                         )
                     command.command_command = value
-                    command.comment = value
-                    command.save(update_fields=[key[0]])
+                    objs.append(command)
                 except ValueError as e:
                     pass
+        Command.objects.bulk_update(objs, ['command_command'])
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
+        targets = ['comment', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets:
+                key_values.update({key: value})
+        # print(key_values)
+        # detect id
+        ids = set()
+        for i in key_values.keys():
+            ids.add(i.split('__')[-1])
+        # print(ids)
+        # regroup by id
+        values_by_id_2 = dict()
+        values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
+        # save
+        print("--- save comment ", end=" ")
+        start_time = time.time()
+        objs = []
+        for key, value in values_by_id_2.items():
+            if value != '' or value != None:
+                command_id = key[-1]
+                try:
+                    command = Command.objects\
+                                        .get(
+                                            id=command_id,
+                                        )
+                    command.comment = value
+                    objs.append(command)
+                except ValueError as e:
+                    pass
+        Command.objects.bulk_update(objs, ['comment'])
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
+        print("--- save meals ", end=" ")
+        start_time = time.time()
         targets = ['meals', ]
         key_values = {}
         for key, value in save.items():
@@ -146,15 +185,15 @@ class UpdateHomeView(View):
                 )
             except:
                 pass
-        #print({ key: dict_list_food[key] for keykey in  })
         for id_ in dict_list_food_2.keys():
             for food in DefaultCommand.objects.all():
                 if food.id in dict_list_food_2[id_]:
-                    if Command.objects.filter(id=id_).filter(meals__in=[food]):
+                    if Command.objects.filter(id=id_).filter(meals=food):
                         continue
                     Command.objects.get(id=id_).meals.add(food)
                     continue
                 Command.objects.get(id=id_).meals.remove(food)
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
 
     def synth_food(self, save):
         """ INFO CLIENT """
@@ -195,22 +234,30 @@ class UpdateHomeView(View):
         """_summary_
         """
         print("\nSauvegarde", end="")
-        start_time = time.time()
         # Getting saves
+        print("- Getting saves ", end="")
+        start_time = time.time()
         save = self.request._post
-        print(".", end="")
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
         # save client
+        print("- save client ", end="")
+        start_time = time.time()
         self.synth_client(save)
-        print(".", end="")
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
         # save planning
+        print("- save planning ", end="\n")
+        start_time = time.time()
         self.synth_planning(save)
-        print(".", end="")
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
         # save food
+        print("- save food ", end="")
+        start_time = time.time()
         self.synth_food(save)
-        print(".", end="")
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
         # save company
+        print("- save company ", end=" ")
+        start_time = time.time()
         self.synth_company(save)
-        print(".", end=" ")
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
         return redirect(reverse('manager:index') + save['date_link'][1:] + save['save_link'])
 
@@ -341,32 +388,82 @@ class HomeView(TemplateView, UpdateView):
         
         range_dates = [date_start + datetime_.timedelta(days=x) for x in range(0, (date_ending - date_start).days)]
         context['range_dates'] = range_dates
-        range_days = [date.day for date in range_dates]
+        range_days = {date.day for date in range_dates}
+        range_months = {date.month for date in range_dates}
+        range_years = {date.year for date in range_dates}
         
+        # testing optimization purpose
+        # for client_id in range(200):
+        #     Client.objects.get_or_create(
+        #         first_name=client_id,
+        #         last_name=client_id,
+        #         address=client_id,
+        #         postcode=client_id,
+        #         address_details=client_id,
+        #         cellphone=client_id,
+        #         cellphone2=client_id,
+        #         order=client_id,
+        #         circuit=Circuit.objects.get(id=1),
+        #     )
+
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
+
+        # TODO : Optimiser la génération des commandes : ne prendre que les 
+        #        commandes existantes et créer les nouvelles uniquement après
+        #        ajouts de commandes.
         print("Phase 2 :", end=" ")
+        start_time = time.time()  
+        dict_days_clients_commands_dont_exist = dict()
+        for client_id in list(existing_clients):
+            for day in range_dates:
+                if not Command.objects\
+                    .filter(
+                    client_id=client_id,
+                    day_date_command=day.day,
+                    month_date_command=day.month,
+                    year_date_command=day.year,
+                    ).exists():
+                    dict_days_clients_commands_dont_exist[(client_id, day)] = {'day':day.day, 'month':day.month, 'year':day.year}
+        batch_size = 100
+        objs = (Command(
+            client=Client.objects.get(id=client_day[0]),
+            circuit=Client.objects.get(id=client_day[0]).circuit,
+            day_date_command=dates.get('day'),
+            month_date_command=dates.get('month'),
+            year_date_command=dates.get('year'),
+            ) for client_day, dates in dict_days_clients_commands_dont_exist.items())
+        while True:
+            batch = list(islice(objs, batch_size))
+            if not batch:
+                break
+            Command.objects.bulk_create(batch, batch_size)
+
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
+
+        print("Phase 3 :", end=" ")
         start_time = time.time()
 
+        # planning cuts
         cut_actual_commands = []
         actual_commands = Command.objects.none()
         for client_id in list(existing_clients):
-            if actual_commands.count() > 400:
-                cut_actual_commands.append(actual_commands.order_by( 'client', 'client__order', ))
-                actual_commands = Command.objects.none()
             for date in range_dates:
-                actual_commands |= Command.objects.filter(
-                    Q(client_id=client_id)&
-                    Q(day_date_command=date.day)&
-                    Q(month_date_command=date.month)&
-                    Q(year_date_command=date.year)
-                )
-        if actual_commands.count() > 0:
+                actual_commands |= Command.objects\
+                .filter(client_id=client_id)\
+                .filter(day_date_command=date.day)\
+                .filter(month_date_command=date.month)\
+                .filter(year_date_command=date.year)
             cut_actual_commands.append(actual_commands.order_by( 'client', 'client__order', ))
-        context['actual_commands'] = actual_commands.order_by( 'client', 'client__order', )
+            actual_commands = Command.objects.none()
+
         context['cut_actual_commands'] = cut_actual_commands
+        context['actual_commands'] = Command.objects\
+                                            .filter(day_date_command__in=range_days)\
+                                            .filter(month_date_command__in=range_months)\
+                                            .filter(year_date_command__in=range_years)
 
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
-        print("Phase 3 :", end=" ")
+        print("Phase 4 :", end=" ")
         start_time = time.time()
 
         years_weeks = dict()
@@ -393,31 +490,6 @@ class HomeView(TemplateView, UpdateView):
         context['range_weeks'] = range_weeks
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
 
-        # TODO : Optimiser la génération des commandes : ne prendre que les 
-        #        commandes existantes et créer les nouvelles uniquement après
-        #        ajouts de commandes.
-        print("Phase 4 :", end=" ")
-        start_time = time.time()
-
-        for client_id in list(existing_clients):
-            for day in range_dates:
-                Command.objects\
-                    .filter(
-                    client_id=client_id,
-                    day_date_command=day.day,
-                    month_date_command=day.month,
-                    year_date_command=day.year,
-                    )\
-                    .get_or_create(
-                    defaults={
-                        'client':Client.objects.get(id=client_id),
-                        'circuit':Client.objects.get(id=client_id).circuit,
-                        'day_date_command':day.day,
-                        'month_date_command':day.month,
-                        'year_date_command':day.year,
-                    }
-                )
-        print("en %s secondes!\n" % round((time.time() - start_time), 2))
         context['new_client'] = form['new_client']
         context['new_food'] = form['new_food']
         context['new_circuit'] = form['new_circuit']
@@ -449,7 +521,7 @@ class AddNewClient(CreateView):
     model = Client
     fields = [
         'first_name','last_name','address', 'address_details',
-	    'cellphone','description', 'postcode', 'circuit'
+	    'cellphone', 'cellphone2', 'postcode', 'circuit'
         ]
     success_url = reverse_lazy('manager:index')
 
@@ -465,7 +537,7 @@ class AddNewFood(CreateView):
 class AddNewCircuit(CreateView):
     model = Circuit
     fields = [
-        'name', 'description_c',
+        'name',
         ]
     success_url = reverse_lazy('manager:index')
 

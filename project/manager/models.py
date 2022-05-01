@@ -29,7 +29,6 @@ class Circuit(models.Model):
     """_summary_
     """
     name = models.CharField(verbose_name=("Nom de la tournée"), max_length=200, blank=False, null=False)
-    # description_c = models.CharField(verbose_name=("Description de la tournée"), max_length=200, blank=True, null=True)
 
     def __str__(self):
         return f"{self.pk}-{self.name}"
@@ -54,6 +53,7 @@ class Client(models.Model):
 
     class Meta:
         ordering = ['circuit', 'last_name', 'first_name']
+        indexes = [models.Index(fields=['order',]),]
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
@@ -102,6 +102,8 @@ class Command(models.Model):
     def __str__(self):
         return f"[{self.id}] {self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
 
+    class Meta:
+        indexes = [models.Index(fields=['day_date_command', 'month_date_command','year_date_command', 'client']),]
 
 class Company(models.Model):
     """_summary_

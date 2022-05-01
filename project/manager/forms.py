@@ -55,7 +55,6 @@ class CircuitForm(forms.ModelForm):
 	"""Surcharge the class Circuit to put place holder
 	and remove help_text."""
 	name = forms.Field(label="Nom de la tournée", )
-	# description_c = forms.Field(label="Description de la tournée", )
 
 	class Meta:
 		model = Circuit

@@ -77,8 +77,6 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
 
 
     def get_id(self, obj):
-        print(obj)
-        print( f'total-circuit-{obj.client.circuit.id}')
         return f'total-circuit-{obj.client.circuit.id}-{obj.day_date_command}'
 
     def get_html(self, obj):
@@ -136,6 +134,12 @@ class DayByDayCircuitTotalSerializer(serializers.ModelSerializer):
 class AllCommentsOfCustomerSerializer(serializers.ModelSerializer):
     html = serializers.SerializerMethodField()
     client_name = serializers.SerializerMethodField()
+    client_id = serializers.SerializerMethodField()
+    command_id = serializers.SerializerMethodField()
+    day = serializers.SerializerMethodField()
+    month = serializers.SerializerMethodField()
+    year = serializers.SerializerMethodField()
+
 
     def get_html(self, obj):
         data = render_to_string(template_name='customer_comment.html',
@@ -147,9 +151,29 @@ class AllCommentsOfCustomerSerializer(serializers.ModelSerializer):
     def get_client_name(self, obj):
         return f"{obj.client.last_name} {obj.client.first_name}"
 
+    def get_client_id(self, obj):
+        return obj.client.id
+
+    def get_command_id(self, obj):
+        return obj.id
+
+    def get_day(self, obj):
+        return obj.day_date_command
+
+    def get_month(self, obj):
+        return obj.month_date_command
+
+    def get_year(self, obj):
+        return obj.year_date_command
+
     class Meta:
         model = Command
         fields = (
             'html',
             'client_name',
+            'client_id',
+            'command_id',
+            'day',
+            'month',
+            'year',
         )

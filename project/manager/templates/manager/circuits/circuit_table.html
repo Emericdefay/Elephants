@@ -25,7 +25,6 @@
     }
 
     tr:hover{
-        {% comment %} background-color : rgba(0,0,0,.5) !important; {% endcomment %}
         opacity: 1;
     }
 
@@ -53,7 +52,6 @@
             {% with day|day as this_day %}
             {% with day|month as this_month %}
             {% with day|year as this_year %}
-            {% with command_list|get:forloop.counter0 as command_client %}
             {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
                 <tr 
                 class="day_cells unique-circuit-btn" 
@@ -95,7 +93,6 @@
                 <tr 
                 class="day_cells unique-circuit-btn" 
                 style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px; font-weight:bold;{% elif day|day_name|firsts:3 != 'lun' %}background-color:gainsboro; width:{{width_cells}}px;{% endif %} text-align:end; vertical-align: middle;"
-
                 data-year={{this_year}}
                 data-month={{this_month}}
                 data-day={{this_day}}
@@ -103,15 +100,14 @@
                 >
                     <td>
                         {% comment %} NB Clients {% endcomment %}
-                        {% comment %} {% random_int 0 20 %} {% endcomment %}
-                        {% if command_client %}
-                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_count}}
+                        {% if actual_commands %}
+                            {{actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit.id|query_filter_command_passed|query_count}}
                         {% endif %}
                     </td>
                     {% for food in foods %}
                         <td>
-                            {% if command_client %}
-                                {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_sum_morning:food}}
+                            {% if actual_commands %}
+                                {{actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit.id|query_filter_command_passed|query_sum_morning:food}}
                             {% endif %}
                         </td>
                     {% endfor %}
@@ -147,21 +143,20 @@
                     <td>
                         {% comment %} NB Clients {% endcomment %}
                         {% comment %} {% random_int 0 20 %} {% endcomment %}
-                        {% if command_client %}
-                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_count}}
+                        {% if actual_commands %}
+                            {{actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_count}}
                         {% endif %}
                     </td>
                     {% for food in foods %}
                         <td>
-                            {% if command_client %}
-                                {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_sum_morning:food}}
+                            {% if actual_commands %}
+                                {{actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_sum_morning:food}}
                             {% endif %}
                         </td>
                     {% endfor %}
                     
                 </tr>
             {% endif %}
-            {% endwith %}
             {% endwith %}
             {% endwith %}
             {% endwith %}

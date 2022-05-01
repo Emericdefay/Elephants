@@ -6,8 +6,8 @@
 {% now "m" as to_month %}
 {% now "d" as todays_date %}
 {% with width_cells=130 %}
-{% with width_text_cells=50 %}
-{% with width_text_cells_max=50 %}
+{% with width_text_cells=150 %}
+{% with width_text_cells_max=150 %}
 
 <style>
     .meals {
@@ -28,61 +28,67 @@
     .customer-comment-btn:hover {
         cursor:pointer;
     }
+
+    .dropdown-menu.show:hover {
+        opacity:1;
+    } 
 </style>
 <link href="{% static "css/button.css" %}" rel="stylesheet">
 
 <h3>
     Planning
 </h3>
-<table class="responsive-table-input-matrix table">
-    <thead class="overflow-auto table-dark position-relative" style="z-index:1;">
-        <tr>
-            <th style="width:5%;">Nom</th>
-
-            {% for day in range_dates %}
-                {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
-                    <th 
-                        class="day_cells" 
-                        {% if to_day|striptags == day|day|striptags and to_month|nonpadded|striptags == day|month|striptags and to_year|striptags == day|year|striptags %}
-                            style="background-color:darkorange; width:{{width_cells}}px;"
-                        {% elif day|day_name|firsts:3 == 'sam' %}
-                            style="background-color:darkgrey; width:{{width_cells}}px;"
-                        {% endif %}
-                    >
-                        {% if day|day_name|firsts:3 == 'lun' %}
-                            LUN<br>
-                            {{day|day}}<br>
-                            {{day|month_name}}
-                        {% elif day|day_name|firsts:3 == 'mar' %}
-                            MAR/MER<br>
-                            {{day|day}}- {{day|day_plusone}}<br>
-                            {{day|month_name}}
-                        {% elif day|day_name|firsts:3 == 'jeu' %}
-                            JEU/VEN<br>
-                            {{day|day}}- {{day|day_plusone}}<br>
-                            {{day|month_name}}
-                        {% elif day|day_name|firsts:3 == 'sam' %}
-                            SAM/DIM<br>
-                            {{day|day}}- {{day|day_plusone}}<br>
-                            {{day|month_name}}
-                        {% endif %}
-                    </th>
-                {% endif %}
-            {% endfor %}
-        </tr>
-    </thead>    
-    <tbody class="overflow-auto">
-        {% comment %} {% regroup data by client as client_list %} {% endcomment %}
-        {% if cut_actual_commands|len_list %}
-            {% for actual_commands in cut_actual_commands %}
-                {% regroup actual_commands by client.order as client_list %}
-                {% include "manager/planning/planning_generation.html" %}
-            {% endfor %}
-        {% else %}
-            {% include "manager/planning/planning_generation.html" with actual_commands=cut_actual_commands.0 %}
-        {% endif %}
-    </tbody>
-</table>
+<div style="text-align: -webkit-center; margin-inline:5%">
+    <table class="responsive-table-input-matrix table">
+        <thead class="overflow-auto table-dark position-relative" style="z-index:1;">
+            <tr>
+                <th style="width:15%;">Nom</th>
+    
+                {% for day in range_dates %}
+                    {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
+                        <th 
+                            class="day_cells" 
+                            {% if to_day|striptags == day|day|striptags and to_month|nonpadded|striptags == day|month|striptags and to_year|striptags == day|year|striptags %}
+                                style="background-color:darkorange; width:{{width_cells}}px;"
+                            {% elif day|day_name|firsts:3 == 'sam' %}
+                                style="background-color:darkgrey; width:{{width_cells}}px;"
+                            {% endif %}
+                        >
+                            {% if day|day_name|firsts:3 == 'lun' %}
+                                LUN<br>
+                                {{day|day}}<br>
+                                {{day|month_name}}
+                            {% elif day|day_name|firsts:3 == 'mar' %}
+                                MAR/MER<br>
+                                {{day|day}}- {{day|day_plusone}}<br>
+                                {{day|month_name}}
+                            {% elif day|day_name|firsts:3 == 'jeu' %}
+                                JEU/VEN<br>
+                                {{day|day}}- {{day|day_plusone}}<br>
+                                {{day|month_name}}
+                            {% elif day|day_name|firsts:3 == 'sam' %}
+                                SAM/DIM<br>
+                                {{day|day}}- {{day|day_plusone}}<br>
+                                {{day|month_name}}
+                            {% endif %}
+                        </th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>    
+        <tbody class="overflow-auto">
+            {% comment %} {% regroup data by client as client_list %} {% endcomment %}
+            {% if cut_actual_commands|len_list %}
+                {% for actual_commands in cut_actual_commands %}
+                    {% regroup actual_commands by client.order as client_list %}
+                    {% include "manager/planning/planning_generation.html" %}
+                {% endfor %}
+            {% else %}
+                {% include "manager/planning/planning_generation.html" with actual_commands=cut_actual_commands.0 %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
 
 {% endwith %}
 {% endwith %}

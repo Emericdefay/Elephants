@@ -1,7 +1,6 @@
 {% load static humanize index %}
 
-{% regroup actual_commands by client.circuit as client_list %}
-{% for circuit, command_list in client_list %}
+{% for circuit in circuits %}
     <div class="card-header my-1" style="background-color:{{gradients|get_value:circuit.id}}" id="heading-{{circuit.id}}"  data-bs-toggle="collapse" data-bs-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
         <h2 class="m-0 row">
             <div class="col-12">

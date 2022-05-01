@@ -299,22 +299,6 @@ def query_sum_morning(obj, f):
         return 0
 
 @register.filter
-def query_sum_morning2(obj, f):
-    print(obj)
-    clients_per_circuit = obj.prefetch_related().all()
-    if clients_per_circuit :
-        sum_food = 0
-        for client in clients_per_circuit:
-            sum_food += client.command_command*DefaultCommand.objects.filter(meals__id=client.id).filter(default=f).count()
-
-        return sum_food
-    else:
-        return 0
-
-
-@register.filter
 def analyse(obj):
     return 0
-
-
 

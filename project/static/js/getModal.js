@@ -262,15 +262,17 @@ function openFoodModal () {
             let urlAd = `${url}/comment-delete/${command}/`;
             $.ajax({
               url: urlAd,
-              type: 'PUT',
+              type: 'GET',
               dataType: 'json',
               beforeSend: () => {
               },
               success: data => {
+                $(`#comment__${('0' + data.day).slice(-2)}-${('0' + data.month).slice(-2)}-${data.year}__${data.command_id}__${data.client_id}`).val("");
+                $(`#command_command__${('0' + data.day).slice(-2)}-${('0' + data.month).slice(-2)}-${data.year}__${data.command_id}__${data.client_id}`).first().removeClass('bg-danger');
                 $(`.row-${command}`).css( "background-color", "darkgray" );
               },
               error: (e) => {
-                $(`.row-${command}`).css( "background-color", "darkgray" );
+                console.log(e)
               },
             });
           });

@@ -39,12 +39,13 @@
                                background-color:
                                    {{gradients|get_value:client.circuit.id}};
                                {% if day|day_name|firsts:3 == 'sam' %}
-                               filter:brightness(0.8);";
                                {% endif %}
                                "
-                        >
-                            {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd command_id=command_client.id day_time_command=command_client.command_command default_command=client.client_command command_opts=command_client %}
-                            {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd_plus_one command_id=command_client_2.id day_time_command=command_client_2.command_command default_command=client.client_command command_opts=command_client_2 %}
+                               >
+                               {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd command_id=command_client.id day_time_command=command_client.command_command default_command=client.client_command command_opts=command_client %}
+                            {% if day|day_name|firsts:3 != 'lun' %}
+                                {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd_plus_one command_id=command_client_2.id day_time_command=command_client_2.command_command default_command=client.client_command command_opts=command_client_2 %}
+                            {% endif %}
                             <input
                                type="number"
                                min=1

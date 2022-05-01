@@ -123,7 +123,6 @@ class DayByDayCircuitTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = models.Command.objects.none()
 
     def get_queryset(self):
-        print(self.request._request.GET)
         try:
             day_date_command__in = [int(day) for day in self.request._request.GET.get('day_date_command__in').split(',')]
             qs = models.Command.objects.filter(
@@ -148,7 +147,6 @@ class DayByDayCircuitTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
                     month_date_command=daytwo.split('-')[1],
                     year_date_command=daytwo.split('-')[-1],
                     ).order_by('client__order')
-                print(qs)
                 return qs
 
             except IndexError:
@@ -208,8 +206,9 @@ class CommandCommentUpdate(APIView):
         except models.Command.DoesNotExist:
             raise Http404
 
-    def put(self, request, pk, format=None):
+    def get(self, request, pk, format=None):
+        print(request.__dict__)
         command = self.get_object(pk)
         command.comment = ""
         command.save()
-        return Response()
+        return Response(serializers.AllCommentsOfCustomerSerializer(command).data)
