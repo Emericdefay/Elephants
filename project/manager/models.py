@@ -100,7 +100,7 @@ class Command(models.Model):
     comment = models.TextField(verbose_name="", blank=True, null=True)
 
     def __str__(self):
-        return f"{self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
+        return f"[{self.id}] {self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
 
 
 class Company(models.Model):

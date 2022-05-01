@@ -330,7 +330,8 @@ class HomeView(TemplateView, UpdateView):
             kwargs['year'] if 'year' in kwargs else datetime.now().year,
             kwargs['month'] if 'month' in kwargs else datetime.now().month,
             kwargs['day'] if 'day' in kwargs else datetime.now().day
-            )
+        )
+        date_origin = date_origin - timedelta(days = date_origin.weekday())
         week_range = WeekRange.objects.get(id=1).range
         date_ending = date_origin + relativedelta(weeks=+week_range)
         date_start = date_origin
@@ -338,7 +339,7 @@ class HomeView(TemplateView, UpdateView):
             date_start = date_origin + relativedelta(weeks=-1)
             date_ending = date_origin + relativedelta(weeks=+(week_range-1))
         
-        range_dates = [date_start + datetime_.timedelta(days=x) for x in range(0, (date_ending - date_start).days + 2)]
+        range_dates = [date_start + datetime_.timedelta(days=x) for x in range(0, (date_ending - date_start).days)]
         context['range_dates'] = range_dates
         range_days = [date.day for date in range_dates]
         
@@ -355,7 +356,7 @@ class HomeView(TemplateView, UpdateView):
             for date in range_dates:
                 actual_commands |= Command.objects.filter(
                     Q(client_id=client_id)&
-                    Q(day_date_command__in=range_days)&
+                    Q(day_date_command=date.day)&
                     Q(month_date_command=date.month)&
                     Q(year_date_command=date.year)
                 )
@@ -578,8 +579,6 @@ class CreateExcel(View):
         month = self.request.POST.get('month', datetime.now().month)
         year = self.request.POST.get('year', datetime.now().year)
         date_posted = self.request.POST.get('date', "")
-        print(f" date posted : {date_posted}")
-        print(date_posted != "")
         if date_posted != "":
             dates = date_posted.split('-')
             date = '-'.join([dates[-1], dates[1], dates[0]])

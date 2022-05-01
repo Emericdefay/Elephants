@@ -22,23 +22,31 @@
     </thead>
     <tbody class="overflow-auto">
         {% for day in range_dates %}
+            {% with day|day as this_day %}
+            {% with day|month as this_month %}
+            {% with day|year as this_year %}
             {% with command_list|get:forloop.counter0 as command_client %}
             {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
                 <tr 
                 class="day_cells total-circuit-btn" 
                 style="{% if to_day|striptags == day|striptags and to_month|nonpadded|striptags == month|striptags and to_year|striptags == year|striptags %}background-color:darkorange; width:{{width_cells}}px; font-weight:bold;{% elif day|day_name|firsts:3 != 'lun' %}background-color:gainsboro; width:{{width_cells}}px;{% elif day|day_name|firsts:3 == 'lun' %}background-color:lightblue; width:{{width_cells}}px;{% endif %} text-align:end;"
-                {% with day|day as this_day %}
-                {% with day|month as this_month %}
-                {% with day|year as this_year %}
+
                 data-year={{this_year}}
                 data-month={{this_month}}
                 data-day={{this_day}}
+                {% if not day|day_name|firsts:3 == 'lun' %}
+                    data-daytwo={{day|day_plusone}}
+                {% endif %}
+                {% if day|day_plusone_equal_1 %}
+                    data-monthtwo={{day|month_plusone}}
+                {% endif %}
+                {% if day|day_plusone_year_equal_1 %}
+                    data-yeartwo={{day|year_plusone}}
+                {% endif %}
                 data-circuit={{circuit.id}}
-                {% endwith %}
-                {% endwith %}
-                {% endwith %}>
+                >
                     
-                    <td {% if day|day_name|firsts:3 == 'lun' %}rowspan=1{% else %}rowspan=2{% endif %} style="vertical-align:middle;">
+                    <td {% if day|day_name|firsts:3 == 'lun' %}rowspan=2{% else %}rowspan=3{% endif %} style="vertical-align:middle;">
                         {% if day|day_name|firsts:3 == 'lun' %}
                             LUN<br>
                             {{day|day}}<br>
@@ -57,12 +65,11 @@
                             {{day|month_name}}
                         {% endif %}
                     </td>
+                </tr>
+                <tr class="day_cells total-circuit-btn" >
                     <td>
                         {% comment %} NB Clients {% endcomment %}
                         {% comment %} {% random_int 0 20 %} {% endcomment %}
-                        {% with day|day as this_day %}
-                        {% with day|month as this_month %}
-                        {% with day|year as this_year %}
                         {% if command_client %}
                             {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count}}
                         {% endif %}
@@ -74,24 +81,15 @@
                                 </td>
                             {% endfor %}
                         {% endif %}
-                        {% endwith %}
-                        {% endwith %}
-                        {% endwith %}
                 </tr>
             {% elif day|day_name|firsts:3 == 'mer' or day|day_name|firsts:3 == 'ven' or day|day_name|firsts:3 == 'dim' %}
                 <tr 
                     class="day_cells total-circuit-btn" 
                     style="text-align:end;"
-                    {% with day|day as this_day %}
-                    {% with day|month as this_month %}
-                    {% with day|year as this_year %}
                     data-year={{this_year}}
                     data-month={{this_month}}
                     data-day={{this_day}}
                     data-circuit={{circuit.id}}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}>
                     {% if day|day_name|firsts:3 == 'dim' and forloop.counter0 == 0 %}
                         <td rowspan=1 style="vertical-align:middle;">
                             DIM<br>
@@ -99,9 +97,6 @@
                             {{day|month_name}}
                         </td>
                     {% endif %}
-                    {% with day|day as this_day %}
-                    {% with day|month as this_month %}
-                    {% with day|year as this_year %}
                     <td>
                         {% comment %} NB Clients {% endcomment %}
                         {% comment %} {% random_int 0 20 %} {% endcomment %}
@@ -116,11 +111,12 @@
                         </td>
                     {% endfor %}
                     {% endif %}
-                    {% endwith %}
-                    {% endwith %}
-                    {% endwith %}
+
                 </tr>
             {% endif %}
+            {% endwith %}                    
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
         {% endfor %}
 </table>

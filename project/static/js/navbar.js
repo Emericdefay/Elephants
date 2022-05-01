@@ -3,7 +3,6 @@ $(function () {
   // debug, re-able to click on links several times
   $(".nav-item").on('click custom', async function (event) {
     event.preventDefault();
-    console.log(window.location.href.split('?tab=#')[0].split('8000')[1]);
     const base = $(this).children().attr('aria-controls');
     $('.nav-item').each(function () {
       if (!$(this).children().attr('type')) {

@@ -1,0 +1,23 @@
+{% load static humanize index %}
+{% with width_cells=130 %}
+{% with actual_commands|get:0 as command_client %}
+
+   <tr 
+    class="day_cells"
+    id="total-circuit-{{circuit.id}}" 
+    >
+        <td>
+                Total
+        </td>
+            {% for food in foods %}
+            <td>
+                {% if command_client %}
+                <strong>
+                    {{command_client|make_query|query_filter_day_date_command:commands.day_date_command|query_filter_month_date_command:commands.month_date_command|query_filter_year_date_command:commands.year_date_command|query_filter_command_passed|query_sum_morning:food}}
+                </strong>
+                {% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+{% endwith %}
+{% endwith %}

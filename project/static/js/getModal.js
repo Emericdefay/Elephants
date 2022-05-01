@@ -118,10 +118,12 @@ function openFoodModal () {
     $('.unique-circuit-btn').on('click', function () {
       const circuit = $(this).data('circuit');
       const day = $(this).data('day');
+      const day2 = $(this).data('daytwo') ?? day;
       const month = $(this).data('month');
+      const month2 = $(this).data('monthtwo') ?? month;
       const year = $(this).data('year');
       const url = 'http://127.0.0.1:8000/api';
-      let urlAd = `${url}/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}&circuit=${circuit}`;
+      let urlAd = `${url}/?search=${day}-${month}-${year}%2C${day2}-${month2}-${year}&circuit=${circuit}`;
       openAdModal();
       $.ajax({
         url: urlAd,
@@ -131,10 +133,20 @@ function openFoodModal () {
         },
         success: data => {
           $('#titleCircuit').text(data.results[0].title);
+          let arrayClients = new Set();
           data.results.forEach(function (row) {
-            $('#feedme').append(row.html);
-          })      
-          urlAd = `${url}/total/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}&circuit=${circuit}`;
+            if (!arrayClients.has(row.id)) {
+              $('#feedme').append(row.html);
+              arrayClients.add(row.id);
+            } else {
+              row.food.forEach(function (food_id) {
+                let value = Number($(`#food_${food_id[0]}_${row.id}`).text());
+                value += food_id[1];
+                $(`#food_${food_id[0]}_${row.id}`).text(value);
+              })
+            }
+          });
+          urlAd = `${url}/total/?search=${day}-${month}-${year}%2C${day2}-${month2}-${year}&circuit=${circuit}`;
           $.ajax({
             url: urlAd,
             type: 'GET',
@@ -181,11 +193,28 @@ function openFoodModal () {
           data.results.forEach(function (row) {
             $('#feedmeTotal').append(row.html);
             arrayIds.add(row.id);
+
           })
 
           $('[id]').each(function () {
             $('[id="' + this.id + '"]:gt(0)').remove();
           })
+
+          urlAd = `${url}/circuit-total-total/?day_date_command=${day}&month_date_command=${month}&year_date_command=${year}`;
+          $.ajax({
+            url: urlAd,
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: () => {
+            },
+            success: data => {
+                $('#feedmeTotal').append(data.results[0].html);
+              
+            },
+            error: (e) => {
+              const html = getHtml(e.responseText);
+            },
+          });
         },
         error: (e) => {
           const html = getHtml(e.responseText);

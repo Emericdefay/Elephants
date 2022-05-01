@@ -46,6 +46,13 @@ def get(obj, key):
         return
 
 @register.filter
+def get_futur(obj, key):
+    try:
+        return (obj[key])
+    except IndexError:
+        return
+
+@register.filter
 def getattr_(obj, key):
     try:
         return getattr(obj, str(key))
@@ -97,6 +104,22 @@ def day_plusone(obj):
     return (obj + relativedelta(days=+1)).day
 
 @register.filter
+def year_plusone(obj):
+    return (obj + relativedelta(years=+1)).year
+
+@register.filter
+def day_plusone_equal_1(obj):
+    return (obj + relativedelta(days=+1)).day == 1
+
+@register.filter
+def day_plusone_year_equal_1(obj):
+    return (obj + relativedelta(days=+1)).year != obj.year
+
+@register.filter
+def month_plusone(obj):
+    return (obj + relativedelta(months=+1)).month
+
+@register.filter
 def day_name(obj):
     return _(obj.strftime("%A"))
 
@@ -142,12 +165,24 @@ def query_filter_day_date_command(obj, f):
     return obj.filter(day_date_command=f)
 
 @register.filter
+def query_filter_day_date_command__in(obj, f):
+    return obj.filter(day_date_command__in=f)
+
+@register.filter
 def query_filter_month_date_command(obj, f):
     return obj.filter(month_date_command=f)
 
 @register.filter
+def query_filter_month_date_command__in(obj, f):
+    return obj.filter(month_date_command__in=f)
+
+@register.filter
 def query_filter_year_date_command(obj, f):
     return obj.filter(year_date_command=f)
+
+@register.filter
+def query_filter_year_date_command__in(obj, f):
+    return obj.filter(year_date_command__in=f)
 
 @register.filter
 def query_filter_client__circuit(obj, f):
@@ -156,6 +191,34 @@ def query_filter_client__circuit(obj, f):
 @register.filter
 def query_filter_client_id(obj, f):
     return obj.filter(client__id=f)
+
+@register.filter
+def query_filter_search(obj, search):
+    try:
+        dayone, daytwo = search.split(',')[0], search.split(',')[1]
+        qs = obj.filter(
+            command_command__gt=0,
+            day_date_command__in=[dayone.split('-')[0]],
+            month_date_command=dayone.split('-')[1],
+            year_date_command=dayone.split('-')[-1],
+            ).order_by('client__order')
+        qs |= obj.filter(
+            command_command__gt=0,
+            day_date_command__in=[daytwo.split('-')[0]],
+            month_date_command=daytwo.split('-')[1],
+            year_date_command=daytwo.split('-')[-1],
+            ).order_by('client__order')
+        return qs
+
+    except IndexError:
+        dayone = search
+        obj = obj.filter(
+            command_command__gt=0,
+            day_date_command__in=[dayone.split('-')[0]],
+            month_date_command=dayone.split('-')[1],
+            year_date_command=dayone.split('-')[-1],
+            ).order_by('client__order')
+    return obj
 
 @register.filter
 def query_filter_command_passed(obj):
@@ -231,6 +294,19 @@ def query_sum_morning(obj, f):
         sum_food = 0
         for client in clients_per_circuit:
             sum_food += client.command_command*DefaultCommand.objects.filter(meals__id=client.id).filter(default=f).count()
+        return sum_food
+    else:
+        return 0
+
+@register.filter
+def query_sum_morning2(obj, f):
+    print(obj)
+    clients_per_circuit = obj.prefetch_related().all()
+    if clients_per_circuit :
+        sum_food = 0
+        for client in clients_per_circuit:
+            sum_food += client.command_command*DefaultCommand.objects.filter(meals__id=client.id).filter(default=f).count()
+
         return sum_food
     else:
         return 0
