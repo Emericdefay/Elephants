@@ -593,7 +593,7 @@ class CreateExcel(View):
                     strike=False,
                     color='FF363742')
 
-    def init_sheet(self, sheet):
+    def init_sheet(self, sheet, number):
         company = Company.objects.get(id=1)
         # h1
         sheet['D24'] = "Total TTC"
@@ -604,7 +604,7 @@ class CreateExcel(View):
         # h2
         sheet['D12'] = "Chambéry, le"
         sheet['D12'].font = self.font_h2()
-        sheet['C14'] = f"{datetime.now().month}"
+        sheet['C14'] = number
         sheet['C14'].font = self.font_h2()
         sheet['C16'] = "Nombre de repas"
         sheet['C16'].font = self.font_h2()
@@ -650,6 +650,7 @@ class CreateExcel(View):
         wb = Workbook()
         month = self.request.POST.get('month', datetime.now().month)
         year = self.request.POST.get('year', datetime.now().year)
+        print(month, year)
         date_posted = self.request.POST.get('date', "")
         if date_posted != "":
             dates = date_posted.split('-')
@@ -667,9 +668,9 @@ class CreateExcel(View):
             img.width  = 115
 
             # Create sheet
-            wb.create_sheet(f"{client.last_name} {client.first_name}")
+            wb.create_sheet(f"{client.id} - {client.last_name} {client.first_name} ")
             active_sheet = wb[f"{client.last_name} {client.first_name}"]
-            active_sheet = self.init_sheet(active_sheet)
+            active_sheet = self.init_sheet(active_sheet, month)
 
             # Insert image
             active_sheet.add_image(img)
