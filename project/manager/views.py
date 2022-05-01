@@ -599,8 +599,8 @@ class CreateExcel(View):
         sheet['D24'] = "Total TTC"
         sheet['D24'].font = self.font_h1()
         sheet['E32'] = company.cellphone_comp
-        sheet['E31'].font = self.font_h1()
-        sheet['E31'].alignment = Alignment(horizontal="center")
+        sheet['E32'].font = self.font_h1()
+        sheet['E32'].alignment = Alignment(horizontal="center")
         # h2
         sheet['D12'] = "Chambéry, le"
         sheet['D12'].font = self.font_h2()
