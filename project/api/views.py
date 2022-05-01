@@ -207,7 +207,6 @@ class CommandCommentUpdate(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
-        print(request.__dict__)
         command = self.get_object(pk)
         command.comment = ""
         command.save()

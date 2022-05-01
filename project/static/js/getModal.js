@@ -268,7 +268,8 @@ function openFoodModal () {
               },
               success: data => {
                 $(`#comment__${('0' + data.day).slice(-2)}-${('0' + data.month).slice(-2)}-${data.year}__${data.command_id}__${data.client_id}`).val("");
-                $(`#command_command__${('0' + data.day).slice(-2)}-${('0' + data.month).slice(-2)}-${data.year}__${data.command_id}__${data.client_id}`).first().removeClass('bg-danger');
+                $(`label[for="command_command__${('0' + data.day).slice(-2)}-${('0' + data.month).slice(-2)}-${data.year}__${data.command_id}__${data.client_id}"]`).children().removeClass('btn-danger');
+                $(`label[for="command_command__${('0' + data.day).slice(-2)}-${('0' + data.month).slice(-2)}-${data.year}__${data.command_id}__${data.client_id}"]`).children().addClass('btn-light');
                 $(`.row-${command}`).css( "background-color", "darkgray" );
               },
               error: (e) => {
