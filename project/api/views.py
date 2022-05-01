@@ -38,14 +38,14 @@ class DayByDayCommand(mixins.ListModelMixin, viewsets.GenericViewSet):
                 qs |= models.Command.objects.filter(
                     command_command__gt=0,
                     client__circuit_id=self.request._request.GET.get('circuit'),
-                    day_date_command__in=dayone.split('-')[0],
+                    day_date_command__in=[dayone.split('-')[0]],
                     month_date_command=dayone.split('-')[1],
                     year_date_command=dayone.split('-')[-1],
                     ).order_by('client__order')
                 qs |= models.Command.objects.filter(
                     command_command__gt=0,
                     client__circuit_id=self.request._request.GET.get('circuit'),
-                    day_date_command__in=daytwo.split('-')[0],
+                    day_date_command__in=[daytwo.split('-')[0]],
                     month_date_command=daytwo.split('-')[1],
                     year_date_command=daytwo.split('-')[-1],
                     ).order_by('client__order')
@@ -56,7 +56,7 @@ class DayByDayCommand(mixins.ListModelMixin, viewsets.GenericViewSet):
                 qs = models.Command.objects.filter(
                     command_command__gt=0,
                     client__circuit_id=self.request._request.GET.get('circuit'),
-                    day_date_command__in=dayone.split('-')[0],
+                    day_date_command__in=[dayone.split('-')[0]],
                     month_date_command=dayone.split('-')[1],
                     year_date_command=dayone.split('-')[-1],
                     ).order_by('client__order')
@@ -90,14 +90,14 @@ class DayByDayCommandTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
                 qs |= models.Command.objects.filter(
                     command_command__gt=0,
                     client__circuit_id=self.request._request.GET.get('circuit'),
-                    day_date_command__in=dayone.split('-')[0],
+                    day_date_command__in=[dayone.split('-')[0]],
                     month_date_command=dayone.split('-')[1],
                     year_date_command=dayone.split('-')[-1],
                     ).order_by('client__order')
                 qs |= models.Command.objects.filter(
                     command_command__gt=0,
                     client__circuit_id=self.request._request.GET.get('circuit'),
-                    day_date_command__in=daytwo.split('-')[0],
+                    day_date_command__in=[daytwo.split('-')[0]],
                     month_date_command=daytwo.split('-')[1],
                     year_date_command=daytwo.split('-')[-1],
                     ).order_by('client__order')
@@ -108,7 +108,7 @@ class DayByDayCommandTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
                 qs = models.Command.objects.filter(
                     command_command__gt=0,
                     client__circuit_id=self.request._request.GET.get('circuit'),
-                    day_date_command__in=dayone.split('-')[0],
+                    day_date_command__in=[dayone.split('-')[0]],
                     month_date_command=dayone.split('-')[1],
                     year_date_command=dayone.split('-')[-1],
                     ).order_by('client__order')
@@ -123,8 +123,43 @@ class DayByDayCircuitTotal(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = models.Command.objects.none()
 
     def get_queryset(self):
-        # get non expired ads
-        return models.Command.objects.all().distinct().order_by('circuit')
+        print(self.request._request.GET)
+        try:
+            day_date_command__in = [int(day) for day in self.request._request.GET.get('day_date_command__in').split(',')]
+            qs = models.Command.objects.filter(
+                command_command__gt=0,
+                day_date_command__in=day_date_command__in,
+                month_date_command=self.request._request.GET.get('month_date_command'),
+                year_date_command=self.request._request.GET.get('year_date_command'),
+                ).order_by('client__order')
+        except AttributeError:
+            try:
+                dayone, daytwo = self.request._request.GET.get('search').split(',')[0], self.request._request.GET.get('search').split(',')[1]
+                qs = models.Command.objects.none()
+                qs |= models.Command.objects.filter(
+                    command_command__gt=0,
+                    day_date_command__in=[dayone.split('-')[0]],
+                    month_date_command=dayone.split('-')[1],
+                    year_date_command=dayone.split('-')[-1],
+                    ).order_by('client__order')
+                qs |= models.Command.objects.filter(
+                    command_command__gt=0,
+                    day_date_command__in=[daytwo.split('-')[0]],
+                    month_date_command=daytwo.split('-')[1],
+                    year_date_command=daytwo.split('-')[-1],
+                    ).order_by('client__order')
+                print(qs)
+                return qs
+
+            except IndexError:
+                dayone = self.request._request.GET.get('search')
+                qs = models.Command.objects.filter(
+                    command_command__gt=0,
+                    day_date_command__in=[dayone.split('-')[0]],
+                    month_date_command=dayone.split('-')[1],
+                    year_date_command=dayone.split('-')[-1],
+                    ).order_by('client__order')
+        return qs
 
 
 class DayByDayCircuitTotalTotal(mixins.ListModelMixin, viewsets.GenericViewSet):

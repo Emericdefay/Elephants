@@ -6,7 +6,7 @@
 
    <tr 
     class="day_cells"
-    id="total-circuit-{{circuit.id}}" 
+    id="total-circuit-{{circuit.id}}-{{commands.day_date_command}}" 
     >
         
         <td>
@@ -15,7 +15,8 @@
             {% endif %}
         </td>
             {% for food in foods %}
-            <td>
+            <td
+            id="total-food-{{food.id}}-{{circuit.id}}">
                 {% if command_list %}
                 <strong>
                     {{command_client|make_query|query_filter_day_date_command:commands.day_date_command|query_filter_month_date_command:commands.month_date_command|query_filter_year_date_command:commands.year_date_command|query_filter_client__circuit:commands.client.circuit|query_filter_command_passed|query_sum_morning:food}}

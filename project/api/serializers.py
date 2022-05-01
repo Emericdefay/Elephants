@@ -72,9 +72,14 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
     html = serializers.SerializerMethodField()
     title = serializers.SerializerMethodField()
+    food = serializers.SerializerMethodField()
+    circuit = serializers.SerializerMethodField()
+
 
     def get_id(self, obj):
-        return f'total-circuit-{obj.circuit.id}'
+        print(obj)
+        print( f'total-circuit-{obj.client.circuit.id}')
+        return f'total-circuit-{obj.client.circuit.id}-{obj.day_date_command}'
 
     def get_html(self, obj):
         data = render_to_string(template_name='circuit_total.html',
@@ -84,9 +89,17 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
                                     'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)
-    
+
+    def get_food(self, obj):
+        number_commanded = Command.objects.get(id=obj.id).command_command
+        return [(food, number_commanded) for food in Command.objects.filter(id=obj.id).order_by('client').values_list('meals', flat=True)]
+
+
     def get_title(self, obj):
         return "Récapitulatif"
+
+    def get_circuit(self, obj):
+        return obj.client.circuit.id
 
     class Meta:
         model = Command
@@ -94,6 +107,8 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
             'html',
             'id',
             'title',
+            'food',
+            'circuit',
         )
 
 
@@ -104,6 +119,7 @@ class DayByDayCircuitTotalSerializer(serializers.ModelSerializer):
         data = render_to_string(template_name='circuit_total_total.html',
                                 context={
                                     'commands': obj,
+                                    'search': self.context['request']._request.GET.get('search'),
                                     'foods': Food.objects.all().order_by('id'),
                                     'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })

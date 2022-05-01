@@ -13,7 +13,7 @@
             <td>
                 {% if command_client %}
                 <strong>
-                    {{command_client|make_query|query_filter_day_date_command:commands.day_date_command|query_filter_month_date_command:commands.month_date_command|query_filter_year_date_command:commands.year_date_command|query_filter_command_passed|query_sum_morning:food}}
+                    {{command_client|make_query|query_filter_search:search|query_sum_morning2:food}}
                 </strong>
                 {% endif %}
             </td>
