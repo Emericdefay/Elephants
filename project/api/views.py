@@ -211,3 +211,20 @@ class CommandCommentUpdate(APIView):
         command.comment = ""
         command.save()
         return Response(serializers.AllCommentsOfCustomerSerializer(command).data)
+
+
+class ClientDefaultFoodUpdate(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return models.Client.objects.get(pk=pk)
+        except models.Command.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, attr, value, format=None):
+        client = self.get_object(pk)
+        setattr(client, attr, value)
+        client.save()
+        return Response()

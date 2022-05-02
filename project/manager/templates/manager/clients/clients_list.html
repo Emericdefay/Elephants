@@ -166,22 +166,25 @@
                 </td>
                 <td style="vertical-align: middle;"><input class="order_clients" type="text" name="order__{{client.id}}" id="order__{{client.id}}" value="{{forloop.counter0}}"/></td>
                 <td style="vertical-align: middle;">
-                  <input type="text" style="inline-size: -webkit-fill-available;" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></br>
-                  <input type="text" style="inline-size: -webkit-fill-available;" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/>
+                  <input type="text" data-client="{{client.id}}" data-attrib="last_name" class="input_last_name" style="inline-size: -webkit-fill-available;" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></br>
+                  <input type="text" data-client="{{client.id}}" data-attrib="first_name" class="input_first_name" style="inline-size: -webkit-fill-available;" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/>
                 </td>
                 <td style="vertical-align: middle;">
-                  <input type="text" style="inline-size: -webkit-fill-available;" name="address__{{client.id}}" id="address__{{client.id}}" value="{{client.address}}"/><br>
-                  <input type="text" style="inline-size: -webkit-fill-available;" name="postcode__{{client.id}}" id="postcode__{{client.id}}" value="{{client.postcode}}"/><br>
-                  <input type="text" style="inline-size: -webkit-fill-available;" name="address_details__{{client.id}}" id="address_details__{{client.id}}" value="{{client.address_details}}"/>
+                  <input type="text" data-client="{{client.id}}" data-attrib="address" class="input_address" style="inline-size: -webkit-fill-available;" name="address__{{client.id}}" id="address__{{client.id}}" value="{{client.address}}"/><br>
+                  <input type="text" data-client="{{client.id}}" data-attrib="postcode" class="input_postcode" style="inline-size: -webkit-fill-available;" name="postcode__{{client.id}}" id="postcode__{{client.id}}" value="{{client.postcode}}"/><br>
+                  <input type="text" data-client="{{client.id}}" data-attrib="address_details" class="input_address_details" style="inline-size: -webkit-fill-available;" name="address_details__{{client.id}}" id="address_details__{{client.id}}" value="{{client.address_details}}"/>
                 </td>
                 <td style="vertical-align: middle;">
-                  <input type="text" style="inline-size: -webkit-fill-available;" name="cellphone__{{client.id}}" id="cellphone__{{client.id}}" value="{{client.cellphone}}"/><br>
-                  <input type="text" style="inline-size: -webkit-fill-available;" name="cellphone2__{{client.id}}" id="cellphone2__{{client.id}}" value="{{client.cellphone2}}"/>
+                  <input type="text" data-client="{{client.id}}" data-attrib="cellphone" class="input_cellphone" style="inline-size: -webkit-fill-available;" name="cellphone__{{client.id}}" id="cellphone__{{client.id}}" value="{{client.cellphone}}"/><br>
+                  <input type="text" data-client="{{client.id}}" data-attrib="cellphone2" class="input_cellphone2" style="inline-size: -webkit-fill-available;" name="cellphone2__{{client.id}}" id="cellphone2__{{client.id}}" value="{{client.cellphone2}}"/>
                 </td>
                 {% for default in formDefaultCommand %}
                     <td style="-webkit-writing-mode: vertical-lr;">
                         <input
+                            class="checkbox-default-food"
                             type="checkbox"
+                            data-client="{{client.id}}"
+                            data-food="{{default.id}}"
                             style="transform: scale(2); vertical-align: sub;"
                             id="_meals__{{default.id}}__{{client.id}}"
                             name="_meals__{{default.id}}__{{client.id}}"

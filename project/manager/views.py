@@ -46,7 +46,7 @@ class UpdateHomeView(View):
 
     def synth_client(self, save):
         """ INFO CLIENT """
-        targets = ['order', 'last_name', 'first_name', 'circuit_id', 'address', 'postcode', 'cellphone', 'cellphone2']
+        targets = ['order', 'circuit_id', ]
         key_values = {}
         for key, value in save.items():
             if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
@@ -61,10 +61,15 @@ class UpdateHomeView(View):
             values_by_id[id_] = {key.split('__')[0]:value for key, value in key_values.items() if key.split('__')[1]==id_}
         #start_time = time.time()
         # save
+        objs = []
         for client_id, kwargs in values_by_id.items():
-            Client.objects.filter(id=client_id).update(**kwargs)
+            for key, value in kwargs.items():
+                client = Client.objects.get(id=client_id)
+                setattr(client, key, value)
+                objs.append(client)
+        Client.objects.bulk_update(objs, targets)
+
         """ MEALS """
-        #print("--- %s seconds save1---" % (time.time() - start_time))
         targets = ['_meals', ]
         key_values = {}
         for key, value in save.items():
@@ -77,14 +82,15 @@ class UpdateHomeView(View):
         #
         # checks
         for id_ in ids:
+            client = Client.objects.filter(id=id_)
+            client_get = Client.objects.get(id=id_)
             for food in DefaultCommand.objects.all():
                 if str(food.id) in values_by_id[id_]:
-                    if Client.objects.filter(id=id_).filter(client_command__in=[food]):
+                    if client.filter(client_command__in=[food]):
                         continue
-                    Client.objects.get(id=id_).client_command.add(food)
+                    client_get.client_command.add(food)
                     continue
-                Client.objects.get(id=id_).client_command.remove(food)
-        #print("--- %s seconds save2---" % (time.time() - start_time))
+                client_get.client_command.remove(food)
 
     def synth_planning(self, save):
         """ PLANNING INFO """
@@ -233,9 +239,9 @@ class UpdateHomeView(View):
     def post(self, request, *args, **kwargs):
         """_summary_
         """
-        print("\nSauvegarde", end="")
+        print("\nSauvegarde", end="\n")
         # Getting saves
-        print("- Getting saves ", end="")
+        print("- Client saves ", end="")
         start_time = time.time()
         save = self.request._post
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
