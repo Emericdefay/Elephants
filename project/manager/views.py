@@ -124,7 +124,7 @@ class UpdateHomeView(View):
                     objs.append(command)
                 except ValueError as e:
                     pass
-        Command.objects.bulk_update(objs, ['command_command'])
+        #Command.objects.bulk_update(objs, ['command_command'])
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
         targets = ['comment', ]
         key_values = {}

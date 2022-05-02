@@ -270,3 +270,22 @@ class CommandDefaultFoodUpdate(APIView):
             command.meals.remove(food)
 
         return Response()
+
+
+class CommandUpdate(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return models.Command.objects.get(pk=pk)
+        except models.Command.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, value, format=None):
+
+        command = self.get_object(pk)
+        command.command_command = value
+        command.save()
+
+        return Response()

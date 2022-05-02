@@ -7,15 +7,17 @@
 {% now "d" as todays_date %}
     <div class="btn-group" role="group">
         <div class="input-group-prepend">
-            <button class="btn btn-outline-dark btn-minus" type="button">
+            <button class="btn btn-outline-dark btn-minus command-btn" data-command="{{command_id}}" type="button">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
         <input
-            class="form-control btn-check quantity"
+            class="form-control btn-check quantity command-val"
             min="0"
             type="number"
+            data-command="{{command_id}}"
             id="command_command__{{day_time}}__{{command_id}}__{{client.id}}"
+            data-id="command_command__{{command_id}}"
             name="command_command__{{day_time}}__{{command_id}}__{{client.id}}"
             value={{day_time_command}}
         >
@@ -71,7 +73,7 @@
                                 <td style="-webkit-writing-mode: vertical-lr;">
                                     <input
                                         type="checkbox"
-                                        data-food="{{food.id}}"
+                                        data-food="{{default.id}}"
                                         data-command="{{command_id}}"
                                         id="meals__{{default.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
                                         name="meals__{{default.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
@@ -109,7 +111,7 @@
             </div>
         </label>
         <div class="input-group-append">
-            <button class="btn btn-outline-dark btn-plus" type="button">
+            <button class="btn btn-outline-dark btn-plus command-btn" data-command="{{command_id}}" type="button">
                 <i class="fa fa-plus"></i>
             </button>
         </div>
