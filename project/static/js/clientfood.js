@@ -1,4 +1,50 @@
-const url = "http://127.0.0.1:8000/api/clientfood"
+$(() => {
+    const url = "http://127.0.0.1:8000/api/clientfood"
+    $('.checkbox-default-food').on('click', function () {
+        const client = $(this).data('client');
+        const food = $(this).data('food');
+        const checked = this.checked ? 1 : 0;
+        urlFood = `${url}/${client}/${food}/${checked}/`;
+        $.ajax({
+            url: urlFood,
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: () => {
+            },
+            success: data => {
+
+            },
+            error: (e) => {
+              console.log(e)
+            },
+        });
+    });
+});
+
+$(() => {
+    const url = "http://127.0.0.1:8000/api/commandfood"
+    $('.checkbox-food').on('click', function () {
+        const command = $(this).data('command');
+        const food = $(this).data('food');
+        const checked = this.checked ? 1 : 0;
+        urlFood = `${url}/${command}/${food}/${checked}/`;
+        $.ajax({
+            url: urlFood,
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: () => {
+            },
+            success: data => {
+
+            },
+            error: (e) => {
+              console.log(e)
+            },
+        });
+    });
+});
+
+const url = "http://127.0.0.1:8000/api/client"
 $(() => {
     // CELLPHONE2
     //setup before functions

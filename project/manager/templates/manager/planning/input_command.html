@@ -54,14 +54,16 @@
                                     <input
                                     type="checkbox"
                                     data-id="{{food.id}}"
+                                    data-food="{{food.id}}"
+                                    data-command="{{command_id}}"
                                     id="meals__{{food.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
-                                        name="meals__{{food.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
-                                            {% if command_client|make_query|query_command_id:command_id|query_command_food:food > 0 %}
-                                                checked
-                                            {% endif %}
-                                        class="default_box"
-                                        style="vertical-align: -webkit-baseline-middle;
-                                        transform: scale(2.1);">
+                                    name="meals__{{food.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
+                                        {% if command_client|make_query|query_command_id:command_id|query_command_food:food > 0 %}
+                                            checked
+                                        {% endif %}
+                                    class="default_box checkbox-food"
+                                    style="vertical-align: -webkit-baseline-middle;
+                                    transform: scale(2.1);">
                                 </td>
                             {% endfor %}
                         {% else %}
@@ -69,6 +71,8 @@
                                 <td style="-webkit-writing-mode: vertical-lr;">
                                     <input
                                         type="checkbox"
+                                        data-food="{{food.id}}"
+                                        data-command="{{command_id}}"
                                         id="meals__{{default.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
                                         name="meals__{{default.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
                                         {% for box_client in default_command.all %}
@@ -76,7 +80,7 @@
                                                 checked
                                             {% endif %}
                                         {% endfor %}
-                                        class="default_box"
+                                        class="default_box checkbox-food"
                                         style="vertical-align: -webkit-baseline-middle;
                                         transform: scale(2.1);">
                                 </td>

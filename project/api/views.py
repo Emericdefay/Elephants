@@ -213,7 +213,7 @@ class CommandCommentUpdate(APIView):
         return Response(serializers.AllCommentsOfCustomerSerializer(command).data)
 
 
-class ClientDefaultFoodUpdate(APIView):
+class ClientUpdate(APIView):
     """
     Retrieve, update or delete a snippet instance.
     """
@@ -227,4 +227,46 @@ class ClientDefaultFoodUpdate(APIView):
         client = self.get_object(pk)
         setattr(client, attr, value)
         client.save()
+        return Response()
+
+class ClientDefaultFoodUpdate(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return models.Client.objects.get(pk=pk)
+        except models.Command.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, food_id, value, format=None):
+
+        client = self.get_object(pk)
+        food = models.DefaultCommand.objects.get(id=food_id)
+        if value:
+            client.client_command.add(food)
+        else:
+            client.client_command.remove(food)
+
+        return Response()
+
+class CommandDefaultFoodUpdate(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return models.Command.objects.get(pk=pk)
+        except models.Command.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, food_id, value, format=None):
+
+        command = self.get_object(pk)
+        food = models.DefaultCommand.objects.get(id=food_id)
+        if value:
+            command.meals.add(food)
+        else:
+            command.meals.remove(food)
+
         return Response()

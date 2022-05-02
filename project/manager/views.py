@@ -70,27 +70,27 @@ class UpdateHomeView(View):
         Client.objects.bulk_update(objs, targets)
 
         """ MEALS """
-        targets = ['_meals', ]
-        key_values = {}
-        for key, value in save.items():
-            if str(key).split('__')[0] in targets:
-                key_values.update({key: value})
-        # select values
-        values_by_id = dict()
-        for id_ in ids:
-            values_by_id[id_] = [key.split('__')[1] for key in key_values.keys() if key.split('__')[-1] == id_]
-        #
-        # checks
-        for id_ in ids:
-            client = Client.objects.filter(id=id_)
-            client_get = Client.objects.get(id=id_)
-            for food in DefaultCommand.objects.all():
-                if str(food.id) in values_by_id[id_]:
-                    if client.filter(client_command__in=[food]):
-                        continue
-                    client_get.client_command.add(food)
-                    continue
-                client_get.client_command.remove(food)
+        # targets = ['_meals', ]
+        # key_values = {}
+        # for key, value in save.items():
+        #     if str(key).split('__')[0] in targets:
+        #         key_values.update({key: value})
+        # # select values
+        # values_by_id = dict()
+        # for id_ in ids:
+        #     values_by_id[id_] = [key.split('__')[1] for key in key_values.keys() if key.split('__')[-1] == id_]
+        # #
+        # # checks
+        # for id_ in ids:
+        #     client = Client.objects.filter(id=id_)
+        #     client_get = Client.objects.get(id=id_)
+        #     for food in DefaultCommand.objects.all():
+        #         if str(food.id) in values_by_id[id_]:
+        #             if client.filter(client_command__in=[food]):
+        #                 continue
+        #             client_get.client_command.add(food)
+        #             continue
+        #         client_get.client_command.remove(food)
 
     def synth_planning(self, save):
         """ PLANNING INFO """
@@ -160,45 +160,45 @@ class UpdateHomeView(View):
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
         print("--- save meals ", end=" ")
         start_time = time.time()
-        targets = ['meals', ]
-        key_values = {}
-        for key, value in save.items():
-            if str(key).split('__')[0] in targets:
-                key_values.update({key: value})
-        # print(key_values)
-        # detect id
-        ids = set()
-        for i in key_values.keys():
-            ids.add(i.split('__')[-1])
-        # print(ids)
-        # regroup by id
-        values_by_id = dict()
-        values_by_id = {(key.split('__')[0], key.split('__')[1], key.split('__')[3]):value for key, value in key_values.items()}
-        # save
-        # print(values_by_id)
-        dict_list_food = dict()
-        for key, value in values_by_id.items():
-            dict_list_food[key[-1]] = []
-        for key, value in values_by_id.items():
-            dict_list_food[key[-1]].append(int(key[1]))
-        dict_list_food_2 = dict()
-        for key in list(Command.objects.filter(command_command__gt=0).values_list('id', flat=True)):
-            try:
-                dict_list_food_2.update(
-                    {
-                        str(key): dict_list_food[str(key)]
-                    }
-                )
-            except:
-                pass
-        for id_ in dict_list_food_2.keys():
-            for food in DefaultCommand.objects.all():
-                if food.id in dict_list_food_2[id_]:
-                    if Command.objects.filter(id=id_).filter(meals=food):
-                        continue
-                    Command.objects.get(id=id_).meals.add(food)
-                    continue
-                Command.objects.get(id=id_).meals.remove(food)
+        # targets = ['meals', ]
+        # key_values = {}
+        # for key, value in save.items():
+        #     if str(key).split('__')[0] in targets:
+        #         key_values.update({key: value})
+        # # print(key_values)
+        # # detect id
+        # ids = set()
+        # for i in key_values.keys():
+        #     ids.add(i.split('__')[-1])
+        # # print(ids)
+        # # regroup by id
+        # values_by_id = dict()
+        # values_by_id = {(key.split('__')[0], key.split('__')[1], key.split('__')[3]):value for key, value in key_values.items()}
+        # # save
+        # # print(values_by_id)
+        # dict_list_food = dict()
+        # for key, value in values_by_id.items():
+        #     dict_list_food[key[-1]] = []
+        # for key, value in values_by_id.items():
+        #     dict_list_food[key[-1]].append(int(key[1]))
+        # dict_list_food_2 = dict()
+        # for key in list(Command.objects.filter(command_command__gt=0).values_list('id', flat=True)):
+        #     try:
+        #         dict_list_food_2.update(
+        #             {
+        #                 str(key): dict_list_food[str(key)]
+        #             }
+        #         )
+        #     except:
+        #         pass
+        # for id_ in dict_list_food_2.keys():
+        #     for food in DefaultCommand.objects.all():
+        #         if food.id in dict_list_food_2[id_]:
+        #             if Command.objects.filter(id=id_).filter(meals=food):
+        #                 continue
+        #             Command.objects.get(id=id_).meals.add(food)
+        #             continue
+        #         Command.objects.get(id=id_).meals.remove(food)
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
 
     def synth_food(self, save):
@@ -495,7 +495,8 @@ class HomeView(TemplateView, UpdateView):
         range_weeks = list({x.isocalendar()[1] for x in range_dates})
         context['range_weeks'] = range_weeks
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
-
+        print("Phase 5 :", end=" ")
+        start_time = time.time()
         context['new_client'] = form['new_client']
         context['new_food'] = form['new_food']
         context['new_circuit'] = form['new_circuit']
@@ -506,6 +507,8 @@ class HomeView(TemplateView, UpdateView):
 
         context['company'] = Company.objects.get_or_create(id=1)[0]
 
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
+        print("Generation de la page HTML")
         return context
 
     def object(self, *args, **kwargs):
