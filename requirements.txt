@@ -9,7 +9,14 @@ asgiref==3.5.0
 click==8.0.4
     # via pip-tools
 colorama==0.4.4
-    # via click
+    # via
+    #   click
+    #   colorlog
+    #   easydev
+colorlog==6.6.0
+    # via easydev
+colormap==1.0.4
+    # via -r requirements.in
 coverage==6.3.2
     # via -r requirements.in
 defusedxml==0.7.1
@@ -28,6 +35,8 @@ django-import-export==2.7.1
     # via -r requirements.in
 djangorestframework==3.13.1
     # via -r requirements.in
+easydev==0.12.0
+    # via -r requirements.in
 et-xmlfile==1.1.0
     # via openpyxl
 flake8==4.0.1
@@ -40,6 +49,8 @@ markuppy==1.14
     # via tablib
 mccabe==0.6.1
     # via flake8
+numpy==1.22.3
+    # via -r requirements.in
 odfpy==1.4.1
     # via tablib
 openpyxl==3.0.9
@@ -49,10 +60,14 @@ openpyxl==3.0.9
     #   tablib
 pep517==0.12.0
     # via pip-tools
+pexpect==4.8.0
+    # via easydev
 pillow==9.1.0
     # via -r requirements.in
 pip-tools==6.5.1
     # via -r requirements.in
+ptyprocess==0.7.0
+    # via pexpect
 pycodestyle==2.8.0
     # via flake8
 pyexcel-io==0.6.6

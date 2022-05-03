@@ -33,6 +33,17 @@
         opacity:1;
     } 
 </style>
+
+<style>
+    {% for circuit in circuits %}
+        .gradient-{{circuit.id}} {
+            background-color:{{gradients|get_value:circuit.id}} !important;
+        }
+        .gradient-{{circuit.id}}-darker {
+            background-color:{{gradients|get_value:circuit.id|get_value_darker}} !important;
+        }
+    {% endfor %}
+</style>
 <link href="{% static "css/button.css" %}" rel="stylesheet">
 
 <h3>

@@ -6,6 +6,8 @@
 {% now "m" as to_month %}
 {% now "d" as todays_date %}
 
+
+
 {% regroup actual_commands by client as client_list %}
         {% for client, command_list in client_list %}
             {% ifchanged client.circuit.id %}
@@ -33,13 +35,15 @@
                     {% with command_list|get:forloop.counter0 as command_client %}
                     {% with command_list|get_futur:forloop.counter as command_client_2 %}
                         <td 
-                        class="meals" 
+                        class="meals
+                            {% if day|day_name|firsts:3 == 'sam' %}
+                                 gradient-{{client.circuit.id}}-darker
+                            {% else %}
+                                 gradient-{{client.circuit.id}}
+                            {% endif %}
+                        " 
                         style="min-width:{{width_cells}}px;
                                vertical-align: middle;
-                               background-color:
-                                   {{gradients|get_value:client.circuit.id}};
-                               {% if day|day_name|firsts:3 == 'sam' %}
-                               {% endif %}
                                "
                                >
                                {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd command_id=command_client.id day_time_command=command_client.command_command default_command=client.client_command command_opts=command_client %}

@@ -61,6 +61,8 @@ class UpdateHomeView(View):
             values_by_id[id_] = {key.split('__')[0]:value for key, value in key_values.items() if key.split('__')[1]==id_}
         #start_time = time.time()
         # save
+        print("--- circuit saves ", end="")
+        start_time = time.time()
         objs = []
         for client_id, kwargs in values_by_id.items():
             for key, value in kwargs.items():
@@ -68,8 +70,13 @@ class UpdateHomeView(View):
                 setattr(client, key, value)
                 objs.append(client)
         Client.objects.bulk_update(objs, ['circuit_id'])
+        
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
+        print("--- order saves ", end="")
+        start_time = time.time()
         for obj in objs:
             obj.save(update_fields=["order"])
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
 
         """ MEALS """
         # targets = ['_meals', ]
@@ -274,7 +281,7 @@ class UpdateHomeView(View):
         save = self.request._post
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
         # save client
-        print("- save client ", end="")
+        print("- save client ", end="\n")
         start_time = time.time()
         self.synth_client(save)
         print("en %s secondes!\n" % round((time.time() - start_time), 2))

@@ -54,7 +54,7 @@ class Client(models.Model):
 
     class Meta:
         ordering = ['circuit__order_c', 'last_name', 'first_name']
-        indexes = [models.Index(fields=['order',]),]
+        # indexes = [models.Index(fields=['order',]),]
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"

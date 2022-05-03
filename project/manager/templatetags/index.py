@@ -11,6 +11,9 @@ from datetime import timedelta, datetime
 import isoweek
 from dateutil.relativedelta import relativedelta
 import datetime as datetime_
+import numpy as np
+from colormap import rgb2hex, rgb2hls, hls2rgb
+
 register = template.Library()
 
 @register.filter
@@ -82,6 +85,27 @@ def analyse(obj):
 @register.filter
 def get_value(obj, key):
     return obj[key]
+
+def hex_to_rgb(hex):
+    hex = hex.lstrip('#')
+    hlen = len(hex)
+    return tuple(int(hex[i:i+hlen//3], 16) for i in range(0, hlen, hlen//3))
+
+def adjust_color_lightness(r, g, b, factor):
+    h, l, s = rgb2hls(r / 255.0, g / 255.0, b / 255.0)
+    l = max(min(l * factor, 1.0), 0.0)
+    r, g, b = hls2rgb(h, l, s)
+    return rgb2hex(int(r * 255), int(g * 255), int(b * 255))
+
+def darken_color(r, g, b, factor=0.1):
+    return adjust_color_lightness(r, g, b, 1 - factor)
+    
+@register.filter
+def get_value_darker(obj):
+    r, g, b = hex_to_rgb(obj)
+
+    return darken_color(r,g,b)
+
 
 @register.filter
 def year(obj):

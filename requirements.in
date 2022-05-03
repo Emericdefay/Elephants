@@ -8,6 +8,9 @@ python-dateutil
 isoweek
 openpyxl
 Pillow
+numpy
+colormap
+easydev
 
 # dev
 pip-tools
