@@ -67,7 +67,9 @@ class UpdateHomeView(View):
                 client = Client.objects.get(id=client_id)
                 setattr(client, key, value)
                 objs.append(client)
-        Client.objects.bulk_update(objs, targets)
+        Client.objects.bulk_update(objs, ['circuit_id'])
+        for obj in objs:
+            obj.save(update_fields=["order"])
 
         """ MEALS """
         # targets = ['_meals', ]
@@ -91,6 +93,32 @@ class UpdateHomeView(View):
         #             client_get.client_command.add(food)
         #             continue
         #         client_get.client_command.remove(food)
+
+    def synth_circuit(self, save):
+        """ INFO CLIENT """
+        targets = ['order_c']
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
+                key_values.update({key: value})
+        # detect id
+        ids = set()
+        for i in key_values.keys():
+            ids.add(i.split('__')[1])
+        # regroup by id
+        values_by_id = dict()
+        for id_ in ids:
+            values_by_id[id_] = {key.split('__')[0]:value for key, value in key_values.items() if key.split('__')[1]==id_}
+        #start_time = time.time()
+        # save
+        objs = []
+        for circuit_id, kwargs in values_by_id.items():
+            for key, value in kwargs.items():
+                client = Circuit.objects.get(id=circuit_id)
+                setattr(client, key, value)
+                objs.append(client)
+        for obj in objs:
+            obj.save(update_fields=["order_c"])
 
     def synth_planning(self, save):
         """ PLANNING INFO """
@@ -241,7 +269,7 @@ class UpdateHomeView(View):
         """
         print("\nSauvegarde", end="\n")
         # Getting saves
-        print("- Client saves ", end="")
+        print("- Data saves ", end="")
         start_time = time.time()
         save = self.request._post
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
@@ -249,6 +277,11 @@ class UpdateHomeView(View):
         print("- save client ", end="")
         start_time = time.time()
         self.synth_client(save)
+        print("en %s secondes!\n" % round((time.time() - start_time), 2))
+        # save circuit
+        print("- save circuit ", end="")
+        start_time = time.time()
+        self.synth_circuit(save)
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
         # save planning
         print("- save planning ", end="\n")
@@ -345,7 +378,7 @@ class HomeView(TemplateView, UpdateView):
         context['foods_edit'] = Food.objects.all()
         context['formDefaultCommand'] = form['defaultcommands']
         context['foodcategories'] = form['foodcategories']
-        circuits = Circuit.objects.all().order_by('name')
+        circuits = Circuit.objects.all().order_by('order_c')
         context['circuits'] = circuits
         gradients = gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
         context['circuits_colors'] = [(gradients[index]) for index, circuit in enumerate(circuits)]
@@ -369,13 +402,7 @@ class HomeView(TemplateView, UpdateView):
         context['week_range'] = form['week_range']
         context['week_range_choices'] = list(range(0, 4))
 
-        commands = Command.objects.filter(
-            Q(month_date_command=(kwargs['month'] if 'month' in kwargs else datetime.now().month))
-            & Q(year_date_command=(kwargs['year'] if 'year' in kwargs else datetime.now().year))
-            ).order_by('client')
-        context['data'] = commands
-
-        clients = Client.objects.all().order_by('circuit', 'order')
+        clients = Client.objects.all().order_by('circuit__order_c', 'order')
         context['clients'] =clients
 
         week_ = datetime.now().weekday
@@ -458,15 +485,16 @@ class HomeView(TemplateView, UpdateView):
                 .filter(client_id=client_id)\
                 .filter(day_date_command=date.day)\
                 .filter(month_date_command=date.month)\
-                .filter(year_date_command=date.year)
-            cut_actual_commands.append(actual_commands.order_by( 'client', 'client__order', ))
+                .filter(year_date_command=date.year)\
+                .exclude(client__circuit__id=5)
+            cut_actual_commands.append(actual_commands.order_by( 'client', 'client__last_name',  ))
             actual_commands = Command.objects.none()
 
         context['cut_actual_commands'] = cut_actual_commands
         context['actual_commands'] = Command.objects\
                                             .filter(day_date_command__in=range_days)\
                                             .filter(month_date_command__in=range_months)\
-                                            .filter(year_date_command__in=range_years)
+                                            .filter(year_date_command__in=range_years).order_by( 'circuit__order_c', 'client', 'client__order', )
 
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
         print("Phase 4 :", end=" ")

@@ -299,6 +299,19 @@ def query_sum_morning(obj, f):
         return 0
 
 @register.filter
-def analyse(obj):
-    return 0
+def sort_order(lst):
+    #from operator import attrgetter
+    #lst.sort(key = attrgetter('order'), reverse = True)
+    #lst.sort(key=lambda x: x.order, reverse=True)
+    custom_list = [rec.id for rec in lst]
+    queryset = Client.objects.filter(id__in=custom_list).order_by('order')
+    return queryset
 
+@register.filter
+def sort_order_c(lst):
+    #from operator import attrgetter
+    #lst.sort(key = attrgetter('order'), reverse = True)
+    #lst.sort(key=lambda x: x.order, reverse=True)
+    custom_list = [rec.id for rec in lst]
+    queryset = Circuit.objects.filter(id__in=custom_list).order_by('order_c')
+    return queryset

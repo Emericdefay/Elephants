@@ -80,7 +80,6 @@
             {% comment %} {% regroup data by client as client_list %} {% endcomment %}
             {% if cut_actual_commands|len_list %}
                 {% for actual_commands in cut_actual_commands %}
-                    {% regroup actual_commands by client.order as client_list %}
                     {% include "manager/planning/planning_generation.html" %}
                 {% endfor %}
             {% else %}

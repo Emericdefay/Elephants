@@ -29,6 +29,7 @@ class Circuit(models.Model):
     """_summary_
     """
     name = models.CharField(verbose_name=("Nom de la tournée"), max_length=200, blank=False, null=False)
+    order_c = models.IntegerField(verbose_name=("Position de tournée"), default=0)
 
     def __str__(self):
         return f"{self.pk}-{self.name}"
@@ -46,13 +47,13 @@ class Client(models.Model):
     address_details = models.CharField(verbose_name=("Details"), max_length=1000, blank=True, null=True)
     cellphone = models.CharField(verbose_name=("Telephone"), max_length=20, blank=True, null=True)
     cellphone2 = models.CharField(verbose_name=("Telephone secondaire"), max_length=20, blank=True, null=True)
-    order =models.IntegerField(verbose_name=("Position de tournée"), default=0)
+    order = models.IntegerField(verbose_name=("Position de tournée"), default=0)
     client_command = models.ManyToManyField(DefaultCommand, related_name='command', blank=True)
     # TODO : models.SET(get_standart_circuit)
     circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
 
     class Meta:
-        ordering = ['circuit', 'last_name', 'first_name']
+        ordering = ['circuit__order_c', 'last_name', 'first_name']
         indexes = [models.Index(fields=['order',]),]
 
     def __str__(self):

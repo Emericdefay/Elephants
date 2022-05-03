@@ -35,7 +35,7 @@ class ClientForm(forms.ModelForm):
 
 	class Meta:
 		model = Client
-		fields = [ 'first_name', 'last_name', 'address', 'postcode', 'address_details', 'cellphone', 'cellphone2', 'circuit']
+		fields = [ 'first_name', 'last_name', 'address', 'order', 'postcode', 'address_details', 'cellphone', 'cellphone2', 'circuit']
 
 
 class DefaultCommandForm(forms.ModelForm):
@@ -55,10 +55,11 @@ class CircuitForm(forms.ModelForm):
 	"""Surcharge the class Circuit to put place holder
 	and remove help_text."""
 	name = forms.Field(label="Nom de la tournée", )
+	order_c = forms.IntegerField(label=("Position de tournée"))
 
 	class Meta:
 		model = Circuit
-		fields = ['name', ]
+		fields = ['name', 'order_c']
 
 
 class CommandForm(forms.ModelForm):

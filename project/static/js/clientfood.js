@@ -70,252 +70,275 @@ $(() => {
 
 const url = "http://127.0.0.1:8000/api/client"
 $(() => {
-    // CELLPHONE2
-    //setup before functions
-    var typingTimer;                //timer identifier
-    var doneTypingInterval = 2000;  //time in ms, 5 seconds for example
-    var $input = $('.input_cellphone2');
-    
-    //on keyup, start the countdown
-    $input.on('keyup focusout', function () {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(doneTyping, doneTypingInterval);
-    });
-    
-    //on keydown, clear the countdown 
-    $input.on('keydown', function () {
-        clearTimeout(typingTimer);
-    });
-    
-    //user is "finished typing," do something
-    function doneTyping () {
-        //do something
-        const client = $input.data('client');
-        const val = $input.val();
-        urlClient = `${url}/${client}/cellphone2/${val}/`;
-        $.ajax({
-            url: urlClient,
-            type: 'GET',
-            dataType: 'json',
-            beforeSend: () => {
-            },
-            success: data => {
-
-            },
-            error: (e) => {
-              console.log(e)
-            },
-        });
-    }
-});
-
-$(() => {
-    // INPUT ADDRESS DETAILS
-    //setup before functions
-    var typingTimer;                //timer identifier
-    var doneTypingInterval = 2000;  //time in ms, 5 seconds for example
-    var $input = $('.input_address_details');
-    
-    //on keyup, start the countdown
-    $input.on('keyup focusout', function () {
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(doneTyping, doneTypingInterval);
-    });
-    
-    //on keydown, clear the countdown 
-    $input.on('keydown', function () {
-      clearTimeout(typingTimer);
-    });
-    
-    //user is "finished typing," do something
-    function doneTyping () {
+  // INPUT CELLPHONE2
+  //setup before functions
+  let typingTimer;                //timer identifier
+  const doneTypingInterval = 2000;  //time in ms, 5 seconds for example
+  let input;
+  
+  //on keyup, start the countdown
+  $('.input_cellphone2').on('keyup focusout', function () {
+    clearTimeout(typingTimer);
+    input = $(this);
+    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+  });
+  
+  //on keydown, clear the countdown 
+  $('.input_cellphone2').on('keydown', function () {
+    clearTimeout(typingTimer);
+  });
+  
+  //user is "finished typing," do something
+  function doneTyping () {
       //do something
-    }
+      const client = input.data('client');
+      const val = input.val();
+      urlClient = `${url}/${client}/cellphone2/${val}/`;
+      $.ajax({
+          url: urlClient,
+          type: 'GET',
+          dataType: 'json',
+          beforeSend: () => {
+          },
+          success: data => {
+
+          },
+          error: (e) => {
+            console.log(e)
+          },
+      });
+  }
 });
 
 $(() => {
-    // INPUT CELLPHONE
-    //setup before functions
-    var typingTimer;                //timer identifier
-    var doneTypingInterval = 2000;  //time in ms, 5 seconds for example
-    var $input = $('.input_cellphone');
-    
-    //on keyup, start the countdown
-    $input.on('keyup focusout', function () {
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(doneTyping, doneTypingInterval);
-    });
-    
-    //on keydown, clear the countdown 
-    $input.on('keydown', function () {
-      clearTimeout(typingTimer);
-    });
-    
-    //user is "finished typing," do something
-    function doneTyping () {
-        //do something
-        const client = $input.data('client');
-        const val = $input.val();
-        urlClient = `${url}/${client}/cellphone/${val}/`;
-        $.ajax({
-            url: urlClient,
-            type: 'GET',
-            dataType: 'json',
-            beforeSend: () => {
-            },
-            success: data => {
+  // INPUT ADDRESS DETAILS
+  //setup before functions
+  let typingTimer;                //timer identifier
+  const doneTypingInterval = 2000;  //time in ms, 5 seconds for example
+  let input;
+  
+  //on keyup, start the countdown
+  $('.input_address_details').on('keyup focusout', function () {
+    clearTimeout(typingTimer);
+    input = $(this);
+    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+  });
+  
+  //on keydown, clear the countdown 
+  $('.input_address_details').on('keydown', function () {
+    clearTimeout(typingTimer);
+  });
+  
+  //user is "finished typing," do something
+  function doneTyping () {
+      //do something
+      const client = input.data('client');
+      const val = input.val();
+      urlClient = `${url}/${client}/address_details/${val}/`;
+      $.ajax({
+          url: urlClient,
+          type: 'GET',
+          dataType: 'json',
+          beforeSend: () => {
+          },
+          success: data => {
 
-            },
-            error: (e) => {
-              console.log(e)
-            },
-        });
-    }
+          },
+          error: (e) => {
+            console.log(e)
+          },
+      });
+  }
 });
 
 $(() => {
-    // INPUT POSTCODE
-    //setup before functions
-    var typingTimer;                //timer identifier
-    var doneTypingInterval = 2000;  //time in ms, 5 seconds for example
-    var $input = $('.input_postcode');
-    
-    //on keyup, start the countdown
-    $input.on('keyup focusout', function () {
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(doneTyping, doneTypingInterval);
-    });
-    
-    //on keydown, clear the countdown 
-    $input.on('keydown', function () {
-      clearTimeout(typingTimer);
-    });
-    
-    //user is "finished typing," do something
-    function doneTyping () {
-        //do something
-        const client = $input.data('client');
-        const val = $input.val();
-        urlClient = `${url}/${client}/postcode/${val}/`;
-        $.ajax({
-            url: urlClient,
-            type: 'GET',
-            dataType: 'json',
-            beforeSend: () => {
-            },
-            success: data => {
+  // INPUT CELLPHONE
+  //setup before functions
+  let typingTimer;                //timer identifier
+  const doneTypingInterval = 2000;  //time in ms, 5 seconds for example
+  let input;
+  
+  //on keyup, start the countdown
+  $('.input_cellphone').on('keyup focusout', function () {
+    clearTimeout(typingTimer);
+    input = $(this);
+    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+  });
+  
+  //on keydown, clear the countdown 
+  $('.input_cellphone').on('keydown', function () {
+    clearTimeout(typingTimer);
+  });
+  
+  //user is "finished typing," do something
+  function doneTyping () {
+      //do something
+      const client = input.data('client');
+      const val = input.val();
+      urlClient = `${url}/${client}/cellphone/${val}/`;
+      $.ajax({
+          url: urlClient,
+          type: 'GET',
+          dataType: 'json',
+          beforeSend: () => {
+          },
+          success: data => {
 
-            },
-            error: (e) => {
-              console.log(e)
-            },
-        });
-    }
+          },
+          error: (e) => {
+            console.log(e)
+          },
+      });
+  }
 });
 
 $(() => {
-    // INPUT ADDRESS
-    //setup before functions
-    var typingTimer;                //timer identifier
-    var doneTypingInterval = 2000;  //time in ms, 5 seconds for example
-    var $input = $('.input_address');
-    
-    //on keyup, start the countdown
-    $input.on('keyup focusout', function () {
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(doneTyping, doneTypingInterval);
-    });
-    
-    //on keydown, clear the countdown 
-    $input.on('keydown', function () {
-      clearTimeout(typingTimer);
-    });
-    
-    //user is "finished typing," do something
-    function doneTyping () {
-        //do something
-        const client = $input.data('client');
-        const val = $input.val();
-        urlClient = `${url}/${client}/address/${val}/`;
-        $.ajax({
-            url: urlClient,
-            type: 'GET',
-            dataType: 'json',
-            beforeSend: () => {
-            },
-            success: data => {
+  // INPUT POSTCODE
+  //setup before functions
+  let typingTimer;                //timer identifier
+  const doneTypingInterval = 2000;  //time in ms, 5 seconds for example
+  let input;
+  
+  //on keyup, start the countdown
+  $('.input_postcode').on('keyup focusout', function () {
+    clearTimeout(typingTimer);
+    input = $(this);
+    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+  });
+  
+  //on keydown, clear the countdown 
+  $('.input_postcode').on('keydown', function () {
+    clearTimeout(typingTimer);
+  });
+  
+  //user is "finished typing," do something
+  function doneTyping () {
+      //do something
+      const client = input.data('client');
+      const val = input.val();
+      urlClient = `${url}/${client}/postcode/${val}/`;
+      $.ajax({
+          url: urlClient,
+          type: 'GET',
+          dataType: 'json',
+          beforeSend: () => {
+          },
+          success: data => {
 
-            },
-            error: (e) => {
-              console.log(e)
-            },
-        });
-    }
+          },
+          error: (e) => {
+            console.log(e)
+          },
+      });
+  }
 });
 
 $(() => {
-    // INPUT FIRST NAME
-    //setup before functions
-    var typingTimer;                //timer identifier
-    var doneTypingInterval = 2000;  //time in ms, 5 seconds for example
-    var $input = $('.input_first_name');
-    
-    //on keyup, start the countdown
-    $input.on('keyup focusout', function () {
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(doneTyping, doneTypingInterval);
-    });
-    
-    //on keydown, clear the countdown 
-    $input.on('keydown', function () {
-      clearTimeout(typingTimer);
-    });
-    
-    //user is "finished typing," do something
-    function doneTyping () {
-        //do something
-        const client = $input.data('client');
-        const val = $input.val();
-        urlClient = `${url}/${client}/first_name/${val}/`;
-        $.ajax({
-            url: urlClient,
-            type: 'GET',
-            dataType: 'json',
-            beforeSend: () => {
-            },
-            success: data => {
+  // INPUT ADDRESS
+  //setup before functions
+  let typingTimer;                //timer identifier
+  const doneTypingInterval = 2000;  //time in ms, 5 seconds for example
+  let input;
+  
+  //on keyup, start the countdown
+  $('.input_address').on('keyup focusout', function () {
+    clearTimeout(typingTimer);
+    input = $(this);
+    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+  });
+  
+  //on keydown, clear the countdown 
+  $('.input_address').on('keydown', function () {
+    clearTimeout(typingTimer);
+  });
+  
+  //user is "finished typing," do something
+  function doneTyping () {
+      //do something
+      const client = input.data('client');
+      const val = input.val();
+      urlClient = `${url}/${client}/address/${val}/`;
+      $.ajax({
+          url: urlClient,
+          type: 'GET',
+          dataType: 'json',
+          beforeSend: () => {
+          },
+          success: data => {
 
-            },
-            error: (e) => {
-              console.log(e)
-            },
-        });
-    }
+          },
+          error: (e) => {
+            console.log(e)
+          },
+      });
+  }
+});
+
+$(() => {
+  // INPUT FIRST NAME
+  //setup before functions
+  let typingTimer;                //timer identifier
+  const doneTypingInterval = 2000;  //time in ms, 5 seconds for example
+  let input;
+  
+  //on keyup, start the countdown
+  $('.input_first_name').on('keyup focusout', function () {
+    clearTimeout(typingTimer);
+    input = $(this);
+    typingTimer = setTimeout(doneTyping, doneTypingInterval);
+  });
+  
+  //on keydown, clear the countdown 
+  $('.input_first_name').on('keydown', function () {
+    clearTimeout(typingTimer);
+  });
+  
+  //user is "finished typing," do something
+  function doneTyping () {
+      //do something
+      const client = input.data('client');
+      const val = input.val();
+      urlClient = `${url}/${client}/first_name/${val}/`;
+      $.ajax({
+          url: urlClient,
+          type: 'GET',
+          dataType: 'json',
+          beforeSend: () => {
+          },
+          success: data => {
+
+          },
+          error: (e) => {
+            console.log(e)
+          },
+      });
+  }
 });
 
 $(() => {
     // INPUT LAST NAME
     //setup before functions
-    var typingTimer;                //timer identifier
-    var doneTypingInterval = 2000;  //time in ms, 5 seconds for example
-    var $input = $('.input_last_name');
+    let typingTimer;                //timer identifier
+    const doneTypingInterval = 2000;  //time in ms, 5 seconds for example
+    let input;
     
     //on keyup, start the countdown
-    $input.on('keyup focusout', function () {
+    $('.input_last_name').on('keyup focusout', function () {
       clearTimeout(typingTimer);
+      input = $(this);
       typingTimer = setTimeout(doneTyping, doneTypingInterval);
     });
     
     //on keydown, clear the countdown 
-    $input.on('keydown', function () {
+    $('.input_last_name').on('keydown', function () {
       clearTimeout(typingTimer);
     });
     
     //user is "finished typing," do something
     function doneTyping () {
         //do something
-        const client = $input.data('client');
-        const val = $input.val();
+        const client = input.data('client');
+        const val = input.val();
         urlClient = `${url}/${client}/last_name/${val}/`;
         $.ajax({
             url: urlClient,

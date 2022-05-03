@@ -84,6 +84,9 @@
                 <a class="nav-link active" id="client-tab" data-bs-toggle="tab" href="#client" role="tab" aria-controls="client" aria-selected="true">Clients</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" id="order-tab" data-bs-toggle="tab" href="#order" role="tab" aria-controls="order" aria-selected="true">Ordres</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="planning-tab" data-bs-toggle="tab" href="#planning" role="tab" aria-controls="planning" aria-selected="false">Planning</a>
             </li>
             <li class="nav-item">
@@ -96,10 +99,10 @@
                 <a class="nav-link" id="bill-tab" data-bs-toggle="tab" href="#bill" role="tab" aria-controls="bill" aria-selected="false">Factures</a>
             </li>
             <li class="ms-auto" style="align-self: center;">
-                <button form="myform" class="btn btn-primary align-content-center mx-3" type="submit" style="width:120px; transform: translate(0px, 2px);">Enregistrer</button>
+                <button form="myform" class="btn btn-lg btn-primary align-content-center mx-3" type="submit">Enregistrer</button>
             </li>
             <li class="" style="align-self: center;">
-                    <button type="button" class="btn dropdown-toggle bg-secondary align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button type="button" class="btn btn-lg dropdown-toggle bg-secondary align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
                         Exporter
                     </button>
                     <form class="dropdown-menu text-center" style="text-align-last: center; width: min-content;" action="{% url "manager:facture" %}" method="post" id="facture">
@@ -115,7 +118,7 @@
                         <label for="date">Date sur les factures:</label>
                         <input type="date" id="date" name="date"
                                value="{{actual_year}}-{{actual_month}}-{{actual_day}}">
-                        <button class="btn btn-secondary" type="submit" href="{% url 'manager:facture' %}" style="width:120px; transform: translate(0px, 2px);">Exporter</button>
+                        <button class="btn btn-secondary" type="submit" href="{% url 'manager:facture' %}">Exporter</button>
                     </form>
             </li>
 
@@ -206,6 +209,11 @@
                                     <div class="tab-pane fade show active" id="client" role="tabpanel" aria-labelledby="client-tab">
                                         <p>
                                             {% include "manager/clients/clients_list.html" %}
+                                        </p>
+                                    </div>
+                                    <div class="tab-pane fade show" id="order" role="tabpanel" aria-labelledby="order-tab">
+                                        <p>
+                                            {% include "manager/clients/order_list.html" %}
                                         </p>
                                     </div>
                                     <div class="tab-pane fade" id="planning" role="tabpanel" aria-labelledby="planning-tab">

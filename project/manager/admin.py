@@ -22,6 +22,7 @@ class CustomCircuit(admin.ModelAdmin):
 	# list_display = ('', )
 	fieldsets = [
 		('name', {'fields': ['name']}),
+		('order_c', {'fields': ['order_c']}),
 	]
 
 
