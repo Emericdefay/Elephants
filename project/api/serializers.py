@@ -177,3 +177,21 @@ class AllCommentsOfCustomerSerializer(serializers.ModelSerializer):
             'month',
             'year',
         )
+
+
+class ClientDefaultFoodSerializer(serializers.ModelSerializer):
+    html = serializers.SerializerMethodField()
+
+    def get_html(self, obj):
+        data = render_to_string(template_name='client_default_food.html',
+                                context={
+                                    'client_command': obj.client_command.all(),
+                                    'all_foods': DefaultCommand.objects.all(),
+                                })
+        return mark_safe(data)
+
+    class Meta:
+        model = Client
+        fields = (
+            'html',
+        )

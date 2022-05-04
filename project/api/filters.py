@@ -102,3 +102,17 @@ class CommandCustomerFilter(filters.FilterSet):
         fields = [
             'client_id',
         ]
+
+
+class ClientFilter(filters.FilterSet):
+
+    id = filters.NumberFilter(
+        label="id",
+    )
+
+
+    class Meta:
+        model = Client
+        fields = [
+            'id',
+        ]

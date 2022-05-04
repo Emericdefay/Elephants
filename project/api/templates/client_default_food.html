@@ -1,0 +1,9 @@
+<div class="row row-cols-3">
+    {% for food in all_foods %}
+        {% if food in client_command %}
+            <div class="col">✔{{food.default.category}}</div>
+        {% else %}
+            <div class="col">❌{{food.default.category}}</div>
+        {% endif %}
+    {% endfor %}
+</div>

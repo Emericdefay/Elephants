@@ -24,7 +24,10 @@
         <label class="btn mx-0 p-0 quantity_label" for="command_command__{{day_time}}__{{command_id}}__{{client.id}}">
             <button 
                 type="button" 
-                class="btn 
+                data-client="{{client.id}}"
+                data-command="{{command_id}}"
+                class="btn
+                dropdown-get-food
                 {% if command_opts.comment and command_opts.comment != '' and command_opts.comment != 'None' %}
                     btn-danger
                 {% elif day_time_command > 0 %}
@@ -38,58 +41,12 @@
             >
                 {{day_time_command}}
             </button>
-            <div class="dropdown-menu">
-                <table>
-                    <thead>
-                        {% with foodcategories as foodcategories %}
-                        {% for food in formDefaultCommand %}
-                            <th class="verticalTableHeader">
-                                {{food.default.category}}
-                            </th>
-                        {% endfor %}
-                        {% endwith %}
-                    </thead>
-                    <tbody>
-                        {% if day_time_command !=  0 %}
-                            {% for food in formDefaultCommand %}
-                                <td>
-                                    <input
-                                    type="checkbox"
-                                    data-id="{{food.id}}"
-                                    data-food="{{food.id}}"
-                                    data-command="{{command_id}}"
-                                    id="meals__{{food.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
-                                    name="meals__{{food.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
-                                        {% if command_client|make_query|query_command_id:command_id|query_command_food:food > 0 %}
-                                            checked
-                                        {% endif %}
-                                    class="default_box checkbox-food"
-                                    style="vertical-align: -webkit-baseline-middle;
-                                    transform: scale(2.1);">
-                                </td>
-                            {% endfor %}
-                        {% else %}
-                            {% for default in formDefaultCommand %}
-                                <td style="-webkit-writing-mode: vertical-lr;">
-                                    <input
-                                        type="checkbox"
-                                        data-food="{{default.id}}"
-                                        data-command="{{command_id}}"
-                                        id="meals__{{default.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
-                                        name="meals__{{default.id}}__{{day_time}}__{{command_id}}__{{client.id}}"
-                                        {% for box_client in default_command.all %}
-                                            {% if default|striptags == box_client|striptags %}
-                                                checked
-                                            {% endif %}
-                                        {% endfor %}
-                                        class="default_box checkbox-food"
-                                        style="vertical-align: -webkit-baseline-middle;
-                                        transform: scale(2.1);">
-                                </td>
-                            {% endfor %}
-                        {% endif %}
-                    </tbody>
-                </table>
+            <div class="dropdown-menu" style="min-width:25rem;">
+                <div
+                     class="container"
+                     id="food-client-{{command_id}}"
+                >
+                </div>
                 <table>
                     <tbody>
                         <tr>

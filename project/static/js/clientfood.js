@@ -47,6 +47,29 @@ $(() => {
 });
 
 $(() => {
+    const url = "http://127.0.0.1:8000/api/getclientfood"
+    $('.dropdown-get-food').on('click', function () {
+        const client = $(this).data('client');
+        const command = $(this).data('command');
+        urlFood = `${url}/?id=${client}`;
+        $.ajax({
+            url: urlFood,
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: () => {
+            },
+            success: data => {
+              console.log(data);
+              $(`#food-client-${command}`).html(data.results[0].html)
+            },
+            error: (e) => {
+              console.log(e)
+            },
+        });
+    });
+});
+
+$(() => {
   $('.command-btn').on('click', function () {
         let url = "http://127.0.0.1:8000/api/command"
         const command = $(this).data('command');
@@ -65,25 +88,29 @@ $(() => {
               console.log(e)
             },
         });
-        url = "http://127.0.0.1:8000/api/commandfood"
-        $(`input[data-command="${command}"][type="checkbox"]`).each( function () {
-          const food = $(this).data('food');
-          const checked = this.checked ? '1' : '0';
-          urlFood = `${url}/${command}/${food}/${checked}/`;
-          $.ajax({
-              url: urlFood,
-              type: 'GET',
-              dataType: 'json',
-              beforeSend: () => {
-              },
-              success: data => {
+        // ---------------------------------------------- //
+        // This part is not used anymore but good to keep
+        // if the customer want to save foods from planning.
+        // ---------------------------------------------  //
+        // url = "http://127.0.0.1:8000/api/commandfood"
+        // $(`input[data-command="${command}"][type="checkbox"]`).each( function () {
+        //   const food = $(this).data('food');
+        //   const checked = this.checked ? '1' : '0';
+        //   urlFood = `${url}/${command}/${food}/${checked}/`;
+        //   $.ajax({
+        //       url: urlFood,
+        //       type: 'GET',
+        //       dataType: 'json',
+        //       beforeSend: () => {
+        //       },
+        //       success: data => {
   
-              },
-              error: (e) => {
-                console.log(e)
-              },
-          });
-      })
+        //       },
+        //       error: (e) => {
+        //         console.log(e)
+        //       },
+        //   });
+        // })
     });
 });
 

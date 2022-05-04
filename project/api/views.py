@@ -196,6 +196,20 @@ class AllCommentsOfCustomer(mixins.ListModelMixin, viewsets.GenericViewSet):
             .order_by('year_date_command', 'month_date_command', 'day_date_command')
 
 
+class ClientDefaultFood(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = (permissions.AllowAny,)
+    filter_backends = [DjangoFilterBackend, ]
+    filterset_class = filters.ClientFilter
+    serializer_class = serializers.ClientDefaultFoodSerializer
+    queryset = models.Client.objects.none()
+
+    def get_queryset(self):
+        # get non expired ads
+        print(self.request._request.GET)
+        return models.Client.objects\
+            .filter(id=self.request._request.GET.get('id'))\
+
+
 class CommandCommentUpdate(APIView):
     """
     Retrieve, update or delete a snippet instance.
@@ -229,6 +243,7 @@ class ClientUpdate(APIView):
         client.save()
         return Response()
 
+
 class ClientDefaultFoodUpdate(APIView):
     """
     Retrieve, update or delete a snippet instance.
@@ -249,6 +264,7 @@ class ClientDefaultFoodUpdate(APIView):
             client.client_command.remove(food)
 
         return Response()
+
 
 class CommandDefaultFoodUpdate(APIView):
     """
