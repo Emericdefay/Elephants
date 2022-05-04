@@ -73,6 +73,9 @@ $(() => {
   $('.command-btn').on('click', function () {
         let url = "http://127.0.0.1:8000/api/command"
         const command = $(this).data('command');
+        const client = $(this).data('client');
+        const month = $(this).data('month');
+        const year = $(this).data('year');
         const value = $(`input[data-id="command_command__${command}"]`).val();
         urlFood = `${url}/${command}/${value}/`;
         $.ajax({
@@ -88,29 +91,43 @@ $(() => {
               console.log(e)
             },
         });
-        // ---------------------------------------------- //
-        // This part is not used anymore but good to keep
-        // if the customer want to save foods from planning.
-        // ---------------------------------------------  //
-        // url = "http://127.0.0.1:8000/api/commandfood"
-        // $(`input[data-command="${command}"][type="checkbox"]`).each( function () {
-        //   const food = $(this).data('food');
-        //   const checked = this.checked ? '1' : '0';
-        //   urlFood = `${url}/${command}/${food}/${checked}/`;
-        //   $.ajax({
-        //       url: urlFood,
-        //       type: 'GET',
-        //       dataType: 'json',
-        //       beforeSend: () => {
-        //       },
-        //       success: data => {
-  
-        //       },
-        //       error: (e) => {
-        //         console.log(e)
-        //       },
-        //   });
-        // })
+        
+        url = "http://127.0.0.1:8000/api/commandfood"
+        $(`input[data-client="${client}"][type="checkbox"]`).each( function () {
+          const food = $(this).data('food');
+          const checked = this.checked ? '1' : '0';
+          urlFood = `${url}/${command}/${food}/${checked}/`;
+          $.ajax({
+              url: urlFood,
+              type: 'GET',
+              dataType: 'json',
+              beforeSend: () => {
+              },
+              success: data => {
+                console.log(data);
+              },
+              error: (e) => {
+                console.log(e)
+              },
+          });
+        })
+        url = "http://127.0.0.1:8000/api/commandmonthbymonth"
+        urlFood = `${url}/${client}/${month}/${year}/`;
+        $.ajax({
+            url: urlFood,
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: () => {
+            },
+            success: data => {
+              console.log(data.money_this_month);
+              $(`#money_this_month__${client}`).text(data.money_this_month);
+
+            },
+            error: (e) => {
+              console.log(e)
+            },
+        });
     });
 });
 

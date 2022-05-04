@@ -1,4 +1,4 @@
-from django.db.models import F, FloatField, Q
+from django.db.models import F, FloatField, Q, Sum
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic.dates import timezone_today
@@ -9,6 +9,7 @@ from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer, Templat
 from rest_framework.views import APIView
 from project.manager import models
 from . import serializers, filters
+from django.db.models.functions import Round
 
 
 class DayByDayCommand(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -284,8 +285,31 @@ class CommandDefaultFoodUpdate(APIView):
             command.meals.add(food)
         else:
             command.meals.remove(food)
+        return Response(status=200)
 
-        return Response()
+
+class CommandMoneyMonthUpdate(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get(self, request, pk, month, year, format=None):
+
+        data = {
+            'money_this_month': models.Command.objects.filter(
+                client__id=pk, 
+                month_date_command=month,
+                year_date_command=year,
+
+                ).aggregate(sum=Round(
+                                Sum(
+                                    (F('meals__default__price')) * F('command_command'),
+
+                                    output_field=FloatField(),
+                                    )
+                                ,2)
+                       )['sum'],
+            }
+        return Response(data=data, status=200)
 
 
 class CommandUpdate(APIView):

@@ -193,25 +193,25 @@
                         {% endfor %}
                     </select>
                 </td>
-                <td style="vertical-align: middle;">
+                <td style="vertical-align: middle; font-weight: bold;">
                   {% if client.client_command.all|make_unit_price %}
-                    <strong>{{client.client_command.all|make_unit_price}}</strong>
+                    {{client.client_command.all|make_unit_price}}
                   {% else %}
-                    <strong>0</strong>
+                    0
                   {% endif %}
                 </td>
                 {% with actual_day as day %}
                 {% with day|day as this_day %}
                 {% with day|month as this_month %}
                 {% with day|year as this_year %}
-                <td style="vertical-align: middle;">
-                  <strong>{{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_meals_this_month}}</strong>
+                <td style="vertical-align: middle; font-weight: bold;">
+                  {{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_meals_this_month}}
                 </td>
-                <td style="vertical-align: middle;">
+                <td style="vertical-align: middle; font-weight: bold;" id="money_this_month__{{client.id}}">
                   {% if month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_price_this_month %}
-                    <strong>{{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_price_this_month}}</strong>
+                    {{month_commands|make_query|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client_id:client.id|query_sum_price_this_month}}
                   {% else %}
-                    <strong>0</strong>
+                    0
                   {% endif %}
                 </td>
                 {% endwith %}

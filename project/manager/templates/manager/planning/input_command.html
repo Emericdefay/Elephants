@@ -7,7 +7,13 @@
 {% now "d" as todays_date %}
     <div class="btn-group" role="group">
         <div class="input-group-prepend">
-            <button class="btn btn-outline-dark btn-minus command-btn" data-command="{{command_id}}" type="button">
+            <button 
+                class="btn btn-outline-dark btn-minus command-btn" 
+                data-command="{{command_id}}" 
+                data-client="{{client.id}}" 
+                data-month="{{this_month}}"
+                data-year="{{this_year}}"
+                type="button">
                 <i class="fa fa-minus"></i>
             </button>
         </div>
@@ -42,33 +48,38 @@
                 {{day_time_command}}
             </button>
             <div class="dropdown-menu" style="min-width:25rem;">
+                <div class="text-center mx-1">
+                    <strong>Plats Commandés</strong>
+                </div>
                 <div
                      class="container"
                      id="food-client-{{command_id}}"
                 >
                 </div>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <label class="mx-0 p-0" for="comment__{{day_time}}__{{command_id}}__{{client.id}}">Commentaire</label>
-                                <input
-                                    type="text"
-                                    min="0"
-                                    step="0.05"
-                                    id="comment__{{day_time}}__{{command_id}}__{{client.id}}"
-                                    name="comment__{{day_time}}__{{command_id}}__{{client.id}}"
-                                    value="{% if command_opts.comment %}{{command_opts.comment}}{% endif %}"
-                                    style="width:{{width_cells}}px;"
-                                    class="default_box">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="text-center mx-1">
+                    <strong>Commentaire</strong>
+                    <textarea
+                        id="comment__{{day_time}}__{{command_id}}__{{client.id}}"
+                        name="comment__{{day_time}}__{{command_id}}__{{client.id}}"
+                        class="default_box"
+                        style="width: -webkit-fill-available;"
+                    >{% if command_opts.comment %}{{command_opts.comment}}{% endif %}</textarea>
+                </div>
+                <div class="text-center">
+                    <button class="save-comment btn btn-primary" data-command="{{commands.id}}">
+                        Enregistrer
+                    </button>
+                </div>
             </div>
         </label>
         <div class="input-group-append">
-            <button class="btn btn-outline-dark btn-plus command-btn" data-command="{{command_id}}" type="button">
+            <button 
+                class="btn btn-outline-dark btn-plus command-btn" 
+                data-command="{{command_id}}"
+                data-client="{{client.id}}"
+                data-month="{{this_month}}"
+                data-year="{{this_year}}"
+                type="button">
                 <i class="fa fa-plus"></i>
             </button>
         </div>
