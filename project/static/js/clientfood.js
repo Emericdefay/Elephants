@@ -47,8 +47,8 @@ $(() => {
 });
 
 $(() => {
-    const url = "http://127.0.0.1:8000/api/command"
-    $('.command-btn').on('click', function () {
+  $('.command-btn').on('click', function () {
+        let url = "http://127.0.0.1:8000/api/command"
         const command = $(this).data('command');
         const value = $(`input[data-id="command_command__${command}"]`).val();
         urlFood = `${url}/${command}/${value}/`;
@@ -65,6 +65,25 @@ $(() => {
               console.log(e)
             },
         });
+        url = "http://127.0.0.1:8000/api/commandfood"
+        $(`input[data-command="${command}"][type="checkbox"]`).each( function () {
+          const food = $(this).data('food');
+          const checked = this.checked ? '1' : '0';
+          urlFood = `${url}/${command}/${food}/${checked}/`;
+          $.ajax({
+              url: urlFood,
+              type: 'GET',
+              dataType: 'json',
+              beforeSend: () => {
+              },
+              success: data => {
+  
+              },
+              error: (e) => {
+                console.log(e)
+              },
+          });
+      })
     });
 });
 
