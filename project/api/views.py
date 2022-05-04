@@ -264,7 +264,10 @@ class ClientDefaultFoodUpdate(APIView):
         else:
             client.client_command.remove(food)
 
-        return Response()
+        data = {
+            'price': models.Food.objects.filter(id__in=client.client_command.all().values_list('default', flat=True)).aggregate(sum=Round(Sum(F('price')), 2))['sum']
+        }
+        return Response(data=data)
 
 
 class CommandDefaultFoodUpdate(APIView):
@@ -294,20 +297,22 @@ class CommandMoneyMonthUpdate(APIView):
     """
     def get(self, request, pk, month, year, format=None):
 
-        data = {
-            'money_this_month': models.Command.objects.filter(
+        commands = models.Command.objects.filter(
                 client__id=pk, 
                 month_date_command=month,
                 year_date_command=year,
 
-                ).aggregate(sum=Round(
-                                Sum(
-                                    (F('meals__default__price')) * F('command_command'),
+                )
 
-                                    output_field=FloatField(),
-                                    )
-                                ,2)
-                       )['sum'],
+        data = {
+            'money_this_month': commands.aggregate(sum=Round(
+                                                 Sum(
+                                                     (F('meals__default__price')) * F('command_command'),
+                                                     output_field=FloatField(),
+                                                     )
+                                                 ,2)
+                                        )['sum'],
+            'meal_this_month': commands.aggregate(sum=Sum(F('command_command')))['sum']
             }
         return Response(data=data, status=200)
 

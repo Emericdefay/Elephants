@@ -12,7 +12,8 @@ $(() => {
             beforeSend: () => {
             },
             success: data => {
-
+              console.log(data)
+              $(`#price_unit__${client}`).html(data.price);
             },
             error: (e) => {
               console.log(e)
@@ -59,7 +60,6 @@ $(() => {
             beforeSend: () => {
             },
             success: data => {
-              console.log(data);
               $(`#food-client-${command}`).html(data.results[0].html)
             },
             error: (e) => {
@@ -111,7 +111,7 @@ $(() => {
               },
           });
         })
-        url = "http://127.0.0.1:8000/api/commandmonthbymonth"
+        url = "http://127.0.0.1:8000/api/commandbymonth"
         urlFood = `${url}/${client}/${month}/${year}/`;
         $.ajax({
             url: urlFood,
@@ -120,8 +120,8 @@ $(() => {
             beforeSend: () => {
             },
             success: data => {
-              console.log(data.money_this_month);
               $(`#money_this_month__${client}`).text(data.money_this_month);
+              $(`#meal_this_month__${client}`).text(data.meal_this_month);
 
             },
             error: (e) => {
