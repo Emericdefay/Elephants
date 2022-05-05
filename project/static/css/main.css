@@ -11,9 +11,10 @@ body {
     background-color: bisque;
 }
 .nav {
-    position: sticky;
+    position: fixed;
     z-index: 100;
     top: 0;
+    width: -webkit-fill-available;
 }
 #food-modal-body {
     background-color: bisque;
