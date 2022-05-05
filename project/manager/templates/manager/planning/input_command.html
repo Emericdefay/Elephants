@@ -49,7 +49,14 @@
             </button>
             <div class="dropdown-menu" style="min-width:25rem;">
                 <div class="text-center mx-1">
-                    <strong>Plats Commandés</strong>
+                    <strong>Plats Programmés</strong>
+                </div>
+                <div
+                     class="container"
+                     id="defaultfood-client-{{command_id}}">
+                </div>
+                <div class="text-center mx-1">
+                    <strong>Plats Commandés ce jour</strong>
                 </div>
                 <div
                      class="container"
@@ -61,12 +68,19 @@
                     <textarea
                         id="comment__{{day_time}}__{{command_id}}__{{client.id}}"
                         name="comment__{{day_time}}__{{command_id}}__{{client.id}}"
+                        data-command="{{command_id}}"
+                        data-client="{{client.id}}"
                         class="default_box"
                         style="width: -webkit-fill-available;"
                     >{% if command_opts.comment %}{{command_opts.comment}}{% endif %}</textarea>
                 </div>
                 <div class="text-center">
-                    <button class="save-comment btn btn-primary" data-command="{{commands.id}}">
+                    <button 
+                    type="button"
+                    class="save-comment btn btn-primary" 
+                    data-command="{{command_id}}"
+                    data-client="{{client.id}}"
+                    >
                         Enregistrer
                     </button>
                 </div>

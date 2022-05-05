@@ -227,6 +227,23 @@ class CommandCommentUpdate(APIView):
         return Response(serializers.AllCommentsOfCustomerSerializer(command).data)
 
 
+class CommentUpdate(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return models.Command.objects.get(pk=pk)
+        except models.Command.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, comment_value, format=None):
+        command = self.get_object(pk)
+        command.comment = comment_value
+        command.save()
+        return Response(serializers.AllCommentsOfCustomerSerializer(command).data)
+
+
 class ClientUpdate(APIView):
     """
     Retrieve, update or delete a snippet instance.

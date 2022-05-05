@@ -181,11 +181,22 @@ class AllCommentsOfCustomerSerializer(serializers.ModelSerializer):
 
 class ClientDefaultFoodSerializer(serializers.ModelSerializer):
     html = serializers.SerializerMethodField()
+    html_food = serializers.SerializerMethodField()
 
     def get_html(self, obj):
+
         data = render_to_string(template_name='client_default_food.html',
                                 context={
                                     'client_command_food': obj.meals.all(),
+                                    'all_foods': DefaultCommand.objects.all(),
+                                })
+        return mark_safe(data)
+
+    def get_html_food(self, obj):
+
+        data = render_to_string(template_name='client_default_food.html',
+                                context={
+                                    'client_command_food': obj.client.client_command.all(),
                                     'all_foods': DefaultCommand.objects.all(),
                                 })
         return mark_safe(data)
@@ -194,4 +205,5 @@ class ClientDefaultFoodSerializer(serializers.ModelSerializer):
         model = Command
         fields = (
             'html',
+            'html_food',
         )

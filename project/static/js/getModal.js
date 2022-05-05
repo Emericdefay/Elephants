@@ -268,8 +268,13 @@ function openFoodModal () {
               },
               success: data => {
                 $(`#comment__${('0' + data.day).slice(-2)}-${('0' + data.month).slice(-2)}-${data.year}__${data.command_id}__${data.client_id}`).val("");
-                $(`label[for="command_command__${('0' + data.day).slice(-2)}-${('0' + data.month).slice(-2)}-${data.year}__${data.command_id}__${data.client_id}"]`).children().removeClass('btn-danger');
-                $(`label[for="command_command__${('0' + data.day).slice(-2)}-${('0' + data.month).slice(-2)}-${data.year}__${data.command_id}__${data.client_id}"]`).children().addClass('btn-light');
+                $(`button[data-command="${command}"][data-bs-toggle="dropdown"]`).removeClass('btn-danger');
+                $(`button[data-command="${command}"][data-bs-toggle="dropdown"]`).removeClass('btn-outline-light');
+                if ($(`button[data-command="${command}"][data-bs-toggle="dropdown"]`).text().replace(/ /g,"").replace(/\n/g,"") == "0") {
+                  $(`button[data-command="${command}"][data-bs-toggle="dropdown"]`).addClass('btn-outline-light');
+                } else {
+                  $(`button[data-command="${command}"][data-bs-toggle="dropdown"]`).addClass('btn-warning');
+                }
                 $(`.row-${command}`).css( "background-color", "darkgray" );
               },
               error: (e) => {

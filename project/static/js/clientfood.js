@@ -61,6 +61,33 @@ $(() => {
             },
             success: data => {
               $(`#food-client-${command}`).html(data.results[0].html)
+              $(`#defaultfood-client-${command}`).html(data.results[0].html_food)
+            },
+            error: (e) => {
+              console.log(e)
+            },
+        });
+    });
+});
+
+$(() => {
+    const url = "http://127.0.0.1:8000/api/commentupdate"
+    $('.save-comment').on('click', function () {
+        // const client = $(this).data('client');
+        const command = $(this).data('command');
+        const client = $(this).data('client');
+        const value = $(`textarea[data-command="${command}"]`).val()
+        urlFood = `${url}/${command}/${value}/`;
+        $.ajax({
+            url: urlFood,
+            type: 'GET',
+            dataType: 'json',
+            beforeSend: () => {
+            },
+            success: data => {
+              // add class comment to line
+              $(`td.customer-comment-btn[data-client="${client}"]`).addClass('comment');
+              $(`button[data-command="${command}"][data-bs-toggle="dropdown"]`).addClass('btn-danger');
             },
             error: (e) => {
               console.log(e)
