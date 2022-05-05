@@ -73,129 +73,131 @@
     </head>
     <body class="overflow-auto" id="reference">
         <!-- Navbar -->
-        <ul class="nav nav-tabs d-print-none" id="menu" role="tablist" style="font-size: x-large;">
-            <li class="nav-brand h-100">
-                <img src="{% static 'img_elephant.png' %}"
-                     alt="Small"
-                     class="d-inline-block align-top"
-                     height="53"
-                />
-            </li>
-            <li class="nav-item ps-1">
-                <a class="nav-link active" id="client-tab" data-bs-toggle="tab" href="#client" role="tab" aria-controls="client" aria-selected="true">Clients</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="order-tab" data-bs-toggle="tab" href="#order" role="tab" aria-controls="order" aria-selected="true">Ordres</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="planning-tab" data-bs-toggle="tab" href="#planning" role="tab" aria-controls="planning" aria-selected="false">Planning</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="food-tab" data-bs-toggle="tab" href="#food" role="tab" aria-controls="food" aria-selected="false">Plats</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="circuit-tab" data-bs-toggle="tab" href="#circuit" role="tab" aria-controls="circuit" aria-selected="false">Tournées</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="bill-tab" data-bs-toggle="tab" href="#bill" role="tab" aria-controls="bill" aria-selected="false">Factures</a>
-            </li>
-            <li class="ms-auto" style="align-self: center;">
-                <button form="myform" class="btn btn-lg btn-primary align-content-center mx-3" type="submit">Enregistrer</button>
-            </li>
-            <li class="" style="align-self: center;">
-                    <button type="button" class="btn btn-lg dropdown-toggle bg-secondary align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
-                        Exporter
-                    </button>
-                    <form class="dropdown-menu text-center" style="text-align-last: center; width: min-content;" action="{% url "manager:facture" %}" method="post" id="facture">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="month_export" class="form-label">Mois</label>
-                            <input style="width: -webkit-fill-available;" type="number" min="1" max="12" step="1"  name="month" id="month" value="{{actual_month}}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="year_export" class="form-label">Année</label>
-                            <input style="width: -webkit-fill-available;" type="number" min="2020" step="1"  name="year" id="year" value="{{actual_year}}">
-                        </div>
-                        <label for="date">Date sur les factures:</label>
-                        <input type="date" id="date" name="date"
-                               value="{{actual_year}}-{{actual_month}}-{{actual_day}}">
-                        <button class="btn btn-secondary" type="submit" href="{% url 'manager:facture' %}">Exporter</button>
-                    </form>
-            </li>
+        <div class="top-bar">
+            <ul class="nav nav-tabs d-print-none" id="menu" role="tablist" style="font-size: x-large;">
+                <li class="nav-brand h-100">
+                    <img src="{% static 'img_elephant.png' %}"
+                         alt="Small"
+                         class="d-inline-block align-top"
+                         height="53"
+                    />
+                </li>
+                <li class="nav-item ps-1">
+                    <a class="nav-link active" id="client-tab" data-bs-toggle="tab" href="#client" role="tab" aria-controls="client" aria-selected="true">Clients</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="order-tab" data-bs-toggle="tab" href="#order" role="tab" aria-controls="order" aria-selected="true">Ordres</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="planning-tab" data-bs-toggle="tab" href="#planning" role="tab" aria-controls="planning" aria-selected="false">Planning</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="food-tab" data-bs-toggle="tab" href="#food" role="tab" aria-controls="food" aria-selected="false">Plats</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="circuit-tab" data-bs-toggle="tab" href="#circuit" role="tab" aria-controls="circuit" aria-selected="false">Tournées</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="bill-tab" data-bs-toggle="tab" href="#bill" role="tab" aria-controls="bill" aria-selected="false">Factures</a>
+                </li>
+                <li class="ms-auto" style="align-self: center;">
+                    <button form="myform" class="btn btn-lg btn-primary align-content-center mx-3" type="submit">Enregistrer</button>
+                </li>
+                <li class="" style="align-self: center;">
+                        <button type="button" class="btn btn-lg dropdown-toggle bg-secondary align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
+                            Exporter
+                        </button>
+                        <form class="dropdown-menu text-center" style="text-align-last: center; width: min-content;" action="{% url "manager:facture" %}" method="post" id="facture">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="month_export" class="form-label">Mois</label>
+                                <input style="width: -webkit-fill-available;" type="number" min="1" max="12" step="1"  name="month" id="month" value="{{actual_month}}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="year_export" class="form-label">Année</label>
+                                <input style="width: -webkit-fill-available;" type="number" min="2020" step="1"  name="year" id="year" value="{{actual_year}}">
+                            </div>
+                            <label for="date">Date sur les factures:</label>
+                            <input type="date" id="date" name="date"
+                                   value="{{actual_year}}-{{actual_month}}-{{actual_day}}">
+                            <button class="btn btn-secondary" type="submit" href="{% url 'manager:facture' %}">Exporter</button>
+                        </form>
+                </li>
 
-        </ul>
+            </ul>
 
-        <div class="quarter-year-header-picker my-1 d-print-none" style="text-align-last:center;">
-            <form action="{% url "manager:week_range" %}" method="post" id="week_range_id">
-                {% csrf_token %}
-                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    {% for week_range_choice in week_range_choices %}
-                        <input type="radio"
-                               onchange='this.form.submit();'
-                               class="btn-check"
-                               name="week_range_input"
-                               value="{{forloop.counter}}"
-                               id="week_range{{ forloop.counter0 }}"
-                               autocomplete="off"
-                                {% if week_range.0|striptags == forloop.counter|striptags %}
-                                   style="background-color: blue;"
-                                   checked
-                                {% endif %}
-                            >
-                        <label class="p-0 btn btn-outline-primary align-content-center mx-0 p-2" for="week_range{{ forloop.counter0 }}">
-                            {{forloop.counter}}
-                            {% blocktrans count count=forloop.counter %}
-                                 Semaine
-                            {% plural %}
-                                 Semaines
-                            {% endblocktrans %}
-                        </label>
+            <div class="quarter-year-header-picker my-1 d-print-none" style="text-align-last:center;">
+                <form action="{% url "manager:week_range" %}" method="post" id="week_range_id">
+                    {% csrf_token %}
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        {% for week_range_choice in week_range_choices %}
+                            <input type="radio"
+                                   onchange='this.form.submit();'
+                                   class="btn-check"
+                                   name="week_range_input"
+                                   value="{{forloop.counter}}"
+                                   id="week_range{{ forloop.counter0 }}"
+                                   autocomplete="off"
+                                    {% if week_range.0|striptags == forloop.counter|striptags %}
+                                       style="background-color: blue;"
+                                       checked
+                                    {% endif %}
+                                >
+                            <label class="p-0 btn btn-outline-primary align-content-center mx-0 p-2" for="week_range{{ forloop.counter0 }}">
+                                {{forloop.counter}}
+                                {% blocktrans count count=forloop.counter %}
+                                     Semaine
+                                {% plural %}
+                                     Semaines
+                                {% endblocktrans %}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+
+
+            <div class=" d-print-none pb-2" style="bottom:0px; text-align-last: center; text-align: -webkit-center; display: flex; place-content: center;">
+                <a
+                    href="#"
+                    class="btn btn-secondary align-content-center mx-1 save-position"
+                    data-anchor="-4"
+                    type="button">
+                    <<
+                </a>
+                <a
+                    href="#"
+                    class="btn btn-secondary align-content-center mx-1 save-position"
+                    data-anchor="-1"
+                    type="button">
+                    <
+                </a>
+                <div class="list-group list-group-horizontal text-nowrap overflow-hidden" style="max-width:500px;" id="calendarBtn">
+                    {% for weeks in list_weeks %}
+                        <a href="{% url "manager:index" %}{{weeks|year}}/{{weeks|month}}/{{weeks|day}}/" id='week_{{weeks|get_year}}_{{weeks|get_week}}'class="list-group-item list-group-item-action {% if weeks|get_week == actual_week and weeks|get_year == actual_year %}active {% elif weeks|get_week in range_weeks and weeks|get_year == actual_year %} bg-info{% endif %}">{{weeks|day}}/{{weeks|month}}/{{weeks|get_year}}</a>
                     {% endfor %}
-                </div>
-            </form>
+                  </div>
+                <a  
+                    href="#"
+                    class="btn btn-secondary align-content-center mx-1 save-position"
+                    data-anchor="1"
+                    type="button">
+                    >
+                </a>
+                <a
+                    href="#"
+                    class="btn btn-secondary align-content-center mx-1 save-position"
+                    data-anchor="4"
+                    type="button">
+                    >>
+                </a>
+            </div>
         </div>
 
-
-        <div class=" d-print-none" style="position:sticky; bottom:0px; text-align-last: center; text-align: -webkit-center; display: flex; place-content: center;">
-            <a
-                href="#"
-                class="btn btn-secondary align-content-center mx-1 save-position"
-                data-anchor="-4"
-                type="button">
-                <<
-            </a>
-            <a
-                href="#"
-                class="btn btn-secondary align-content-center mx-1 save-position"
-                data-anchor="-1"
-                type="button">
-                <
-            </a>
-            <div class="list-group list-group-horizontal text-nowrap overflow-hidden" style="max-width:500px;" id="calendarBtn">
-                {% for weeks in list_weeks %}
-                    <a href="{% url "manager:index" %}{{weeks|year}}/{{weeks|month}}/{{weeks|day}}/" id='week_{{weeks|get_year}}_{{weeks|get_week}}'class="list-group-item list-group-item-action {% if weeks|get_week == actual_week and weeks|get_year == actual_year %}active {% elif weeks|get_week in range_weeks and weeks|get_year == actual_year %} bg-info{% endif %}">{{weeks|day}}/{{weeks|month}}/{{weeks|get_year}}</a>
-                {% endfor %}
-              </div>
-            <a  
-                href="#"
-                class="btn btn-secondary align-content-center mx-1 save-position"
-                data-anchor="1"
-                type="button">
-                >
-            </a>
-            <a
-                href="#"
-                class="btn btn-secondary align-content-center mx-1 save-position"
-                data-anchor="4"
-                type="button">
-                >>
-            </a>
-        </div>
-
-
+        <div></div>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="wrapper pt-0 d-print-none">
+        <div class="wrapper pt-0 d-print-none position-relative" style="top:140px">
             <!-- Main content -->
             <section class="content p-0 vh-100">
                 <div class="container-fluid vh-100">

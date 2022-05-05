@@ -121,38 +121,39 @@
           Ajouter
         </button>
     </h3>
-    {% regroup clients by circuit as client_list %}
-      {% for circuit, clients_by_circuit in client_list %}
-        <table class="responsive-table-input-matrix table table-hover" id="table-{{forloop.counter0}}">
-            <thead class="table-dark position-relative" {% if forloop.counter0 > 0 %} style="visibility:collapse;"{% else %}style="z-index:1; opacity:1;"{% endif %}>
-                <tr>
-                    <th>Nom</th>
-                    <th>Adresse</th>
-                    <th>Tel</th>
-                    {% with foodcategories as foodcategories %}
-                    {% for food in formDefaultCommand %}
-                        <th  style="width: 0px;" class="verticalTableHeader">
-                                    {{ food.default.category }}
-                        </th>
-                        {% endfor %}
-                    {% endwith %}
-                    <th style="width: 0px;" >Tournée</th>
-                    <th>€/u</th>
-                    <th>Nb. Repas</th>
-                    <th>€ ce mois</th>
-                    {% comment %} <th>Export</th> {% endcomment %}
-                </tr>
-            </thead>
-          
-          <tbody class="overflow-auto">
-            {% ifchanged clients_by_circuit.circuit %}
-              {% if forloop.counter0 != 0 %}
-                <tr style="border-collapse: separate; border-spacing:0 20px;">
-                  <td colspan="17">
-                  </td>
-                </tr>
-              {% endif %}
-            {% endifchanged %}
+
+    <table class="responsive-table-input-matrix table table-hover" id="table-{{forloop.counter0}}">
+        <thead class="table-dark position-relative" {% if forloop.counter0 > 0 %} style="visibility:collapse;"{% else %}style="z-index:1; opacity:1;"{% endif %}>
+            <tr>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Tel</th>
+                {% with foodcategories as foodcategories %}
+                {% for food in formDefaultCommand %}
+                    <th  style="width: 0px;" class="verticalTableHeader">
+                                {{ food.default.category }}
+                    </th>
+                    {% endfor %}
+                {% endwith %}
+                <th style="width: 0px;" >Tournée</th>
+                <th>€/u</th>
+                <th>Nb. Repas</th>
+                <th>€ ce mois</th>
+                {% comment %} <th>Export</th> {% endcomment %}
+            </tr>
+        </thead>
+      
+      <tbody class="overflow-auto">
+        {% comment %} {% ifchanged clients_by_circuit.circuit %}
+          {% if forloop.counter0 != 0 %}
+            <tr style="border-collapse: separate; border-spacing:0 20px;">
+              <td colspan="17">
+              </td>
+            </tr>
+          {% endif %}
+        {% endifchanged %} {% endcomment %}
+        {% regroup clients_alpha by circuit as client_list %}
+        {% for circuit, clients_by_circuit in client_list %}
           {% for client in clients_by_circuit %}
             <tr style="background-color: ; margin-bottom:1rem; background-color:{{gradients|get_value:circuit.id}}">
                 <td style="vertical-align: middle;">
@@ -224,6 +225,7 @@
                   Excel à l'unitée
                 </button></td> {% endcomment %}
             </tr>
-            {% endfor %}
-          </table>
           {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>

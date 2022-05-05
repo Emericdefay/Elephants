@@ -10,11 +10,12 @@ body {
 #menu {
     background-color: bisque;
 }
-.nav {
+.top-bar {
     position: fixed;
     z-index: 100;
     top: 0;
     width: -webkit-fill-available;
+    background-color: antiquewhite;
 }
 #food-modal-body {
     background-color: bisque;

@@ -1,6 +1,6 @@
 {% load static humanize index %}
 
-{% comment %} <style> 
+<style> 
     /* 
     Generic Styling, for Desktops/Laptops 
     */
@@ -86,7 +86,7 @@
         text-align: center;
       }
     }
-</style> {% endcomment %}
+</style>
 <style>
   .board-ordered tr > *:nth-child(2) {
     display: none;
@@ -105,15 +105,6 @@
     font-family: 'Font Awesome\ 5 Free';
     font-weight: 900;
   }
-</style>
-
-<style>
-
-
-  
-
-  
-
 </style>
 
 
@@ -147,7 +138,7 @@
 </h3>
 <div class='container'>
   <div class='row row-cols-5'>
-    {% regroup clients by circuit as client_list %}
+    {% regroup clients_order by circuit as client_list %}
     {% for circuit, clients_by_circuit in client_list %}
       <div class="col">
         <h4>{{circuit.name}}</h4>
@@ -191,7 +182,7 @@
   </div>
 </div>
 
-{% regroup clients by circuit as client_list %}
+{% regroup clients_order by circuit as client_list %}
 {% for circuit, clients_by_circuit in client_list %}
   <script>
     document.addEventListener('DOMContentLoaded', function () {

@@ -404,13 +404,15 @@ class HomeView(TemplateView, UpdateView):
             )
 
 
-        existing_clients = Client.objects.all().order_by('circuit', 'order').values_list('id', flat=True)
+        existing_clients = Client.objects.all().order_by('last_name', 'first_name').values_list('id', flat=True)
 
         context['week_range'] = form['week_range']
         context['week_range_choices'] = list(range(0, 4))
 
-        clients = Client.objects.all().order_by('circuit__order_c', 'order')
-        context['clients'] =clients
+        clients = Client.objects.all()
+        context['clients'] = Client.objects.all().order_by('last_name', 'first_name')
+        context['clients_alpha'] = clients.order_by('last_name', 'first_name')
+        context['clients_order'] = clients.order_by('circuit__order_c', 'order')
 
         week_ = datetime.now().weekday
         date_origin = datetime_.date(
@@ -494,7 +496,7 @@ class HomeView(TemplateView, UpdateView):
                 .filter(month_date_command=date.month)\
                 .filter(year_date_command=date.year)\
                 .exclude(client__circuit__id=5)
-            cut_actual_commands.append(actual_commands.order_by( 'client', 'client__last_name',  ))
+            cut_actual_commands.append(actual_commands.order_by( 'client__last_name', 'client__first_name',  ))
             actual_commands = Command.objects.none()
 
         context['cut_actual_commands'] = cut_actual_commands
