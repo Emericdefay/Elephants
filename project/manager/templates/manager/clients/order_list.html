@@ -432,7 +432,7 @@
         const width = parseInt(window.getComputedStyle(table).width);
         list = document.createElement('div');
         list.classList.add('clone-list');
-        list.style.position = 'absolute';
+        list.style.position = 'initial';
         list.style.left = `${rect.left}px`;
         list.style.top = `${rect.top + window.scrollY}px`;
         console.log(list.style.top)

@@ -1,7 +1,8 @@
 {% load static humanize %}
 {% load index %}
 
-<div style="text-align: -webkit-center;">
+
+<div class="col text-center d-flex" style="text-align: -webkit-center;">
     <h3 style="padding-right: 17%;">
         Plats
         <button
@@ -12,54 +13,54 @@
         Ajouter
       </button>
     </h3>
-    <table class="responsive-table-input-matrix table w-auto">
-    <thead class="overflow-auto table-dark">
-        <tr>
-            <th>Catégorie</th>
-            <th>Prix</th>
-        </tr>
-    </thead>
-    <tbody class="overflow-auto" style="background-color: wheat;">
-        {% with foodcategories as foodcategories %}
-        {% for food in formDefaultCommand %}
+    <table class="responsive-table-input-matrix table w-auto board-ordered" id="table-order-food">
+        <thead class="overflow-auto table-dark">
             <tr>
-                {% with food.id as price %}
-                {% with food.default as id_food %}
-    
-                <td>
-                    <input
-                        type="text"
-                        min=0
-                        id="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                        name="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                        {% comment %} value={{ foodcategories|index:forloop.counter0|index:1 }} {% endcomment %}
-                        value={{ formDefaultCommand|query_from_id_get_name:food.id }}
-                        style="width:{{width_cells}}px;"
-                        class="default_box">
-                </td>
-                <td>
-                    <input
-                        type="number"
-                        min=0
-                        step=0.05
-                        id="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                        name="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                        value={{formDefaultCommand|query_from_id_get_price:food.id}}
-                        style="width:{{width_cells}}px;"
-                        class="default_box">
-                </td>
-                {% endwith %}
-                {% endwith %}
-                
+                <th>#</th>
+                <th>#</th>
+                <th>Catégorie</th>
+                <th>Prix</th>
             </tr>
-            {% endfor %}
-        {% endwith %}
+        </thead>
+        <tbody class="overflow-auto" style="background-color: wheat;">
+            {% with foodcategories as foodcategories %}
+            {% for food in formDefaultCommand %}
+                <tr>
+                    {% with food.default as id_food %}
+                    <td style="vertical-align:middle;" class="draggable draggable-grip"></td>
+                    <td style="vertical-align:middle;" class="d-none"><input class="order_foods" type="text" name="order_food__{{food.id}}" id="order_food__{{food.id}}" value="{{forloop.counter0}}"/></td>
+                    <td>
+                        <input
+                            type="text"
+                            id="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                            name="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                            {% comment %} value={{ foodcategories|index:forloop.counter0|index:1 }} {% endcomment %}
+                            value={{ formDefaultCommand|query_from_id_get_name:food.id }}
+                            style="width:{{width_cells}}px;"
+                            class="default_box">
+                    </td>
+                    <td>
+                        <input
+                            type="number"
+                            min=0
+                            step=0.05
+                            id="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                            name="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
+                            value={{formDefaultCommand|query_from_id_get_price:food.id}}
+                            style="width:{{width_cells}}px;"
+                            class="default_box">
+                    </td>
+                    {% endwith %}
+                </tr>
+                {% endfor %}
+            {% endwith %}
+        </body>
     </table>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const table = document.getElementById('table-order-c');
+      const table = document.getElementById('table-order-food');
   
       let draggingEle;
       let draggingRowIndex;
@@ -98,7 +99,7 @@
           const width = parseInt(window.getComputedStyle(table).width);
           list = document.createElement('div');
           list.classList.add('clone-list');
-          list.style.position = 'absolute';
+          list.style.position = 'initial';
           list.style.left = `${rect.left}px`;
           list.style.top = `${rect.top + window.scrollY}px`;
           console.log(list.style.top)
@@ -240,7 +241,7 @@
           document.removeEventListener('mousemove', mouseMoveHandler);
           document.removeEventListener('mouseup', mouseUpHandler);
           let counter0 = 0;
-          table.querySelectorAll('.order_clients').forEach(function(order) {
+          table.querySelectorAll('.order_foods').forEach(function(order) {
             order.setAttribute('value', counter0);
             counter0 += 1;
         });
