@@ -107,20 +107,23 @@
                         <button type="button" class="btn btn-lg dropdown-toggle bg-secondary align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
                             Exporter
                         </button>
-                        <form class="dropdown-menu text-center" style="text-align-last: center; width: min-content;" action="{% url "manager:facture" %}" method="post" id="facture">
+                        <form class="dropdown-menu text-center p-2" style="text-align-last: center; width: min-content;" action="{% url "manager:facture" %}" method="post" id="facture">
                             {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="month_export" class="form-label">Mois</label>
+                            <div class="mb-1">
+                                <h4>Factures</h4>
+                            </div>
+                            <div class="mb-1">
+                                <label for="month_export" class="form-label">Mois de facturation</label>
                                 <input style="width: -webkit-fill-available;" type="number" min="1" max="12" step="1"  name="month" id="month" value="{{actual_month}}">
                             </div>
-                            <div class="mb-3">
-                                <label for="year_export" class="form-label">Année</label>
+                            <div class="mb-1">
+                                <label for="year_export" class="form-label">Année de facturation</label>
                                 <input style="width: -webkit-fill-available;" type="number" min="2020" step="1"  name="year" id="year" value="{{actual_year}}">
                             </div>
                             <label for="date">Date sur les factures:</label>
                             <input type="date" id="date" name="date"
                                    value="{{actual_year}}-{{actual_month}}-{{actual_day}}">
-                            <button class="btn btn-secondary" type="submit" href="{% url 'manager:facture' %}">Exporter</button>
+                            <button class="btn btn-secondary mt-2" type="submit" href="{% url 'manager:facture' %}">Exporter</button>
                         </form>
                 </li>
 
@@ -317,11 +320,11 @@
                         <table class="responsive-table-input-matrix table table-hover">
                             <thead class="overflow-auto table-dark">
                                 <tr>
-                                    <th>Client</th>
-                                    <th>Adresse</th>
-                                    <th>Telephone</th>
+                                    <th class="circuit">Client</th>
+                                    <th class="circuit">Adresse</th>
+                                    <th class="circuit">Telephone</th>
                                     {% for food in formDefaultCommand %}
-                                        <th class="verticalTableHeader">
+                                        <th class="circuit verticalTableHeader">
                                             {{ food.default.category }}
                                         </th>
                                     {% endfor %}
@@ -356,9 +359,9 @@
                         <table class="responsive-table-input-matrix table table-hover">
                             <thead class="overflow-auto table-dark">
                                 <tr>
-                                    <th>Tournée</th>
+                                    <th class="circuit">Tournée</th>
                                     {% for food in formDefaultCommand %}
-                                        <th class="verticalTableHeader">
+                                        <th class="circuit verticalTableHeader">
                                             {{ food.default.category }}
                                         </th>
                                     {% endfor %}
