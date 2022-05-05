@@ -21,7 +21,7 @@
             {% endifchanged %}
             <tr class="line" style="margin-bottom: 1rem; border-spacing:0 20px; border-collapse: separate;">
             {% with command_list|get:forloop.counter0 as client__command  %}
-            <td class="meals meals-details customer-comment-btn {% if client__command.comment and client__command.comment != '' and client__command.comment != 'None' %}ribbon ribbon-top-left{% endif %}" 
+            <td class="meals meals-details customer-comment-btn {% if client__command.comment and client__command.comment != '' and client__command.comment != 'None' %}comment{% endif %}" 
                 data-client="{{client.id}}" 
                 style="min-width:{{width_text_cells}}px;
                 max-width:{{width_text_cells_max}}px;
