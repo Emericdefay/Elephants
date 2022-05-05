@@ -50,9 +50,9 @@ $(() => {
 $(() => {
     const url = "http://127.0.0.1:8000/api/getclientfood"
     $('.dropdown-get-food').on('click', function () {
-        const client = $(this).data('client');
+        // const client = $(this).data('client');
         const command = $(this).data('command');
-        urlFood = `${url}/?id=${client}`;
+        urlFood = `${url}/?id=${command}`;
         $.ajax({
             url: urlFood,
             type: 'GET',

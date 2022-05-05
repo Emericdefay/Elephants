@@ -1,6 +1,6 @@
 <div class="row row-cols-3">
     {% for food in all_foods %}
-        {% if food in client_command %}
+        {% if food in client_command_food %}
             <div class="col">✔{{food.default.category}}</div>
         {% else %}
             <div class="col">❌{{food.default.category}}</div>

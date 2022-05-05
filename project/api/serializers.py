@@ -185,13 +185,13 @@ class ClientDefaultFoodSerializer(serializers.ModelSerializer):
     def get_html(self, obj):
         data = render_to_string(template_name='client_default_food.html',
                                 context={
-                                    'client_command': obj.client_command.all(),
+                                    'client_command_food': obj.meals.all(),
                                     'all_foods': DefaultCommand.objects.all(),
                                 })
         return mark_safe(data)
 
     class Meta:
-        model = Client
+        model = Command
         fields = (
             'html',
         )

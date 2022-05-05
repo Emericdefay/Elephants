@@ -78,7 +78,6 @@ class DayByDayCommandFilter(filters.FilterSet):
                     return qs
         return queryset
 
-
     class Meta:
         model = Command
         fields = [
@@ -96,7 +95,6 @@ class CommandCustomerFilter(filters.FilterSet):
         queryset=Client.objects.all(),
     )
 
-
     class Meta:
         model = Command
         fields = [
@@ -110,9 +108,20 @@ class ClientFilter(filters.FilterSet):
         label="id",
     )
 
-
     class Meta:
         model = Client
+        fields = [
+            'id',
+        ]
+
+class CommandFilter(filters.FilterSet):
+
+    id = filters.NumberFilter(
+        label="id",
+    )
+
+    class Meta:
+        model = Command
         fields = [
             'id',
         ]

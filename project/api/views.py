@@ -200,14 +200,13 @@ class AllCommentsOfCustomer(mixins.ListModelMixin, viewsets.GenericViewSet):
 class ClientDefaultFood(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = (permissions.AllowAny,)
     filter_backends = [DjangoFilterBackend, ]
-    filterset_class = filters.ClientFilter
+    filterset_class = filters.CommandFilter
     serializer_class = serializers.ClientDefaultFoodSerializer
-    queryset = models.Client.objects.none()
+    queryset = models.Command.objects.none()
 
     def get_queryset(self):
         # get non expired ads
-        print(self.request._request.GET)
-        return models.Client.objects\
+        return models.Command.objects\
             .filter(id=self.request._request.GET.get('id'))\
 
 
