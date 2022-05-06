@@ -26,16 +26,14 @@
             {% with foodcategories as foodcategories %}
             {% for food in formDefaultCommand %}
                 <tr>
-                    {% with food.default as id_food %}
                     <td style="vertical-align:middle;" class="draggable draggable-grip"></td>
-                    <td style="vertical-align:middle;" class="d-none"><input class="order_foods" type="text" name="order_food__{{food.id}}" id="order_food__{{food.id}}" value="{{forloop.counter0}}"/></td>
+                    <td style="vertical-align:middle;" class="d-none"><input class="order_foods" type="text" name="order_food__{{food.default.id}}" id="order_food__{{food.default.id}}" value="{{forloop.counter0}}"/></td>
                     <td style="vertical-align: middle;">
                         <input
                             type="text"
-                            id="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                            name="category__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                            {% comment %} value={{ foodcategories|index:forloop.counter0|index:1 }} {% endcomment %}
-                            value={{ formDefaultCommand|query_from_id_get_name:food.id }}
+                            id="category__{{food.default.id}}"
+                            name="category__{{food.default.id}}"
+                            value="{{food.default.category}}"
                             style="width:{{width_cells}}px;"
                             class="default_box">
                     </td>
@@ -44,13 +42,12 @@
                             type="number"
                             min=0
                             step=0.05
-                            id="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                            name="price__{{formDefaultCommand|query_from_id_get_default_id:food.id}}"
-                            value={{formDefaultCommand|query_from_id_get_price:food.id}}
+                            id="price__{{food.default.id}}"
+                            name="price__{{food.default.id}}"
+                            value={{food.default.price}}
                             style="width:{{width_cells}}px;"
                             class="default_box">
                     </td>
-                    {% endwith %}
                 </tr>
                 {% endfor %}
             {% endwith %}

@@ -238,7 +238,7 @@ class UpdateHomeView(View):
 
     def synth_food(self, save):
         """ INFO CLIENT """
-        targets = ['price', 'category', ]
+        targets = ['price', ]
         key_values = {}
         for key, value in save.items():
             if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
@@ -259,6 +259,30 @@ class UpdateHomeView(View):
         # save
         for food_id, kwargs in values_by_id.items():
             Food.objects.filter(id=food_id).update(**kwargs)
+
+        targets = ['category', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
+                key_values.update({key: value})
+        # detect id
+        ids = set()
+        for i in key_values.keys():
+            ids.add(i.split('__')[1])
+        # # regroup by id
+        values_by_id = dict()
+        for id_ in ids:
+            values_by_id[id_] = dict()
+
+        for id_ in ids:
+            for key, value in key_values.items():
+                if key.split('__')[1]==id_:
+                    values_by_id[id_].update({key.split('__')[0]: value})
+        # save
+        for food_id, kwargs in values_by_id.items():
+            food = Food.objects.get(id=food_id)
+            food.category = kwargs.get('category')
+            food.save()
 
         targets = ['order_food', ]
         key_values = {}
