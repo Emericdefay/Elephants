@@ -45,10 +45,11 @@ class DefaultCommandForm(forms.ModelForm):
 		forms (_type_): _description_
 	"""
 	default = forms.Field(label="", )
+	order_food = forms.Field(label="", )
 
 	class Meta:
 		model= DefaultCommand
-		fields = ['default', ]
+		fields = ['default', 'order_food']
 
 
 class CircuitForm(forms.ModelForm):

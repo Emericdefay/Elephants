@@ -137,7 +137,7 @@
     Ordre des clients
 </h3>
 <div class='container'>
-  <div class='row row-cols-5'>
+  <div class='row row-cols-4'>
     {% regroup clients_order by circuit as client_list %}
     {% for circuit, clients_by_circuit in client_list %}
       <div class="col">

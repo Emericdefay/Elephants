@@ -17,6 +17,7 @@ class Food(models.Model):
 
 class DefaultCommand(models.Model):
     default = models.ForeignKey(Food, on_delete=models.CASCADE, verbose_name=("Plats réguliers"), blank=False, null=False)
+    order_food = models.IntegerField(verbose_name=("Position du plat"), default=0)
 
     def __str__(self):
         for name, member in FoodCategory.__members__.items():
