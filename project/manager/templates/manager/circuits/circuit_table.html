@@ -38,14 +38,7 @@
     <thead class="overflow-auto table-dark">
         <tr>
             <th></th>
-            <th>Clients</th>
-            {% with foodcategories as foodcategories %}
-            {% for food in formDefaultCommand %}
-                <th class="verticalTableHeader">
-                    {{food.default.category}}
-                </th>
-                {% endfor %}
-            {% endwith %}
+            <th>Jour</th>
         </tr>
     </thead>
     <tbody class="overflow-auto">
@@ -99,19 +92,9 @@
                 data-day={{this_day}}
                 data-circuit={{circuit.id}}
                 >
-                    <td>
-                        {% comment %} NB Clients {% endcomment %}
-                        {% if actual_commands %}
-                            {{actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit.id|query_filter_command_passed|query_count}}
-                        {% endif %}
+                    <td {% if actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit.id|query_filter_command_passed|query_count > 0 %}class="text-bold"{% endif %}>
+                        {{day|day_name}}
                     </td>
-                    {% for food in foods %}
-                        <td>
-                            {% if actual_commands %}
-                                {{actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit.id|query_filter_command_passed|query_sum_morning:food}}
-                            {% endif %}
-                        </td>
-                    {% endfor %}
                 </tr>
             {% elif day|day_name|firsts:3 == 'mer' or day|day_name|firsts:3 == 'ven' or day|day_name|firsts:3 == 'dim' %}
                 <tr 
@@ -141,20 +124,9 @@
                             {{day|month_name}}
                         </td>
                     {% endif %}
-                    <td>
-                        {% comment %} NB Clients {% endcomment %}
-                        {% comment %} {% random_int 0 20 %} {% endcomment %}
-                        {% if actual_commands %}
-                            {{actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_count}}
-                        {% endif %}
+                    <td {% if actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit.id|query_filter_command_passed|query_count > 0 %}class="text-bold"{% endif %}>
+                        {{day|day_name}}
                     </td>
-                    {% for food in foods %}
-                        <td>
-                            {% if actual_commands %}
-                                {{actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit|query_filter_command_passed|query_sum_morning:food}}
-                            {% endif %}
-                        </td>
-                    {% endfor %}
                     
                 </tr>
             {% endif %}

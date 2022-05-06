@@ -36,3 +36,7 @@ body {
 #circuit_form label {
     text-align:start;
 }
+
+.text-bold {
+    font-weight: bold;
+}
