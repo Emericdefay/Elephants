@@ -260,6 +260,28 @@ class UpdateHomeView(View):
         for food_id, kwargs in values_by_id.items():
             Food.objects.filter(id=food_id).update(**kwargs)
 
+        targets = ['order_food', ]
+        key_values = {}
+        for key, value in save.items():
+            if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
+                key_values.update({key: value})
+        # detect id
+        ids = set()
+        for i in key_values.keys():
+            ids.add(i.split('__')[1])
+        # # regroup by id
+        values_by_id = dict()
+        for id_ in ids:
+            values_by_id[id_] = dict()
+
+        for id_ in ids:
+            for key, value in key_values.items():
+                if key.split('__')[1]==id_:
+                    values_by_id[id_].update({key.split('__')[0]: value})
+        # save
+        for food_id, kwargs in values_by_id.items():
+            DefaultCommand.objects.filter(id=food_id).update(**kwargs)
+
     def synth_company(self, save):
         """ INFO COMPANY """
         targets = ['comment_comp', 'cellphone_comp', 'company_comp', 'address_comp', 'siret_comp', ]
@@ -325,7 +347,7 @@ class HomeView(TemplateView, UpdateView):
         # Client tab
         clients = Client.objects.all().order_by('circuit', 'last_name', 'first_name')
         circuits = Circuit.objects.all().order_by('name')
-        defaultcommands = DefaultCommand.objects.all().order_by('default')
+        defaultcommands = DefaultCommand.objects.all().order_by('order_food')
         gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
         gradients_colors = dict((circuit.id, gradients[index]) for index, circuit in enumerate(circuits))
         # Planning tab

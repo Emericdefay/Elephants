@@ -188,7 +188,7 @@ class ClientDefaultFoodSerializer(serializers.ModelSerializer):
         data = render_to_string(template_name='client_default_food.html',
                                 context={
                                     'client_command_food': obj.meals.all(),
-                                    'all_foods': DefaultCommand.objects.all(),
+                                    'all_foods': DefaultCommand.objects.all().order_by('order_food'),
                                 })
         return mark_safe(data)
 
@@ -197,7 +197,7 @@ class ClientDefaultFoodSerializer(serializers.ModelSerializer):
         data = render_to_string(template_name='client_default_food.html',
                                 context={
                                     'client_command_food': obj.client.client_command.all(),
-                                    'all_foods': DefaultCommand.objects.all(),
+                                    'all_foods': DefaultCommand.objects.all().order_by('order_food'),
                                 })
         return mark_safe(data)
 
