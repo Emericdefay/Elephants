@@ -18,4 +18,6 @@ urlpatterns = [
     path('commandbymonth/<int:pk>/<int:month>/<int:year>/', views.CommandMoneyMonthUpdate.as_view()),
     path('command/<int:pk>/<int:value>/', views.CommandUpdate.as_view()),
     path('getclientfood/', views.ClientDefaultFood.as_view({'get':'list'})),
+    path('getallclients/', views.GetAllClients.as_view({'get':'list'})),
+    # path('getallplanning/', views.GetAllPlanning.as_view({'get':'list'})),
 ]

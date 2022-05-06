@@ -350,3 +350,13 @@ class CommandUpdate(APIView):
         command.save()
 
         return Response()
+
+
+class GetAllClients(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = serializers.GetAllClientsSerializer
+    queryset = models.Client.objects.none()
+
+    def get_queryset(self):
+        # get non expired ads
+        return models.Client.objects.all().order_by('last_name', 'first_name')

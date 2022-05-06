@@ -32,6 +32,11 @@ def index(indexable, i):
     return indexable[i]
 
 @register.filter
+def to_int(obj):
+    print(obj)
+    return int(obj)
+
+@register.filter
 def firsts(indexable, i):
     return indexable[:i]
 

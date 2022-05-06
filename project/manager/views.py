@@ -449,7 +449,6 @@ class HomeView(TemplateView, UpdateView):
             kwargs['day'] if 'day' in kwargs else datetime.now().day,
             )
 
-
         existing_clients = Client.objects.all().order_by('last_name', 'first_name').values_list('id', flat=True)
 
         context['week_range'] = form['week_range']
@@ -510,9 +509,10 @@ class HomeView(TemplateView, UpdateView):
                     day_date_command=day.day,
                     month_date_command=day.month,
                     year_date_command=day.year,
-                    ).exists():
+                    )\
+                    .exists():
                     dict_days_clients_commands_dont_exist[(client_id, day)] = {'day':day.day, 'month':day.month, 'year':day.year}
-        batch_size = 100
+        batch_size = 1000
         objs = (Command(
             client=Client.objects.get(id=client_day[0]),
             circuit=Client.objects.get(id=client_day[0]).circuit,

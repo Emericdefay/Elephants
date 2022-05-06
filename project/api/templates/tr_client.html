@@ -1,0 +1,63 @@
+{% load humanize index %}
+<tr style="background-color: ; margin-bottom:1rem;  background-color:{{gradients|get_value:client.circuit.id}}">
+    <td style="vertical-align: middle;">
+      <input type="text" data-client="{{client.id}}" data-attrib="last_name" class="input_last_name" style="inline-size: -webkit-fill-available;" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></br>
+      <input type="text" data-client="{{client.id}}" data-attrib="first_name" class="input_first_name" style="inline-size: -webkit-fill-available;" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/>
+    </td>
+    <td style="vertical-align: middle;">
+      <input type="text" data-client="{{client.id}}" data-attrib="address" class="input_address" style="inline-size: -webkit-fill-available;" name="address__{{client.id}}" id="address__{{client.id}}" value="{{client.address}}"/><br>
+      <input type="text" data-client="{{client.id}}" data-attrib="postcode" class="input_postcode" style="inline-size: -webkit-fill-available;" name="postcode__{{client.id}}" id="postcode__{{client.id}}" value="{{client.postcode}}"/><br>
+      <input type="text" data-client="{{client.id}}" data-attrib="address_details" class="input_address_details" style="inline-size: -webkit-fill-available;" name="address_details__{{client.id}}" id="address_details__{{client.id}}" value="{{client.address_details}}"/>
+    </td>
+    <td style="vertical-align: middle;">
+      <input type="text" data-client="{{client.id}}" data-attrib="cellphone" class="input_cellphone" style="inline-size: -webkit-fill-available;" name="cellphone__{{client.id}}" id="cellphone__{{client.id}}" value="{{client.cellphone}}"/><br>
+      <input type="text" data-client="{{client.id}}" data-attrib="cellphone2" class="input_cellphone2" style="inline-size: -webkit-fill-available;" name="cellphone2__{{client.id}}" id="cellphone2__{{client.id}}" value="{{client.cellphone2}}"/>
+    </td>
+    {% for default in all_foods %}
+        <td style="-webkit-writing-mode: vertical-lr;">
+            <input
+                class="checkbox-default-food"
+                type="checkbox"
+                data-client="{{client.id}}"
+                data-food="{{default.id}}"
+                style="transform: scale(2); vertical-align: sub;"
+                id="_meals__{{default.id}}__{{client.id}}"
+                name="_meals__{{default.id}}__{{client.id}}"
+            {% for box_client in client.client_command.all %}
+                {% if default|striptags == box_client|striptags %}
+                    checked
+                {% endif %}
+            {% endfor %}
+                class="default_box">
+        </td>
+    {% endfor %}
+    <td style="vertical-align: middle;">
+        <select name="circuit_id__{{client.id}}" id="circuit_id__{{client.id}}">
+            {% for circuit in circuits %}
+                <option value="{{ circuit.id }}" {% if circuit.id == client.circuit.id %}selected="selected"{% endif %}> {{ circuit.name }} </option>
+            {% endfor %}
+        </select>
+    </td>
+    <td style="vertical-align: middle; font-weight: bold;" id="price_unit__{{client.id}}">
+      {% if client.client_command.all|make_unit_price %}
+        {{client.client_command.all|make_unit_price}}
+      {% else %}
+        0
+      {% endif %}
+    </td>
+    <td style="vertical-align: middle; font-weight: bold;" id="meal_this_month__{{client.id}}">
+      {{commands|query_sum_meals_this_month}}
+    </td>
+    <td style="vertical-align: middle; font-weight: bold;" id="money_this_month__{{client.id}}">
+      {% if commands|query_sum_price_this_month %}
+        {{commands|query_sum_price_this_month}}
+      {% else %}
+        0
+      {% endif %}
+    </td>
+    {% comment %} <td><button
+      class="btn btn-warning align-content-center mx-3"
+      type="button">
+      Excel à l'unitée
+    </button></td> {% endcomment %}
+</tr>

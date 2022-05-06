@@ -1,3 +1,5 @@
+from datetime import datetime
+from click import command
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.db.models import F, FloatField, Q
 from django.middleware.csrf import get_token
@@ -206,4 +208,33 @@ class ClientDefaultFoodSerializer(serializers.ModelSerializer):
         fields = (
             'html',
             'html_food',
+        )
+
+
+class GetAllClientsSerializer(serializers.ModelSerializer):
+    html = serializers.SerializerMethodField()
+
+    def get_html(self, obj):
+        circuits = Circuit.objects.all().order_by('name')
+        gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
+        gradients_colors = dict((circuit.id, gradients[index]) for index, circuit in enumerate(circuits))
+        month=self.context['request']._request.GET.get('month')
+        year=self.context['request']._request.GET.get('year')
+
+        data = render_to_string(template_name='tr_client.html',
+                                context={
+                                    'circuits': circuits.order_by('order_c'),
+                                    'this_month': month,
+                                    'this_year': year,
+                                    'client': obj,
+                                    'gradients': gradients_colors,
+                                    'commands': Command.objects.filter(month_date_command=month, year_date_command=year, client=obj),
+                                    'all_foods': DefaultCommand.objects.all().order_by('order_food'),
+                                })
+        return mark_safe(data)
+
+    class Meta:
+        model = Command
+        fields = (
+            'html',
         )

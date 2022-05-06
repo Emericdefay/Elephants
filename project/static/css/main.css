@@ -40,3 +40,7 @@ body {
 .text-bold {
     font-weight: bold;
 }
+
+.background-food-day {
+    background-color: bisque;
+}
