@@ -21,7 +21,7 @@
             {% endifchanged %} {% endcomment %}
             <tr id="tr_planning_{{client.id}}" class="line" style="margin-bottom: 1rem; border-spacing:0 20px; border-collapse: separate; background-color:{{client.circuit.circuit_color}}">
             {% with command_list|get:forloop.counter0 as client__command  %}
-            <td class="meals meals-details customer-comment-btn gradient-{{client.circuit.id}}-lighter {% if client.has_comment %}comment{% endif %}" 
+            <td class="meals meals-details customer-comment-btn {% if client.has_comment %}comment{% endif %}" 
                 data-client="{{client.id}}" 
                 style="min-width:{{width_text_cells}}px;
                 max-width:{{width_text_cells_max}}px;"
@@ -37,7 +37,7 @@
                     <td 
                     class="meals
                         {% if day|day_name|firsts:3 == 'sam' %}
-                             gradient-{{client.circuit.id}}-darker
+                             gradient-darker
                         {% endif %}
                     " 
                     style="min-width:{{width_cells}}px;

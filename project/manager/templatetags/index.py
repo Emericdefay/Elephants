@@ -47,6 +47,12 @@ def nonpadded(string):
     return string
 
 @register.filter
+def padded(string):
+    if len(string) == 1:
+        return f"0{string}"
+    return string
+
+@register.filter
 def get(obj, key):
     try:
         return (obj[key])

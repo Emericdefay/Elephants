@@ -2,6 +2,7 @@
 from django.urls import path
 # Local Libs:
 from . import views
+from django.views.decorators.csrf import csrf_exempt
 
 app_name = 'manager'
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path('new_food', views.AddNewFood.as_view(), name='new_food'),
     path('new_circuit', views.AddNewCircuit.as_view(), name='new_circuit'),
     path('facture', views.CreateExcel.as_view(), name='facture'),
+    path('unit_facture', csrf_exempt(views.CreateUnitExcel.as_view()), name='unit_facture'),
 ]
