@@ -352,6 +352,30 @@ class CommandUpdate(APIView):
         return Response()
 
 
+class ClientCircuitUpdate(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return models.Client.objects.get(pk=pk)
+        except models.Command.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, circuit, format=None):
+
+        client = self.get_object(pk)
+        circuit = models.Circuit.objects.get(id=circuit)
+        client.circuit = circuit
+        client.save()
+
+        data = {
+            'circuit_color' : circuit.circuit_color,
+        }
+
+        return Response(data=data, status=200)
+
+
 class GetAllClients(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.GetAllClientsSerializer

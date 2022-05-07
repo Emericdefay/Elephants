@@ -37,14 +37,15 @@
 <style>
     {% for circuit in circuits %}
         .gradient-{{circuit.id}} {
-            background-color:{{circuit.circuit_color}} !important;
+            background-color:{{circuit.circuit_color}};
         }
         .gradient-{{circuit.id}}-darker {
-            background-color:{{circuit.circuit_color|get_value_darker}} !important;
+            background-color:#999999 !important;
+            saturate(1);
         }
         .gradient-{{circuit.id}}-lighter {
             filter:brightness(1.1);
-            background-color:{{circuit.circuit_color}} !important;
+            background-color:{{circuit.circuit_color}};
         }
     {% endfor %}
 </style>

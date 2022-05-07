@@ -20,23 +20,23 @@ const lastName = () => {
   
   //user is "finished typing," do something
   function doneTyping () {
-      //do something
-      const client = input.data('client');
-      const val = input.val();
-      urlClient = `${url}/${client}/last_name/${val}/`;
-      $.ajax({
-          url: urlClient,
-          type: 'GET',
-          dataType: 'json',
-          beforeSend: () => {
-          },
-          success: data => {
+    //do something
+    const client = input.data('client');
+    const val = input.val();
+    urlClient = `${url}/${client}/last_name/${val}/`;
+    $.ajax({
+      url: urlClient,
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
 
-          },
-          error: (e) => {
-            console.log(e)
-          },
-      });
+      },
+      error: (e) => {
+        console.log(e)
+      },
+    });
   }
 };
 
@@ -62,23 +62,23 @@ const firstName = () => {
   
   //user is "finished typing," do something
   function doneTyping () {
-      //do something
-      const client = input.data('client');
-      const val = input.val();
-      urlClient = `${url}/${client}/first_name/${val}/`;
-      $.ajax({
-          url: urlClient,
-          type: 'GET',
-          dataType: 'json',
-          beforeSend: () => {
-          },
-          success: data => {
+    //do something
+    const client = input.data('client');
+    const val = input.val();
+    urlClient = `${url}/${client}/first_name/${val}/`;
+    $.ajax({
+      url: urlClient,
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
 
-          },
-          error: (e) => {
-            console.log(e)
-          },
-      });
+      },
+      error: (e) => {
+        console.log(e)
+      },
+    });
   }
 };
 
@@ -104,23 +104,23 @@ const address = () => {
   
   //user is "finished typing," do something
   function doneTyping () {
-      //do something
-      const client = input.data('client');
-      const val = input.val();
-      urlClient = `${url}/${client}/address/${val}/`;
-      $.ajax({
-          url: urlClient,
-          type: 'GET',
-          dataType: 'json',
-          beforeSend: () => {
-          },
-          success: data => {
+    //do something
+    const client = input.data('client');
+    const val = input.val();
+    urlClient = `${url}/${client}/address/${val}/`;
+    $.ajax({
+      url: urlClient,
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
 
-          },
-          error: (e) => {
-            console.log(e)
-          },
-      });
+      },
+      error: (e) => {
+        console.log(e)
+      },
+    });
   }
 };
 
@@ -146,23 +146,23 @@ const postCode = () => {
   
   //user is "finished typing," do something
   function doneTyping () {
-      //do something
-      const client = input.data('client');
-      const val = input.val();
-      urlClient = `${url}/${client}/postcode/${val}/`;
-      $.ajax({
-          url: urlClient,
-          type: 'GET',
-          dataType: 'json',
-          beforeSend: () => {
-          },
-          success: data => {
+    //do something
+    const client = input.data('client');
+    const val = input.val();
+    urlClient = `${url}/${client}/postcode/${val}/`;
+    $.ajax({
+      url: urlClient,
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
 
-          },
-          error: (e) => {
-            console.log(e)
-          },
-      });
+      },
+      error: (e) => {
+        console.log(e)
+      },
+    });
   }
 };
 
@@ -188,23 +188,23 @@ const addressDetails = () => {
   
   //user is "finished typing," do something
   function doneTyping () {
-      //do something
-      const client = input.data('client');
-      const val = input.val();
-      urlClient = `${url}/${client}/address_details/${val}/`;
-      $.ajax({
-          url: urlClient,
-          type: 'GET',
-          dataType: 'json',
-          beforeSend: () => {
-          },
-          success: data => {
+    //do something
+    const client = input.data('client');
+    const val = input.val();
+    urlClient = `${url}/${client}/address_details/${val}/`;
+    $.ajax({
+      url: urlClient,
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
 
-          },
-          error: (e) => {
-            console.log(e)
-          },
-      });
+      },
+      error: (e) => {
+        console.log(e)
+      },
+    });
   }
 };
 
@@ -230,23 +230,23 @@ const cellphone = () => {
   
   //user is "finished typing," do something
   function doneTyping () {
-      //do something
-      const client = input.data('client');
-      const val = input.val();
-      urlClient = `${url}/${client}/cellphone/${val}/`;
-      $.ajax({
-          url: urlClient,
-          type: 'GET',
-          dataType: 'json',
-          beforeSend: () => {
-          },
-          success: data => {
+    //do something
+    const client = input.data('client');
+    const val = input.val();
+    urlClient = `${url}/${client}/cellphone/${val}/`;
+    $.ajax({
+      url: urlClient,
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
 
-          },
-          error: (e) => {
-            console.log(e)
-          },
-      });
+      },
+      error: (e) => {
+        console.log(e)
+      },
+    });
   }
 };
 
@@ -272,52 +272,74 @@ const cellphone2 = () => {
   
   //user is "finished typing," do something
   function doneTyping () {
-      //do something
-      const client = input.data('client');
-      const val = input.val();
-      urlClient = `${url}/${client}/cellphone2/${val}/`;
-      $.ajax({
-          url: urlClient,
-          type: 'GET',
-          dataType: 'json',
-          beforeSend: () => {
-          },
-          success: data => {
+    //do something
+    const client = input.data('client');
+    const val = input.val();
+    urlClient = `${url}/${client}/cellphone2/${val}/`;
+    $.ajax({
+      url: urlClient,
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
 
-          },
-          error: (e) => {
-            console.log(e)
-          },
-      });
+      },
+      error: (e) => {
+        console.log(e)
+      },
+    });
   }
 };
 
 const clientFood = () => {
   const url = "http://127.0.0.1:8000/api/clientfood"
   $('.checkbox-default-food').on('click', function () {
-      const client = $(this).data('client');
-      const food = $(this).data('food');
-      const checked = this.checked ? 1 : 0;
-      urlFood = `${url}/${client}/${food}/${checked}/`;
-      $.ajax({
-          url: urlFood,
-          type: 'GET',
-          dataType: 'json',
-          beforeSend: () => {
-          },
-          success: data => {
-            console.log(data)
-            $(`#price_unit__${client}`).html(data.price);
-          },
-          error: (e) => {
-            console.log(e)
-          },
-      });
+    const client = $(this).data('client');
+    const food = $(this).data('food');
+    const checked = this.checked ? 1 : 0;
+    urlFood = `${url}/${client}/${food}/${checked}/`;
+    $.ajax({
+      url: urlFood,
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
+        console.log(data)
+        $(`#price_unit__${client}`).html(data.price);
+      },
+      error: (e) => {
+        console.log(e)
+      },
+    });
   });
 };
 
 const clientCircuit = () => {
-
+  const url = "http://127.0.0.1:8000/api/clientcircuit"
+  console.log('clientCircuit started...')
+  $('.circuit-selected').change(function () {
+    const circuit = $(this)[0].selectedOptions[0].attributes[1].nodeValue;
+    const client = $(this)[0].selectedOptions[0].attributes[0].nodeValue;
+    urlFood = `${url}/${client}/${circuit}/`;
+    $.ajax({
+      url: urlFood,
+      type: 'GET',
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
+        console.log(data)
+        // $(`#price_unit__${client}`).html(data.price);
+        $(`#tr_client_${client}`).css('background-color', data.circuit_color);
+        $(`#tr_planning_${client}`).css('background-color', data.circuit_color);
+      },
+      error: (e) => {
+        console.log(e)
+      },
+    });
+  });
 };
 
 // Initialize

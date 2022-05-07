@@ -11,15 +11,15 @@
 {% regroup actual_commands by client as client_list %}
         {% for client, command_list in client_list %}
 
-            {% ifchanged client.circuit.id %}
+            {% comment %} {% ifchanged client.circuit.id %}
                 {% if forloop.counter0 != 0 %}
                     <tr style="border-collapse: separate; border-spacing:0 20px; margin-bottom:1rem;">
                         <td colspan="36">
                         </td>
                     </tr>
                 {% endif %}
-            {% endifchanged %}
-            <tr class="line" style="margin-bottom: 1rem; border-spacing:0 20px; border-collapse: separate;">
+            {% endifchanged %} {% endcomment %}
+            <tr id="tr_planning_{{client.id}}" class="line" style="margin-bottom: 1rem; border-spacing:0 20px; border-collapse: separate; background-color:{{client.circuit.circuit_color}}">
             {% with command_list|get:forloop.counter0 as client__command  %}
             <td class="meals meals-details customer-comment-btn gradient-{{client.circuit.id}}-lighter {% if client.has_comment %}comment{% endif %}" 
                 data-client="{{client.id}}" 
@@ -38,8 +38,6 @@
                     class="meals
                         {% if day|day_name|firsts:3 == 'sam' %}
                              gradient-{{client.circuit.id}}-darker
-                        {% else %}
-                             gradient-{{client.circuit.id}}
                         {% endif %}
                     " 
                     style="min-width:{{width_cells}}px;

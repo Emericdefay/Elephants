@@ -1,5 +1,5 @@
 {% load humanize index %}
-<tr style="margin-bottom:1rem;  background-color:{{client.circuit.circuit_color}}">
+<tr id="tr_client_{{client.id}}" style="margin-bottom:1rem;  background-color:{{client.circuit.circuit_color}}">
     <td style="vertical-align: middle;">
       <input type="text" data-client="{{client.id}}" data-attrib="last_name" class="input_last_name" style="inline-size: -webkit-fill-available;" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></br>
       <input type="text" data-client="{{client.id}}" data-attrib="first_name" class="input_first_name" style="inline-size: -webkit-fill-available;" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/>
@@ -32,9 +32,9 @@
         </td>
     {% endfor %}
     <td style="vertical-align: middle;">
-        <select name="circuit_id__{{client.id}}" id="circuit_id__{{client.id}}">
+        <select class="circuit-selected" name="circuit_id__{{client.id}}" id="circuit_id__{{client.id}}">
             {% for circuit in circuits %}
-                <option value="{{ circuit.id }}" {% if circuit.id == client.circuit.id %}selected="selected"{% endif %}> {{ circuit.name }} </option>
+                <option data-client="{{client.id}}" data-circuit="{{circuit.id}}" value="{{ circuit.id }}" {% if circuit.id == client.circuit.id %}selected="selected"{% endif %}> {{ circuit.name }} </option>
             {% endfor %}
         </select>
     </td>
