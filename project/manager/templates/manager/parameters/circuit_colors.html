@@ -1,0 +1,7 @@
+{% for circuit in circuits %}
+    <div>
+        <input type="color" id="circuit_color__{{circuit.id}}" name="circuit_color__{{circuit.id}}"
+               value="{{circuit.color}}">
+        <label for="head">{{circuit.name}}</label>
+    </div>
+{% endfor %}

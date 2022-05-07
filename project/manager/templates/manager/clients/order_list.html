@@ -109,31 +109,6 @@
 
 
 <h3>
-    Ordre des circuits
-</h3>
-<div class="col text-center">
-  <table class="responsive-table-input-matrix table table-hover board-ordered" id="table-order-c" style="display:inline;">
-    <thead class="table-dark position-relative" style="z-index:1; opacity:1;">
-        <tr>
-            <th>#</th>
-            <th>#</th>
-            <th>Nom</th>
-        </tr>
-    </thead>
-    <tbody>
-      {% for circuit in circuits|sort_order_c %}
-        <tr style=" background-color:{{gradients|get_value:circuit.id}}">
-            <td style="vertical-align:middle;" class="draggable draggable-grip"></td>
-            <td style="vertical-align:middle;" class="d-none"><input class="order_clients" type="text" name="order_c__{{circuit.id}}" id="order_c__{{circuit.id}}" value="{{forloop.counter0}}"/></td>
-            <td style="vertical-align:middle;">
-              <span><strong>{{circuit.name}}</strong> </span>
-            </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-<h3>
     Ordre des clients
 </h3>
 <div class='container'>
