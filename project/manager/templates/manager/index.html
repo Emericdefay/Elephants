@@ -101,7 +101,10 @@
                 <li class="nav-item">
                     <a class="nav-link" id="bill-tab" data-bs-toggle="tab" href="#bill" role="tab" aria-controls="bill" aria-selected="false">Factures</a>
                 </li>
-                <li class="ms-auto" style="align-self: center;">
+                <li class="nav-item ms-auto">
+                    <a class="nav-link" id="parameters-tab" data-bs-toggle="tab" href="#parameters" role="tab" aria-controls="parameters" aria-selected="false">Paramètres</a>
+                </li>
+                <li class="" style="align-self: center;">
                     <button form="myform" class="btn btn-lg btn-primary align-content-center mx-3" type="submit">Enregistrer</button>
                 </li>
                 <li class="" style="align-self: center;">
@@ -241,6 +244,11 @@
                                     <div class="tab-pane fade" id="bill" role="tabpanel" aria-labelledby="bill-tab">
                                         <p>
                                             {% include "manager/bills/bill.html" %}
+                                        </p>
+                                    </div>
+                                    <div class="tab-pane fade" id="parameters" role="tabpanel" aria-labelledby="parameters-tab">
+                                        <p>
+                                            {% include "manager/parameters/parameters.html" %}
                                         </p>
                                     </div>
                                 </form>
