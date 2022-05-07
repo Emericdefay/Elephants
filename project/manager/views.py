@@ -103,7 +103,7 @@ class UpdateHomeView(View):
 
     def synth_circuit(self, save):
         """ INFO CLIENT """
-        targets = ['order_c']
+        targets = ['order_c', 'circuit_color',]
         key_values = {}
         for key, value in save.items():
             if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
@@ -125,7 +125,7 @@ class UpdateHomeView(View):
                 setattr(client, key, value)
                 objs.append(client)
         for obj in objs:
-            obj.save(update_fields=["order_c"])
+            obj.save(update_fields=targets)
 
     def synth_planning(self, save):
         """ PLANNING INFO """
