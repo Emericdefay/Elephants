@@ -772,11 +772,11 @@ class CreateExcel(View):
             active_sheet['F12'].font = self.font_h2()
 
             # set clients address
-            active_sheet['H8'] = f"{client.last_name} {client.first_name}"
-            active_sheet['H8'].font = self.font_h1()
-            active_sheet['H9'] = f"{client.address}"
-            active_sheet['H10'] = f"{client.postcode}"
-            active_sheet['H9'].alignment = Alignment(wrap_text=True, shrink_to_fit=False)
+            active_sheet['H6'] = f"{client.last_name} {client.first_name}"
+            active_sheet['H6'].font = self.font_h1()
+            active_sheet['H7'] = f"{client.address}"
+            active_sheet['H7'].alignment = Alignment(wrap_text=True, shrink_to_fit=False)
+            active_sheet['H8'] = f"{client.postcode}"
 
             # Number of meals
             number_of_meals = commands.filter(client=client, command_command__gt=0).aggregate(sum=Sum(F('command_command')))['sum']
