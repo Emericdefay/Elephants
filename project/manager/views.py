@@ -749,7 +749,7 @@ class CreateExcel(View):
             date = '-'.join([dates[-1], dates[1], dates[0]])
         else:
             date = f"{datetime.now().year}-{datetime.now().month}-{datetime.now().day}"
-        clients = Client.objects.all().order_by('circuit')
+        clients = Client.objects.all().order_by('circuit').order_by('last_name', 'first_name')
         commands = Command.objects.filter(year_date_command=year, month_date_command=month)
 
         for client in clients:
