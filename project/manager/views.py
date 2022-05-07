@@ -753,6 +753,16 @@ class CreateExcel(View):
         commands = Command.objects.filter(year_date_command=year, month_date_command=month)
 
         for client in clients:
+            # Don't display clients that doesn't pay this month
+            customer_this_month = commands.filter(client=client)\
+                    .aggregate(sum=Sum(
+                        (F('meals__default__price')) * F('command_command'),
+                        output_field=FloatField(),
+                        )
+                    )['sum']
+            if not customer_this_month:
+                continue
+
             # Elephant img added
             img = drawing.image.Image(os.path.join(os.getcwd(), 'project', 'static', 'img_elephant.png'))
             img.anchor = 'C3'
