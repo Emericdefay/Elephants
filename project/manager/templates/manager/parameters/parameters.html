@@ -1,4 +1,13 @@
-parametres
 
-{% include 'manager/parameters/circuit_orders.html' %}
-{% include 'manager/parameters/circuit_colors.html' %}
+<div class="container">
+    <div class="row row-cols-2">
+        <div class="col" style="text-align-last: start;">
+            <h3>Ordre des tournées</h3>
+            {% include 'manager/parameters/circuit_orders.html' %}
+        </div>
+        <div class="col d-grid">
+            <h3>Couleur des tournées</h3>
+            {% include 'manager/parameters/circuit_colors.html' %}
+        </div>
+    </div>
+</div>

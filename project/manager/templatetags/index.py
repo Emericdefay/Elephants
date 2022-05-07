@@ -281,6 +281,11 @@ def query_food_id(obj, n):
     return obj.get(default=n).pk
 
 @register.filter
+def query_detect_comment(obj):
+    print(obj)
+    return 
+
+@register.filter
 def query_command_food(obj, f):
     return obj.filter(meals=f).count()
 

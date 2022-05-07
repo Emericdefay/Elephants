@@ -54,6 +54,11 @@ class Client(models.Model):
     # TODO : models.SET(get_standart_circuit)
     circuit = models.ForeignKey(Circuit, on_delete=models.PROTECT)
 
+    @property
+    def has_comment(self):
+        comments = [comment for comment in Command.objects.filter(client=self).values_list('comment', flat=True) if comment]
+        return comments
+
     class Meta:
         ordering = ['circuit__order_c', 'last_name', 'first_name']
         # indexes = [models.Index(fields=['order',]),]
