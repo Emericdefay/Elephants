@@ -126,7 +126,6 @@
                   <th>Adresse</th>
               </tr>
           </thead>
-
           <tbody>
             {% ifchanged clients_by_circuit.circuit %}
               {% if forloop.counter0 != 0 %}
@@ -137,7 +136,7 @@
               {% endif %}
             {% endifchanged %}
             {% for client in clients_by_circuit|sort_order %}
-              <tr style=" background-color:{{gradients|get_value:circuit.id}}">
+              <tr style=" background-color:{{circuit.circuit_color}}">
                   <td style="vertical-align:middle;" class="draggable draggable-grip"></td>
                   <td style="vertical-align:middle;" class="d-none"><input class="order_clients" type="text" name="order__{{client.id}}" id="order__{{client.id}}" value="{{forloop.counter0}}"/></td>
                   <td style="vertical-align:middle;">

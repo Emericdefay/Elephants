@@ -1,7 +1,7 @@
 {% load static humanize index %}
 
 {% for circuit in circuits %}
-    <div class="card-header my-1" style="background-color:{{gradients|get_value:circuit.id}}" id="heading-{{circuit.id}}"  data-bs-toggle="collapse" data-bs-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
+    <div class="card-header my-1" style="background-color:{{circuit.circuit_color}}" id="heading-{{circuit.id}}"  data-bs-toggle="collapse" data-bs-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">
         <h2 class="m-0 row">
             <div class="col-12">
                 <button class="btn btn-link text-white font-weight-bold text-uppercase collapsible-link" type="button" data-bs-toggle="collapse" data-bs-target="#acc-{{circuit.id}}" aria-expanded="false" aria-controls="acc-{{circuit.id}}">

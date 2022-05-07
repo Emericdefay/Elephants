@@ -13,7 +13,7 @@
     </thead>
     <tbody>
       {% for circuit in circuits|sort_order_c %}
-        <tr style=" background-color:{{gradients|get_value:circuit.id}}">
+        <tr style=" background-color:{{circuit.circuit_color}}">
             <td style="vertical-align:middle;" class="draggable draggable-grip"></td>
             <td style="vertical-align:middle;" class="d-none"><input class="order_clients" type="text" name="order_c__{{circuit.id}}" id="order_c__{{circuit.id}}" value="{{forloop.counter0}}"/></td>
             <td style="vertical-align:middle;">

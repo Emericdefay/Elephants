@@ -1,5 +1,5 @@
 {% load humanize index %}
-<tr style="background-color: ; margin-bottom:1rem;  background-color:{{gradients|get_value:client.circuit.id}}">
+<tr style="margin-bottom:1rem;  background-color:{{client.circuit.circuit_color}}">
     <td style="vertical-align: middle;">
       <input type="text" data-client="{{client.id}}" data-attrib="last_name" class="input_last_name" style="inline-size: -webkit-fill-available;" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></br>
       <input type="text" data-client="{{client.id}}" data-attrib="first_name" class="input_first_name" style="inline-size: -webkit-fill-available;" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/>
