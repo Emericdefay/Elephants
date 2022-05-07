@@ -31,6 +31,7 @@ class Circuit(models.Model):
     """
     name = models.CharField(verbose_name=("Nom de la tournée"), max_length=200, blank=False, null=False)
     order_c = models.IntegerField(verbose_name=("Position de tournée"), default=0)
+    circuit_color = models.CharField(verbose_name=("Couleur de tournée"), max_length=10, default="#ffffff")
 
     def __str__(self):
         return f"{self.pk}-{self.name}"

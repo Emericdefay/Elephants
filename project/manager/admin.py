@@ -23,6 +23,7 @@ class CustomCircuit(admin.ModelAdmin):
 	fieldsets = [
 		('name', {'fields': ['name']}),
 		('order_c', {'fields': ['order_c']}),
+		('circuit_color', {'fields': ['circuit_color']}),
 	]
 
 
