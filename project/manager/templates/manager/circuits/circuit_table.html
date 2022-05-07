@@ -38,7 +38,7 @@
     <thead class="overflow-auto table-dark">
         <tr>
             <th></th>
-            <th>Jour</th>
+            <th>Jours</th>
         </tr>
     </thead>
     <tbody class="overflow-auto">
@@ -92,7 +92,7 @@
                 data-day={{this_day}}
                 data-circuit={{circuit.id}}
                 >
-                    <td {% if actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit.id|query_filter_command_passed|query_count > 0 %}class="text-bold"{% endif %}>
+                    <td {% if actual_commands|query_filter_client__circuit:circuit.id|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count > 0 %}class="text-bold"{% endif %}>
                         {{day|day_name}}
                     </td>
                 </tr>
@@ -124,8 +124,7 @@
                             {{day|month_name}}
                         </td>
                     {% endif %}
-                    <td {% if actual_commands|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_client__circuit:circuit.id|query_filter_command_passed|query_count > 0 %}class="text-bold"{% endif %}>
-                        {{day|day_name}}
+                    <td {% if actual_commands|query_filter_client__circuit:circuit.id|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count > 0 %}class="text-bold"{% endif %}>                        {{day|day_name}}
                     </td>
                     
                 </tr>

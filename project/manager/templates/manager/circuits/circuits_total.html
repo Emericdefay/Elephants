@@ -11,14 +11,7 @@
     <thead class="overflow-auto table-dark">
         <tr>
             <th></th>
-            <th>Nb Clients</th>
-            {% with foodcategories as foodcategories %}
-            {% for food in formDefaultCommand %}
-                <th class="verticalTableHeader">
-                    {{food.default.category}}
-                </th>
-                {% endfor %}
-            {% endwith %}
+            <th>Jours</th>
         </tr>
     </thead>
     <tbody class="overflow-auto">
@@ -46,7 +39,7 @@
                 {% endif %}
                 >
                     
-                    <td {% if day|day_name|firsts:3 == 'lun' %}rowspan=2{% else %}rowspan=3{% endif %} style="vertical-align:middle;">
+                    <td {% if day|day_name|firsts:3 == 'lun' %}rowspan=2{% else %}rowspan=3{% endif %} style="vertical-align:middle;" {% if actual_commands|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count > 0 %}class="text-bold"{% endif %}>
                         {% if day|day_name|firsts:3 == 'lun' %}
                             LUN<br>
                             {{day|day}}<br>
@@ -71,24 +64,13 @@
                 data-month={{this_month}}
                 data-day={{this_day}}
                 >
-                    <td>
-                        {% comment %} NB Clients {% endcomment %}
-                        {% comment %} {% random_int 0 20 %} {% endcomment %}
-                        {% if command_client %}
-                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count}}
-                        {% endif %}
+                    <td {% if actual_commands|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count > 0 %}class="text-bold"{% endif %}>
+                        {{day|day_name}}
                     </td>
-                    {% if command_client %}
-                        {% for food in foods %}
-                            <td>
-                                {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_sum_morning:food}}
-                            </td>
-                        {% endfor %}
-                    {% endif %}
                 </tr>
             {% elif day|day_name|firsts:3 == 'mer' or day|day_name|firsts:3 == 'ven' or day|day_name|firsts:3 == 'dim' %}
                 <tr 
-                    class="day_cells total-circuit-btn" 
+                    class="day_cells total-circuit-btn {% if actual_commands|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count > 0 %}text-bold{% endif %}" 
                     style="text-align:end;"
                     data-year={{this_year}}
                     data-month={{this_month}}
@@ -101,21 +83,9 @@
                             {{day|month_name}}
                         </td>
                     {% endif %}
-                    <td>
-                        {% comment %} NB Clients {% endcomment %}
-                        {% comment %} {% random_int 0 20 %} {% endcomment %}
-                        {% if command_client %}
-                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count}}
-                        {% endif %}
+                    <td {% if actual_commands|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_count > 0 %}class="text-bold"{% endif %}>
+                        {{day|day_name}}
                     </td>
-                    {% if command_client %}
-                        {% for food in foods %}
-                        <td>
-                            {{command_client|make_query|query_filter_day_date_command:this_day|query_filter_month_date_command:this_month|query_filter_year_date_command:this_year|query_filter_command_passed|query_sum_morning:food}}
-                        </td>
-                    {% endfor %}
-                    {% endif %}
-
                 </tr>
             {% endif %}
             {% endwith %}                    
