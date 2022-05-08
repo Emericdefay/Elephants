@@ -85,7 +85,7 @@ class DayByDayCircuitSerializer(serializers.ModelSerializer):
         data = render_to_string(template_name='circuit_total.html',
                                 context={
                                     'commands': obj,
-                                    'foods': Food.objects.all().order_by('id'),
+                                    'foods': Food.objects.all().order_by('category'),
                                     'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)
@@ -120,7 +120,7 @@ class DayByDayCircuitTotalSerializer(serializers.ModelSerializer):
                                 context={
                                     'commands': obj,
                                     'search': self.context['request']._request.GET.get('search'),
-                                    'foods': Food.objects.all().order_by('id'),
+                                    'foods': Food.objects.all().order_by('category'),
                                     'actual_commands': Command.objects.filter(id=obj.id).order_by('client'),
                                 })
         return mark_safe(data)
