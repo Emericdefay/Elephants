@@ -28,9 +28,9 @@ class ClientForm(forms.ModelForm):
 	last_name = forms.Field(label="Nom", widget=forms.TextInput(attrs={'placeholder': 'Nom'}))
 	address = forms.Field(label="Adresse postale", widget=forms.TextInput(attrs={'placeholder': '5, Rue Salteur'}))
 	postcode = forms.Field(label="00000 Ville", widget=forms.TextInput(attrs={'placeholder': '73000 Chambery'}))
-	address_details = forms.Field(label="Détails", widget=forms.TextInput(attrs={'placeholder': 'Digicode, au troisième, Chez "un tel"'}))
-	cellphone = forms.Field(label="Téléphone", widget=forms.TextInput(attrs={'placeholder': '0600000000'}))
-	cellphone2 = forms.Field(label="Téléphone secondaire", widget=forms.TextInput(attrs={'placeholder': "De l'un de ses enfants?"}))
+	address_details = forms.Field(label="Détails", required=False, widget=forms.TextInput(attrs={'placeholder': 'Digicode, au troisième, Chez "un tel"'}))
+	cellphone = forms.Field(label="Téléphone", required=False, widget=forms.TextInput(attrs={'placeholder': '0600000000'}))
+	cellphone2 = forms.Field(label="Téléphone secondaire", required=False, widget=forms.TextInput(attrs={'placeholder': "De l'un de ses enfants?"}))
 	circuit = forms.ModelChoiceField(label='Tournée',empty_label=None, queryset=Circuit.objects.all(), widget=forms.Select)
 
 	class Meta:
