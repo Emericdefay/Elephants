@@ -1,0 +1,119 @@
+{% load static %}
+
+<footer class="footer">
+    <nav aria-label="Footer navigation">
+        <div class="footer-nav-div">
+            <div class="footer-links">
+                <ul>
+                    <li>
+                        <h2>{{company.company_comp}}</h2>
+                    </li>
+                    <li>
+                        <a href="https://lacarte.menu/restaurants/chambery/cafeteria-elephants">
+                            La carte
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            {{company.address_comp}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            {{company.cellphone_comp}}
+                        </a>
+                    </li>
+                </ul>
+                {% comment %} <ul>
+                    <li>
+                        <h2>
+                            A propos
+                        </h2>
+                    </li>
+                    <li>
+                        <a href="/about-us/">
+                            Our story
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/legals/">
+                            Terms of use
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/privacy-policy/">
+                            Privacy policy
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://sitepoint.typeform.com/to/fNY7XG">
+                            Corporate memberships
+                        </a>
+                    </li>
+                </ul> {% endcomment %}
+                <ul>
+                    <li>
+                        <h2>
+                            Développé par:
+                        </h2>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Emeric DEFAY
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            07 77 04 65 99
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            emericdefay@gmail.com
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:emericdefay@gmail.com">
+                            Contactez-moi
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer-separator">
+
+            </div>
+            <div class="footer-extra">
+                <div class="mb-2">
+                    <img src="{% static 'logo.png' %}"
+                    alt="Small"
+                    class=""
+                    height="100"/>
+                </div>
+                <ul>
+                    <li>
+                        <h2>
+                            K0rporation
+                        </h2>
+                    </li>
+                </ul>
+                <div>
+                    <p>
+                        
+                        © 2022 – <!-- -->{% now 'Y' %}<!-- --> K0rporation
+                    </p>
+                    {% comment %} <p class="recaptcha-branding">
+                        This site is protected by reCAPTCHA and the Google
+                        <a href="https://policies.google.com/privacy">
+                            Privacy Policy 
+                        </a>
+                            and
+                        <a href="https://policies.google.com/terms">
+                            Terms of Service 
+                        </a>
+                        apply.
+                    </p> {% endcomment %}
+                </div>
+            </div>
+        </div>
+    </nav>
+</footer>

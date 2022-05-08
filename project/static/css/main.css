@@ -48,3 +48,9 @@ body {
 .background-food-day-same {
     background-color: rgb(149, 211, 137);
 }
+
+.tab-pane {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}

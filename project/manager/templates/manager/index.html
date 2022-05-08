@@ -20,6 +20,7 @@
 
         <link href="{% static "css/main.css" %}" rel="stylesheet">
         <link href="{% static "css/comment.css" %}" rel="stylesheet">
+        <link href="{% static "css/footer.css" %}" rel="stylesheet">
 
         <script src="{% static 'js/navbar.js' %}"></script>
         <script src="{% static 'js/getModal.js' %}"></script>
@@ -222,36 +223,43 @@
                                         <p>
                                             {% include "manager/clients/clients_list.html" %}
                                         </p>
+                                        {% include "footer.html" %}
                                     </div>
                                     <div class="tab-pane fade show" id="order" role="tabpanel" aria-labelledby="order-tab">
                                         <p>
                                             {% include "manager/clients/order_list.html" %}
                                         </p>
+                                        {% include "footer.html" %}
                                     </div>
                                     <div class="tab-pane fade" id="planning" role="tabpanel" aria-labelledby="planning-tab">
                                         <p>
                                             {% include "manager/planning/planning.html" %}
                                         </p>
+                                        {% include "footer.html" %}
                                     </div>
                                     <div class="tab-pane fade" id="food" role="tabpanel" aria-labelledby="food-tab">
                                         <p>
                                             {% include "manager/food/food.html" %}
                                         </p>
+                                        {% include "footer.html" %}
                                     </div>
                                     <div class="tab-pane fade" id="circuit" role="tabpanel" aria-labelledby="circuit-tab">
                                         <p>
                                             {% include "manager/circuits/circuits.html" %}
                                         </p>
+                                        {% include "footer.html" %}
                                     </div>
                                     <div class="tab-pane fade" id="bill" role="tabpanel" aria-labelledby="bill-tab">
                                         <p>
                                             {% include "manager/bills/bill.html" %}
                                         </p>
+                                        {% include "footer.html" %}
                                     </div>
                                     <div class="tab-pane fade" id="parameters" role="tabpanel" aria-labelledby="parameters-tab">
                                         <p>
                                             {% include "manager/parameters/parameters.html" %}
                                         </p>
+                                        {% include "footer.html" %}
                                     </div>
                                 </form>
                             </div>
