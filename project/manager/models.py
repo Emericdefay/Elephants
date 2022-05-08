@@ -107,6 +107,10 @@ class Command(models.Model):
     meals = models.ManyToManyField(DefaultCommand, related_name='meals', blank=True)
     comment = models.TextField(verbose_name="", blank=True, null=True)
 
+    @property
+    def is_different_from_default(self):
+        return (list(self.meals.all().values_list('id', flat=True)) != list(self.client.client_command.all().values_list('id', flat=True)))
+
     def __str__(self):
         return f"[{self.id}] {self.client.last_name} {self.client.first_name} : {self.day_date_command}/{self.month_date_command}/{self.year_date_command}"
 

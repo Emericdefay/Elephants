@@ -43,23 +43,14 @@
                 {{day_time_command}}
             </button>
             <div class="dropdown-menu p-2" style="min-width:25rem;">
-                <div class="text-center mx-1">
-                    <strong>Plats Programmés</strong>
+                <div id="defaultfood-client-{{command_id}}">
+
                 </div>
-                <div
-                     class="container"
-                     id="defaultfood-client-{{command_id}}">
+
+                <div id="food-client-{{command_id}}"
+                >
                 </div>
-                <div class="background-food-day" style="border: 2px solid #363742;">
-                    <div class="text-center mx-1">
-                        <strong>Plats Commandés ce jour</strong>
-                    </div>
-                    <div
-                         class="container"
-                         id="food-client-{{command_id}}"
-                    >
-                    </div>
-                </div>
+
                 <div class="text-center mx-1">
                     <strong>Commentaire</strong>
                     <textarea

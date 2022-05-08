@@ -41,6 +41,10 @@ body {
     font-weight: bold;
 }
 
-.background-food-day {
+.background-food-day-different {
     background-color: bisque;
+}
+
+.background-food-day-same {
+    background-color: rgb(149, 211, 137);
 }
