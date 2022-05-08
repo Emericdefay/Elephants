@@ -108,7 +108,7 @@ $(() => {
               beforeSend: () => {
               },
               success: data => {
-                console.log(data);
+
               },
               error: (e) => {
                 console.log(e)
@@ -126,7 +126,6 @@ $(() => {
             success: data => {
               $(`#money_this_month__${client}`).text(data.money_this_month);
               $(`#meal_this_month__${client}`).text(data.meal_this_month);
-
             },
             error: (e) => {
               console.log(e)

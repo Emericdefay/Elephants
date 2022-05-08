@@ -12,12 +12,10 @@ $(() => {
         beforeSend: () => {
         },
         success: data => {
-            console.log(data)
             // add class comment to line
             data.results.forEach(function (row) {
                 $('#tbody-planning').append(row.html);
             })
-            
             setTimeout(() => {reloadJs('http://127.0.0.1:8000/static/js/planning.js');}, 500);
         },
         error: (e) => {

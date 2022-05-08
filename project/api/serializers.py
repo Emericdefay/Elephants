@@ -141,6 +141,7 @@ class AllCommentsOfCustomerSerializer(serializers.ModelSerializer):
     day = serializers.SerializerMethodField()
     month = serializers.SerializerMethodField()
     year = serializers.SerializerMethodField()
+    has_comments = serializers.SerializerMethodField()
 
 
     def get_html(self, obj):
@@ -168,6 +169,11 @@ class AllCommentsOfCustomerSerializer(serializers.ModelSerializer):
     def get_year(self, obj):
         return obj.year_date_command
 
+    def get_has_comments(self, obj):
+        client = obj.get_client
+        has_comments = client.has_comment
+        return has_comments
+
     class Meta:
         model = Command
         fields = (
@@ -178,6 +184,7 @@ class AllCommentsOfCustomerSerializer(serializers.ModelSerializer):
             'day',
             'month',
             'year',
+            'has_comments',
         )
 
 

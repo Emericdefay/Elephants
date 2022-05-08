@@ -306,7 +306,6 @@ const clientFood = () => {
       beforeSend: () => {
       },
       success: data => {
-        console.log(data)
         $(`#price_unit__${client}`).html(data.price);
       },
       error: (e) => {
@@ -329,7 +328,6 @@ const clientCircuit = () => {
       beforeSend: () => {
       },
       success: data => {
-        console.log(data)
         // $(`#price_unit__${client}`).html(data.price);
         $(`#tr_client_${client}`).css('background-color', data.circuit_color);
         $(`#tr_planning_${client}`).css('background-color', data.circuit_color);

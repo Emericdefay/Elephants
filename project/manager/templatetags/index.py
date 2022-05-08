@@ -33,7 +33,6 @@ def index(indexable, i):
 
 @register.filter
 def to_int(obj):
-    print(obj)
     return int(obj)
 
 @register.filter
@@ -285,11 +284,6 @@ def query_from_id_get_price(obj, id_):
 @register.filter
 def query_food_id(obj, n):
     return obj.get(default=n).pk
-
-@register.filter
-def query_detect_comment(obj):
-    print(obj)
-    return 
 
 @register.filter
 def query_command_food(obj, f):

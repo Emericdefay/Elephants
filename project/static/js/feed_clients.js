@@ -29,7 +29,6 @@ $(() => {
             data.results.forEach(function (row) {
                 $('#tbody-client').append(row.html);
             })
-            
             setTimeout(() => {reloadJs('http://127.0.0.1:8000/static/js/clientfood.js');}, 500);
         },
         error: (e) => {

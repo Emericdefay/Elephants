@@ -226,7 +226,6 @@ function openFoodModal () {
             },
             success: data => {
                 $('#feedmeTotal').append(data.results[0].html);
-              
             },
             error: (e) => {
               const html = getHtml(e.responseText);
@@ -276,6 +275,9 @@ function openFoodModal () {
                   $(`button[data-command="${command}"][data-bs-toggle="dropdown"]`).addClass('btn-warning');
                 }
                 $(`.row-${command}`).css( "background-color", "darkgray" );
+                if (data.has_comments.length == 0) {
+                  $(`td.customer-comment-btn[data-client="${client}"]`).removeClass('comment');
+                }
               },
               error: (e) => {
                 console.log(e)
