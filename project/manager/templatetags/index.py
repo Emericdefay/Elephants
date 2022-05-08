@@ -311,20 +311,33 @@ def len_list(obj):
         return False
 
 @register.filter
+def make_unit_price_from_command(obj):
+    unit_price = Food.objects.filter(id__in=obj.all().values_list('meals', flat=True)).aggregate(sum=Round(Sum(F('price')), 2))['sum']
+    return unit_price if unit_price else 0
+
+
+@register.filter
 def query_sum_meals_this_month(obj):
-    return obj.aggregate(sum=Sum(F('command_command')))['sum']
+    meals = obj.aggregate(sum=Sum(F('command_command')))['sum']
+    return meals if meals else 0
 
 @register.filter
 def query_sum_price_this_month(obj):
-    return obj.aggregate(sum=Round(
+    prices = obj.aggregate(sum=Round(
                                 Sum(
                                     (F('meals__default__price')) * F('command_command'),
-
                                     output_field=FloatField(),
                                     )
                                 ,2)
                        )['sum']
+    return prices if prices else 0
 
+@register.filter
+def no_difference(obj):
+    price = query_sum_price_this_month(obj)
+    meals = query_sum_meals_this_month(obj)
+    unit_price = make_unit_price_from_command(obj)
+    return unit_price * meals == price
 
 @register.filter
 def query_sum_morning(obj, f):

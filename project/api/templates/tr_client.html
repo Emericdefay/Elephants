@@ -49,14 +49,10 @@
       {{commands|query_sum_meals_this_month}}
     </td>
     <td style="vertical-align: middle; font-weight: bold;" id="money_this_month__{{client.id}}">
-      {% if commands|query_sum_price_this_month %}
         {{commands|query_sum_price_this_month}}
-      {% else %}
-        0
-      {% endif %}
     </td>
     <td class="w-0" style="vertical-align: middle;">
-      <button type="button" class="btn btn-warning align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="btn {% if commands|no_difference %}btn-success{% else %}btn-warning{% endif %} align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
         Excel à l'unitée
       </button>
       <form class="dropdown-menu text-center p-2" style="text-align-last: center; width: min-content;" action="{% url "manager:unit_facture" %}" method="post" id="unit_facture">
@@ -77,7 +73,7 @@
           <label for="date">Date sur les factures:</label>
           <input type="date" id="date_unit__{{client.id}}" name="date_unit"
                  value="{{actual_year}}-{{actual_month|padded}}-01">
-          <button class="btn btn-secondary mt-2" type="submit" href="{% url 'manager:unit_facture' %}">Exporter</button>
+          <button data-client={{client.id}} class="btn btn-secondary mt-2 export-unit-btn" type="submit" href="{% url 'manager:unit_facture' %}">Exporter</button>
       </form>
     </td>
 </tr>

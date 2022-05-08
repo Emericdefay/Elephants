@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.views import View
 from django.db.models import Q, Sum, Prefetch, F, Avg, Case, When, Value, FloatField, IntegerField
 from django.db.models.functions import Round
@@ -314,162 +314,159 @@ class CreateUnitExcel(View):
             date = '-'.join([dates[-1], dates[1], dates[0]])
         else:
             date = f"{datetime.now().year}-{datetime.now().month}-{datetime.now().day}"
-        clients = models.Client.objects.filter(id=client_id)
+        client = models.Client.objects.get(id=client_id)
         commands = models.Command.objects.filter(year_date_command=year, month_date_command=month)
 
-        for client in clients:
-            # Don't display clients that doesn't pay this month
-            commands = commands.filter(client=client)
-            customer_this_month = commands.aggregate(sum=Sum(
-                        (F('meals__default__price')) * F('command_command'),
-                        output_field=FloatField(),
-                        )
-                    )['sum']
-            if not customer_this_month:
-                wb.create_sheet(f"{client.id} - {client.last_name} {client.first_name}")
-                continue
-
-            # Elephant img added
-            img = drawing.image.Image(os.path.join(os.getcwd(), 'project', 'static', 'img_elephant.png'))
-            img.anchor = 'B3'
-            img.height = 148
-            img.width  = 115
-
-            # Create sheet
+        # Don't display clients that doesn't pay this month
+        commands = commands.filter(client=client)
+        customer_this_month = commands.aggregate(sum=Sum(
+                    (F('meals__default__price')) * F('command_command'),
+                    output_field=FloatField(),
+                    )
+                )['sum']
+        if not customer_this_month:
             wb.create_sheet(f"{client.id} - {client.last_name} {client.first_name}")
-            active_sheet = wb[f"{client.id} - {client.last_name} {client.first_name}"]
-            active_sheet = self.init_sheet(active_sheet, month)
+            data = {'error': "Ce client n'a pas commandé ce mois-ci."}
+            return HttpResponse(content=data, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
-            # Insert image
-            active_sheet.add_image(img)
+        # Elephant img added
+        img = drawing.image.Image(os.path.join(os.getcwd(), 'project', 'static', 'img_elephant.png'))
+        img.anchor = 'B3'
+        img.height = 148
+        img.width  = 115
 
-            # Insert date
-            active_sheet['F12'] = date
-            active_sheet['F12'].font = self.font_h2()
+        # Create sheet
+        wb.create_sheet(f"{client.id} - {client.last_name} {client.first_name}")
+        active_sheet = wb[f"{client.id} - {client.last_name} {client.first_name}"]
+        active_sheet = self.init_sheet(active_sheet, month)
 
-            # set clients address
-            active_sheet['F6'] = f"{client.last_name} {client.first_name}"
-            active_sheet['F6'].font = self.font_h1()
-            active_sheet['F7'] = f"{client.address}"
-            active_sheet['F7'].alignment = Alignment(wrap_text=True, shrink_to_fit=False)
-            active_sheet['F8'] = f"{client.postcode}"
+        # Insert image
+        active_sheet.add_image(img)
 
-            active_sheet['C16'] = "Plat"
-            active_sheet['D16'] = "Prix /u TTC"
-            active_sheet['E16'] = "Quantité"
-            active_sheet['F16'] = "Prix total TTC"
-            active_sheet['C16'].font = self.font_p2()
-            active_sheet['C16'].alignment = Alignment(horizontal="center")
-            active_sheet['D16'].font = self.font_p2()
-            active_sheet['D16'].alignment = Alignment(horizontal="center")
-            active_sheet['E16'].font = self.font_p2()
-            active_sheet['E16'].alignment = Alignment(horizontal="center")
-            active_sheet['F16'].font = self.font_p2()
-            active_sheet['F16'].alignment = Alignment(horizontal="center")
+        # Insert date
+        active_sheet['F12'] = date
+        active_sheet['F12'].font = self.font_h2()
 
-            offsetY = 0
-            # details
-            for food in models.Food.objects.all():
-                price = float(str(food.price).replace(',', '.'))
-                command_command =commands\
-                                    .filter(meals__id=food.id)\
-                                    .aggregate(sum=Round(
-                                                       Sum(
-                                                           F('command_command'),
-                                                               output_field=IntegerField(),
-                                                       ),
-                                                   2
-                                                )
-                                    )['sum']
-                if not command_command:
-                    continue
-                active_sheet[f'C{17+offsetY}'] = food.category
-                active_sheet[f'D{17+offsetY}'] = price
-                active_sheet[f'D{17+offsetY}'].number_format = '#,##0.00€' 
-                active_sheet[f'D{17+offsetY}'].alignment = Alignment(horizontal="center")
-                active_sheet[f'E{17+offsetY}'] = command_command               
-                active_sheet[f'E{17+offsetY}'].alignment = Alignment(horizontal="center")              
-                active_sheet[f'F{17+offsetY}'] = f"=D{17+offsetY}*E{17+offsetY}"
-                active_sheet[f'F{17+offsetY}'].number_format = '#,##0.00€' 
-                active_sheet[f'F{17+offsetY}'].alignment = Alignment(horizontal="center")
-                offsetY += 1
-            #Totals
-            active_sheet[f'D{17 + offsetY + 1}'] = "Total"
-            active_sheet[f'E{17 + offsetY + 1}'] = f"=SUM(E{17}:E{17+offsetY})"
-            active_sheet[f'F{17 + offsetY + 1}'] = f"=SUM(F{17}:F{17+offsetY})"
-            active_sheet[f'D{17 + offsetY + 1}'].font = self.font_h1()
-            active_sheet[f'D{17 + offsetY + 1}'].alignment = Alignment(horizontal="center")
-            active_sheet[f'E{17 + offsetY + 1}'].font = self.font_h1()
-            active_sheet[f'E{17 + offsetY + 1}'].alignment = Alignment(horizontal="center")
-            active_sheet[f'F{17 + offsetY + 1}'].font = self.font_h1()
-            active_sheet[f'F{17 + offsetY + 1}'].number_format = '#,##0.00€' 
-            active_sheet[f'F{17 + offsetY + 1}'].alignment = Alignment(horizontal="center")
+        # set clients address
+        active_sheet['F6'] = f"{client.last_name} {client.first_name}"
+        active_sheet['F6'].font = self.font_h1()
+        active_sheet['F7'] = f"{client.address}"
+        active_sheet['F7'].alignment = Alignment(wrap_text=True, shrink_to_fit=False)
+        active_sheet['F8'] = f"{client.postcode}"
 
-            
-            company = models.Company.objects.get(id=1)
+        active_sheet['C16'] = "Plats"
+        active_sheet['D16'] = "Prix /u TTC"
+        active_sheet['E16'] = "Quantité"
+        active_sheet['F16'] = "Prix total TTC"
+        active_sheet['C16'].font = self.font_p2()
+        active_sheet['C16'].alignment = Alignment(horizontal="center")
+        active_sheet['D16'].font = self.font_p2()
+        active_sheet['D16'].alignment = Alignment(horizontal="center")
+        active_sheet['E16'].font = self.font_p2()
+        active_sheet['E16'].alignment = Alignment(horizontal="center")
+        active_sheet['F16'].font = self.font_p2()
+        active_sheet['F16'].alignment = Alignment(horizontal="center")
 
-            # cellphone
-            active_sheet[f'E{24 + offsetY + 2}'] = company.cellphone_comp
-            active_sheet[f'E{24 + offsetY + 2}'].font = self.font_h1()
-            active_sheet[f'E{24 + offsetY + 2}'].alignment = Alignment(horizontal="center")
+        offsetY = 0
+        # details
+        for food in models.Food.objects.all():
+            price = float(str(food.price).replace(',', '.'))
+            command_command =commands\
+                                .filter(meals__id=food.id)\
+                                .aggregate(sum=Round(
+                                                   Sum(
+                                                       F('command_command'),
+                                                           output_field=IntegerField(),
+                                                   ),
+                                               2
+                                            )
+                                )['sum']
+            if not command_command:
+                continue
+            active_sheet[f'C{17+offsetY}'] = food.category
+            active_sheet[f'D{17+offsetY}'] = price
+            active_sheet[f'D{17+offsetY}'].number_format = '#,##0.00€' 
+            active_sheet[f'D{17+offsetY}'].alignment = Alignment(horizontal="center")
+            active_sheet[f'E{17+offsetY}'] = command_command               
+            active_sheet[f'E{17+offsetY}'].alignment = Alignment(horizontal="center")              
+            active_sheet[f'F{17+offsetY}'] = f"=D{17+offsetY}*E{17+offsetY}"
+            active_sheet[f'F{17+offsetY}'].number_format = '#,##0.00€' 
+            active_sheet[f'F{17+offsetY}'].alignment = Alignment(horizontal="center")
+            offsetY += 1
+        #Total
+        active_sheet[f'E{17 + offsetY + 1}'] = "Total"
+        active_sheet[f'E{17 + offsetY + 1}'].font = self.font_h1()
+        active_sheet[f'E{17 + offsetY + 1}'].alignment = Alignment(horizontal="center")
+        active_sheet[f'F{17 + offsetY + 1}'] = f"=SUM(F{17}:F{17+offsetY})"
+        active_sheet[f'F{17 + offsetY + 1}'].font = self.font_h1()
+        active_sheet[f'F{17 + offsetY + 1}'].number_format = '#,##0.00€' 
+        active_sheet[f'F{17 + offsetY + 1}'].alignment = Alignment(horizontal="center")
 
-            # footer
-            active_sheet[f'E{26 + offsetY + 2}'] = company.company_comp
-            active_sheet[f'E{26 + offsetY + 2}'].font = self.font_foot()
-            active_sheet[f'E{26 + offsetY + 2}'].alignment = Alignment(horizontal="center")
-            active_sheet[f'E{27 + offsetY + 2}'] = company.address_comp
-            active_sheet[f'E{27 + offsetY + 2}'].font = self.font_foot()
-            active_sheet[f'E{27 + offsetY + 2}'].alignment = Alignment(horizontal="center")
-            active_sheet[f'E{28 + offsetY + 2}'] = company.siret_comp
-            active_sheet[f'E{28 + offsetY + 2}'].font = self.font_foot()
-            active_sheet[f'E{28 + offsetY + 2}'].alignment = Alignment(horizontal="center")
+        
+        company = models.Company.objects.get(id=1)
 
-            # p2
-            text = company.comment_comp
-            number_of_lines = len(text) // 80 + 1
-            initial_row = 20 + offsetY
+        # cellphone
+        active_sheet[f'E{24 + offsetY + 2}'] = company.cellphone_comp
+        active_sheet[f'E{24 + offsetY + 2}'].font = self.font_h1()
+        active_sheet[f'E{24 + offsetY + 2}'].alignment = Alignment(horizontal="center")
+
+        # footer
+        active_sheet[f'E{26 + offsetY + 2}'] = company.company_comp
+        active_sheet[f'E{26 + offsetY + 2}'].font = self.font_foot()
+        active_sheet[f'E{26 + offsetY + 2}'].alignment = Alignment(horizontal="center")
+        active_sheet[f'E{27 + offsetY + 2}'] = company.address_comp
+        active_sheet[f'E{27 + offsetY + 2}'].font = self.font_foot()
+        active_sheet[f'E{27 + offsetY + 2}'].alignment = Alignment(horizontal="center")
+        active_sheet[f'E{28 + offsetY + 2}'] = company.siret_comp
+        active_sheet[f'E{28 + offsetY + 2}'].font = self.font_foot()
+        active_sheet[f'E{28 + offsetY + 2}'].alignment = Alignment(horizontal="center")
+
+        # p2
+        text = company.comment_comp
+        number_of_lines = len(text) // 80 + 1
+        initial_row = 20 + offsetY
+        put_to_other_line = ''
+        for row_offset in range(number_of_lines):
+            text_line = put_to_other_line + text[row_offset * 80:(row_offset + 1) * 80]
             put_to_other_line = ''
-            for row_offset in range(number_of_lines):
-                text_line = put_to_other_line + text[row_offset * 80:(row_offset + 1) * 80]
-                put_to_other_line = ''
-                if text_line[-1] != ' ' and row_offset != number_of_lines - 1:
-                    put_to_other_line = text_line.split(' ')[-1]
-                    text_line = ' '.join(text_line.split(' ')[:-1])
+            if text_line[-1] != ' ' and row_offset != number_of_lines - 1:
+                put_to_other_line = text_line.split(' ')[-1]
+                text_line = ' '.join(text_line.split(' ')[:-1])
 
-                active_sheet[f'E{initial_row + row_offset}'] = text_line
-                active_sheet[f'E{initial_row + row_offset}'].font = self.font_p2()
-                active_sheet[f'E{initial_row + row_offset}'].alignment = Alignment(horizontal="center")
-            # dimensions
-            dims = {
-                'A': 5,
-                'B': 5,
-                'C': 12,
-                'D': 10,
-                'E': 9,
-                'F': 35,
-                'G': 35,
-                'H': 35,
-            }
-            for col, value in dims.items():
-                active_sheet.column_dimensions[col].width = value
-            # Border on prices
-            # thin = Side(border_style="double")
-            # for number in range(21, 25):
-            #     active_sheet[f'C{number}'].border = Border(left=thin)
-            #     active_sheet[f'G{number}'].border = Border(right=thin)
-            # for letter in ['D', 'E', 'F']:
-            #     active_sheet[f'{letter}20'].border = Border(top=thin)
-            #     active_sheet[f'{letter}25'].border = Border(bottom=thin)
-            # active_sheet[f'C20'].border = Border(top=thin, left=thin)
-            # active_sheet[f'G20'].border = Border(top=thin, right=thin)
-            # active_sheet[f'C25'].border = Border(bottom=thin, left=thin)
-            # active_sheet[f'G25'].border = Border(bottom=thin, right=thin)
+            active_sheet[f'E{initial_row + row_offset}'] = text_line
+            active_sheet[f'E{initial_row + row_offset}'].font = self.font_p2()
+            active_sheet[f'E{initial_row + row_offset}'].alignment = Alignment(horizontal="center")
+        # dimensions
+        dims = {
+            'A': 5,
+            'B': 5,
+            'C': 12,
+            'D': 10,
+            'E': 9,
+            'F': 35,
+            'G': 35,
+            'H': 35,
+        }
+        for col, value in dims.items():
+            active_sheet.column_dimensions[col].width = value
+        # Border on prices
+        # thin = Side(border_style="double")
+        # for number in range(21, 25):
+        #     active_sheet[f'C{number}'].border = Border(left=thin)
+        #     active_sheet[f'G{number}'].border = Border(right=thin)
+        # for letter in ['D', 'E', 'F']:
+        #     active_sheet[f'{letter}20'].border = Border(top=thin)
+        #     active_sheet[f'{letter}25'].border = Border(bottom=thin)
+        # active_sheet[f'C20'].border = Border(top=thin, left=thin)
+        # active_sheet[f'G20'].border = Border(top=thin, right=thin)
+        # active_sheet[f'C25'].border = Border(bottom=thin, left=thin)
+        # active_sheet[f'G25'].border = Border(bottom=thin, right=thin)
         # Delete std Sheet
         std = wb.get_sheet_by_name('Sheet')
         wb.remove_sheet(std)
 
         # Export
         response = HttpResponse(content=save_virtual_workbook(wb), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = f'attachment; filename="Factures_{month}_{year}.xlsx"'
+        response['Content-Disposition'] = f'attachment; filename="Detail_{year}_{month}_{client.last_name}_{client.first_name}.xlsx"'
 
         return response

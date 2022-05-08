@@ -318,7 +318,6 @@ const clientFood = () => {
 
 const clientCircuit = () => {
   const url = "http://127.0.0.1:8000/api/clientcircuit"
-  console.log('clientCircuit started...')
   $('.circuit-selected').change(function () {
     const circuit = $(this)[0].selectedOptions[0].attributes[1].nodeValue;
     const client = $(this)[0].selectedOptions[0].attributes[0].nodeValue;
@@ -342,6 +341,56 @@ const clientCircuit = () => {
   });
 };
 
+const exportBill = () => {
+  const url = "http://127.0.0.1:8000/unit_facture"
+  $('.export-unit-btn').on('click', function () {
+    const client = $(this).data('client');
+    const month = $(`#month_unit__${client}`).val();
+    const year = $(`#year_unit__${client}`).val();
+    const data = {
+      'month_unit': month,
+      'year_unit': year,
+      'client_unit_bill': client,
+    }
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: data,
+      dataType: 'json',
+      beforeSend: () => {
+      },
+      success: data => {
+
+      },
+      error: (e) => {
+        toastr.options = {
+          "closeButton": false,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": false,
+          "positionClass": "toast-bottom-right",
+          "preventDuplicates": false,
+          "onclick": null,
+          "showDuration": "300",
+          "hideDuration": "1000",
+          "timeOut": "5000",
+          "extendedTimeOut": "1000",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        }
+        if (e.responseText == 'error') {
+          toastr.warning("Il n'y a pas de commandes pour ce client à cette période. 😅 Un fichier vierge a été créé.", "Zut");
+        } else {
+          toastr.success("Le détail pour ce client est téléchargé! 😊", "Et voilà!");
+        }
+      },
+    });
+  });
+};
+
 // Initialize
 lastName();
 firstName();
@@ -352,3 +401,4 @@ cellphone();
 cellphone2();
 clientFood();
 clientCircuit();
+exportBill();

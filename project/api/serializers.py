@@ -216,18 +216,18 @@ class GetAllClientsSerializer(serializers.ModelSerializer):
 
     def get_html(self, obj):
         circuits = Circuit.objects.all().order_by('name')
-        gradients = [f'#{(hex(int(256*256*256 - (250*250*250)//(k+1) )))[2:]}' for k in range(len(list(circuits)))]
-        gradients_colors = dict((circuit.id, gradients[index]) for index, circuit in enumerate(circuits))
         month=self.context['request']._request.GET.get('month', datetime.now().month)
         year=self.context['request']._request.GET.get('year', datetime.now().year)
-
+        if year == '0':
+            year = datetime.now().year
+        if month == '0':
+            month = datetime.now().month
         data = render_to_string(template_name='tr_client.html',
                                 context={
                                     'circuits': circuits.order_by('order_c'),
-                                    'actual_month': month,
-                                    'actual_year': year,
+                                    'actual_month': str(month),
+                                    'actual_year': str(year),
                                     'client': obj,
-                                    'gradients': gradients_colors,
                                     'commands': Command.objects.filter(month_date_command=month, year_date_command=year, client=obj),
                                     'all_foods': DefaultCommand.objects.all().order_by('order_food'),
                                 })
