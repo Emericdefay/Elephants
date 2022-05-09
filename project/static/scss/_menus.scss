@@ -1,0 +1,17 @@
+.tab-pane {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-bar {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    width: -webkit-fill-available;
+    background-color: antiquewhite;
+}
+
+#menu {
+    background-color: bisque;
+}

@@ -1,12 +1,12 @@
 
-$(() => {
+export const commandFood = () => {
     const url = "http://127.0.0.1:8000/api/commandfood"
     $('.checkbox-food').on('click', function () {
         const command = $(this).data('command');
         $(`input[data-command="${command}"][type="checkbox"]`).each( function () {
             const food = $(this).data('food');
             const checked = this.checked ? '1' : '0';
-            urlFood = `${url}/${command}/${food}/${checked}/`;
+            const urlFood = `${url}/${command}/${food}/${checked}/`;
             $.ajax({
                 url: urlFood,
                 type: 'GET',
@@ -22,14 +22,14 @@ $(() => {
             });
         })
     });
-});
+};
 
-$(() => {
+export const getClientFood = () => {
     const url = "http://127.0.0.1:8000/api/getclientfood"
     $('.dropdown-get-food').on('click', function () {
         // const client = $(this).data('client');
         const command = $(this).data('command');
-        urlFood = `${url}/?id=${command}`;
+        const urlFood = `${url}/?id=${command}`;
         $.ajax({
             url: urlFood,
             type: 'GET',
@@ -45,16 +45,16 @@ $(() => {
             },
         });
     });
-});
+};
 
-$(() => {
+export const commentUpdate = () => {
     const url = "http://127.0.0.1:8000/api/commentupdate"
     $('.save-comment').on('click', function () {
         // const client = $(this).data('client');
         const command = $(this).data('command');
         const client = $(this).data('client');
         const value = $(`textarea[data-command="${command}"]`).val()
-        urlFood = `${url}/${command}/${value}/`;
+        const urlFood = `${url}/${command}/${value}/`;
         $.ajax({
             url: urlFood,
             type: 'GET',
@@ -71,9 +71,9 @@ $(() => {
             },
         });
     });
-});
+};
 
-$(() => {
+export const command = () => {
   $('.command-btn').on('click', function () {
         let url = "http://127.0.0.1:8000/api/command"
         const command = $(this).data('command');
@@ -81,7 +81,7 @@ $(() => {
         const month = $(this).data('month');
         const year = $(this).data('year');
         const value = $(`input[data-id="command_command__${command}"]`).val();
-        urlFood = `${url}/${command}/${value}/`;
+        let urlFood = `${url}/${command}/${value}/`;
         $.ajax({
             url: urlFood,
             type: 'GET',
@@ -132,10 +132,12 @@ $(() => {
             },
         });
     });
-});
+};
 
 // Initialize
-// commandFood();
-// getClientFood();
-// commentUpdate();
-// command();
+export default {
+  commandFood,
+  getClientFood,
+  commentUpdate,
+  command,
+}

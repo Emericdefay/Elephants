@@ -1,0 +1,25 @@
+.comment {
+    position: relative;
+
+    &:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0; 
+        height: 0; 
+        display: block;
+        border-right: 20px solid transparent;
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid #f00;
+    }
+}
+
+.background-food-day {
+    &-different {
+        background-color: bisque;
+    }
+    &-same {
+        background-color: rgb(149, 211, 137);
+    }
+}

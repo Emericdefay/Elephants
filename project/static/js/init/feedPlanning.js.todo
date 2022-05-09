@@ -3,7 +3,7 @@ function reloadJs(src) {
     $('<script/>').attr('src', src).appendTo('head');
 }
 
-$(() => {
+export const getAllPlanning =() => {
     const url = "http://127.0.0.1:8000/api/getallclients/"
     $.ajax({
         url: url,
@@ -22,4 +22,9 @@ $(() => {
           console.log(e)
         },
     });
-});
+};
+
+
+export default {
+    getAllClients,
+};

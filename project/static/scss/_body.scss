@@ -1,0 +1,26 @@
+/* Body */
+body { 
+    display:flex; 
+    flex-direction:column; 
+    height:100vh; margin:0; 
+    background-color: antiquewhite;
+}
+
+/* Modals */
+#food-modal-body {
+    background-color: bisque;
+}
+
+#add-modal-body {
+    background-color: bisque;
+}
+
+#circuit-modal-body {
+    background-color: bisque;
+}
+
+.modal-header {
+    background-color: darksalmon;
+    font-family: cursive;
+    font-size: x-large;
+}

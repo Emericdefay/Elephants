@@ -1,0 +1,28 @@
+/* Forms */
+#food_form label {
+    text-align:start;
+}
+
+#client_form label {
+    text-align:start;
+}
+
+#circuit_form label {
+    text-align:start;
+}
+
+.inline-group {
+    max-width: 9rem;
+    padding: .5rem;
+
+    .form-control {
+        text-align: right;
+
+        &[type="number"]::-webkit-inner-spin-button,
+        &[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    }
+
+}

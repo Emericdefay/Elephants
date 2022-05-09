@@ -3,7 +3,7 @@ function reloadJs(src) {
     $('<script/>').attr('src', src).appendTo('head');
 }
 
-$(() => {
+export const getAllClients = () => {
     const d = new Date()
     const date = window.location.href.split('?tab=#')[0].split('8000/')[1];
 
@@ -29,10 +29,15 @@ $(() => {
             data.results.forEach(function (row) {
                 $('#tbody-client').append(row.html);
             })
-            setTimeout(() => {reloadJs('http://127.0.0.1:8000/static/js/clientfood.js');}, 500);
+            setTimeout(() => {reloadJs('http://127.0.0.1:8000/static/js/handlers/clientFood.js');}, 500);
         },
         error: (e) => {
           console.log(e)
         },
     });
-});
+};
+
+
+export default {
+    getAllClients,
+}
