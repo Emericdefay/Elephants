@@ -1,3 +1,31 @@
-.text-bold {
-    font-weight: bold;
+.text {
+    &-bold {
+        font-weight: bold;
+    }
+    &-little {
+        font-size: small;font-style: italic;
+    }
+}
+
+
+
+.bill {
+
+    margin-inline: 10%;
+    background-color: burlywood;
+    padding-inline: 5%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    border-radius: 25px;
+
+    &-label{
+        font-weight: 600;
+        padding-left: 10px;    
+    }
+
+    input, textarea
+    {
+        inline-size: -webkit-fill-available;
+    }
+
 }

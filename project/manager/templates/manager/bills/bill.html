@@ -1,62 +1,46 @@
 
-<style>
-    .bill_label {
-        font-weight: 600;
-        padding-left: 10px;
-    }
-</style>
-
-<div
-style="
-       margin-inline: 10%;
-       background-color: burlywood;
-       padding-inline: 5%;
-       padding-top: 3%;
-       padding-bottom: 3%;
-       border-radius: 25px;
-">
+<div class="bill">
     <h2 class="text-center mb-5">Champs figurants sur les Factures 🧾</h2>
-    <label class="bill_label" for="company_comp">Nom de l'entreprise</label>
+    <label class="bill-label" for="company_comp">Nom de l'entreprise</label>
     <input 
-    type="text" 
-    style="inline-size: -webkit-fill-available;" 
-    name="company_comp" 
-    id="company_comp" 
-    value="{{company.company_comp}}"/>
+        type="text" 
+        name="company_comp" 
+        id="company_comp" 
+        value="{{company.company_comp}}"/>
     
-    <label class="bill_label" for="address_comp">Adresse</label>
+    <label class="bill-label" for="address_comp">Adresse</label>
     <input 
-    type="text" 
-    style="inline-size: -webkit-fill-available;" 
-    name="address_comp" 
-    id="address_comp" 
-    value="{{company.address_comp}}"/>
+        type="text" 
+        name="address_comp" 
+        id="address_comp" 
+        value="{{company.address_comp}}"/>
     
-    <label class="bill_label" for="cellphone_comp">Telephone</label>
+    <label class="bill-label" for="cellphone_comp">Telephone</label>
     <input 
-    type="text" 
-    style="inline-size: -webkit-fill-available;" 
-    name="cellphone_comp" 
-    id="cellphone_comp" 
-    value="{{company.cellphone_comp}}"/>
+        type="text" 
+        name="cellphone_comp" 
+        id="cellphone_comp" 
+        value="{{company.cellphone_comp}}"/>
     
-    <label class="bill_label" for="siret_comp">SIRET de l'entreprise</label>
+    <label class="bill-label" for="siret_comp">SIRET de l'entreprise</label>
     <input 
-    type="text" 
-    style="inline-size: -webkit-fill-available;" 
-    name="siret_comp" 
-    id="siret_comp" 
-    value="{{company.siret_comp}}"/>
+        type="text"  
+        name="siret_comp" 
+        id="siret_comp" 
+        value="{{company.siret_comp}}"/>
     
-    <label class="bill_label" for="comment_comp">Commentaire de la facture<span class="text-danger">*</span> <span style="font-size: small;font-style: italic;">Limité à 240 caractères pour ne pas surcharger la facture.</span></label>
-
+    <label class="bill-label" for="comment_comp">
+        Commentaire de la facture
+        <span class="text-danger">*</span>
+        <span class="text-little">
+            Limité à 240 caractères pour ne pas surcharger la facture.
+        </span>
+    </label>
     <textarea 
-    maxlength="240"
-    onkeypress="if (this.value.length > 240) { return false; }"
-    style="inline-size: -webkit-fill-available;" 
-    name="comment_comp" 
-    rows="2"
-    id="comment_comp">{{company.comment_comp}}</textarea>
+        maxlength="240"
+        onkeypress="if (this.value.length > 240) { return false; }"
+        name="comment_comp" 
+        rows="2"
+        id="comment_comp"
+    >{{company.comment_comp}}</textarea>
 </div>
-
-
