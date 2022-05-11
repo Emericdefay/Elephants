@@ -1,26 +1,23 @@
-{% load static humanize index %}
-{% with width_cells=130 %}
-   <tr 
-    class="day_cells " 
+{% load index %}
+<tr 
+    class="day_cells circuit-total" 
     id="circuit_total_{{commands.day_date_command}}_{{commands.circuit.id}}"
-    style="border-top: 2px solid black;"
-    >
-        <td colspan=3 style="text-align: end; padding-right: 1em; background-color: lightgrey;">
-        {% if commands %}
-            <strong>Total</strong>
-        {% endif %}
-        </td>
-        {% regroup actual_commands by client.circuit as client_list %}
-        {% for circuit, command_list in client_list %}
+>
+    <td colspan=3 class="circuit-total-head">
+    {% if commands %}
+        <strong>Total</strong>
+    {% endif %}
+    </td>
+    {% regroup actual_commands by client.circuit as client_list %}
+    {% for circuit, command_list in client_list %}
         {% with command_list|get:forloop.counter0 as command_client %}
-            {% for food in foods %}
-            <td style="vertical-align: middle; font-weight: bold; background-color: lightgrey;">
+        {% for food in foods %}
+            <td class="circuit-total-body">
                 {% if commands %}
                         {{command_client|make_query|query_filter_search:search|query_filter_client__circuit:commands.client.circuit|query_sum_morning:food}}
                 {% endif %}
             </td>
-            {% endfor %}
-            {% endwith %}
         {% endfor %}
-    </tr>
-{% endwith %}
+        {% endwith %}
+    {% endfor %}
+</tr>

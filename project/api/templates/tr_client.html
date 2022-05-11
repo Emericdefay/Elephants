@@ -1,27 +1,90 @@
 {% load humanize index %}
 
-<tr id="tr_client_{{client.id}}" style="margin-bottom:1rem;  background-color:{{client.circuit.circuit_color}}">
-    <td style="vertical-align: middle;">
-      <input type="text" data-client="{{client.id}}" data-attrib="last_name" class="input_last_name" style="inline-size: -webkit-fill-available;" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></br>
-      <input type="text" data-client="{{client.id}}" data-attrib="first_name" class="input_first_name" style="inline-size: -webkit-fill-available;" name="first_name__{{client.id}}" id="first_name__{{client.id}}" value="{{client.first_name}}"/>
+<tr 
+  id="tr_client_{{client.id}}" 
+  class="client-forms" 
+  style="background-color:{{client.circuit.circuit_color}}"
+  >
+    <td>
+      <input 
+        type="text" 
+        data-client="{{client.id}}" 
+        data-attrib="last_name" 
+        class="input_last_name" 
+        name="last_name__{{client.id}}" 
+        id="last_name__{{client.id}}" 
+        value="{{client.last_name}}"
+      />
+    </br>
+      <input 
+        type="text" 
+        data-client="{{client.id}}" 
+        data-attrib="first_name" 
+        class="input_first_name" 
+        name="first_name__{{client.id}}" 
+        id="first_name__{{client.id}}" 
+        value="{{client.first_name}}"
+      />
     </td>
-    <td style="vertical-align: middle;">
-      <input type="text" data-client="{{client.id}}" data-attrib="address" class="input_address" style="inline-size: -webkit-fill-available;" name="address__{{client.id}}" id="address__{{client.id}}" value="{{client.address}}"/><br>
-      <input type="text" data-client="{{client.id}}" data-attrib="postcode" class="input_postcode" style="inline-size: -webkit-fill-available;" name="postcode__{{client.id}}" id="postcode__{{client.id}}" value="{{client.postcode}}"/><br>
-      <input type="text" data-client="{{client.id}}" data-attrib="address_details" class="input_address_details" style="inline-size: -webkit-fill-available;" name="address_details__{{client.id}}" id="address_details__{{client.id}}" value="{{client.address_details}}"/>
+    <td>
+      <input 
+        type="text" 
+        data-client="{{client.id}}" 
+        data-attrib="address" 
+        class="input_address"
+        name="address__{{client.id}}" 
+        id="address__{{client.id}}" 
+        value="{{client.address}}"
+      />
+      <br>
+      <input 
+        type="text" 
+        data-client="{{client.id}}" 
+        data-attrib="postcode" 
+        class="input_postcode" 
+        name="postcode__{{client.id}}" 
+        id="postcode__{{client.id}}" 
+        value="{{client.postcode}}"
+      />
+      <br>
+      <input 
+        type="text" 
+        data-client="{{client.id}}" 
+        data-attrib="address_details" 
+        class="input_address_details" 
+        name="address_details__{{client.id}}" 
+        id="address_details__{{client.id}}" 
+        value="{% if client.address_details %}{{client.address_details}}{% endif %}"
+      />
     </td>
-    <td style="vertical-align: middle;">
-      <input type="text" data-client="{{client.id}}" data-attrib="cellphone" class="input_cellphone" style="inline-size: -webkit-fill-available;" name="cellphone__{{client.id}}" id="cellphone__{{client.id}}" value="{{client.cellphone}}"/><br>
-      <input type="text" data-client="{{client.id}}" data-attrib="cellphone2" class="input_cellphone2" style="inline-size: -webkit-fill-available;" name="cellphone2__{{client.id}}" id="cellphone2__{{client.id}}" value="{{client.cellphone2}}"/>
+    <td>
+      <input 
+        type="text" 
+        data-client="{{client.id}}" 
+        data-attrib="cellphone" 
+        class="input_cellphone" 
+        name="cellphone__{{client.id}}" 
+        id="cellphone__{{client.id}}" 
+        value="{% if client.cellphone %}{{client.cellphone}}{% endif %}"
+      />
+      <br>
+      <input 
+        type="text" 
+        data-client="{{client.id}}" 
+        data-attrib="cellphone2" 
+        class="input_cellphone2" 
+        name="cellphone2__{{client.id}}" 
+        id="cellphone2__{{client.id}}" 
+        value="{% if client.cellphone2 %}{{client.cellphone2}}{% endif %}"
+      />
     </td>
     {% for default in all_foods %}
-        <td style="-webkit-writing-mode: vertical-lr;">
+        <td>
             <input
-                class="checkbox-default-food"
+                class="checkbox-default-food default_box"
                 type="checkbox"
                 data-client="{{client.id}}"
                 data-food="{{default.id}}"
-                style="transform: scale(2); vertical-align: sub;"
                 id="_meals__{{default.id}}__{{client.id}}"
                 name="_meals__{{default.id}}__{{client.id}}"
             {% for box_client in client.client_command.all %}
@@ -29,34 +92,34 @@
                     checked
                 {% endif %}
             {% endfor %}
-                class="default_box">
+            >
         </td>
     {% endfor %}
-    <td style="vertical-align: middle;">
+    <td>
         <select class="circuit-selected" name="circuit_id__{{client.id}}" id="circuit_id__{{client.id}}">
             {% for circuit in circuits %}
                 <option data-client="{{client.id}}" data-circuit="{{circuit.id}}" value="{{ circuit.id }}" {% if circuit.id == client.circuit.id %}selected="selected"{% endif %}> {{ circuit.name }} </option>
             {% endfor %}
         </select>
     </td>
-    <td style="vertical-align: middle; font-weight: bold;" id="price_unit__{{client.id}}">
+    <td class="text-bold" id="price_unit__{{client.id}}">
       {% if client.client_command.all|make_unit_price %}
         {{client.client_command.all|make_unit_price}}
       {% else %}
         0
       {% endif %}
     </td>
-    <td style="vertical-align: middle; font-weight: bold;" id="meal_this_month__{{client.id}}">
+    <td class="text-bold" id="meal_this_month__{{client.id}}">
       {{commands|query_sum_meals_this_month}}
     </td>
-    <td style="vertical-align: middle; font-weight: bold;" id="money_this_month__{{client.id}}">
+    <td class="text-bold" id="money_this_month__{{client.id}}">
         {{commands|query_sum_price_this_month}}
     </td>
-    <td class="w-0" style="vertical-align: middle;">
+    <td class="w-0">
       <button type="button" class="btn {% if commands|no_difference %}btn-success{% else %}btn-warning{% endif %} align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
         Excel à l'unitée
       </button>
-      <form class="dropdown-menu text-center p-2" style="text-align-last: center; width: min-content;" action="{% url "manager:unit_facture" %}" method="post" id="unit_facture">
+      <form class="dropdown-menu text-center p-2" action="{% url "manager:unit_facture" %}" method="post" id="unit_facture">
           <div class="d-none">
               <input type="number" name="client_unit_bill" id="client_unit_bill__{{client.id}}" value="{{client.id}}">
           </div>
@@ -65,11 +128,11 @@
           </div>
           <div class="mb-1">
               <label for="month_export" class="form-label">Mois de facturation</label>
-              <input style="width: -webkit-fill-available;" type="number" min="1" max="12" step="1" name="month_unit" id="month_unit__{{client.id}}" value="{{actual_month}}">
+              <input type="number" min="1" max="12" step="1" name="month_unit" id="month_unit__{{client.id}}" value="{{actual_month}}">
           </div>
           <div class="mb-1">
               <label for="year_export" class="form-label">Année de facturation</label>
-              <input style="width: -webkit-fill-available;" type="number" min="2020" step="1" name="year_unit" id="year_unit__{{client.id}}" value="{{actual_year}}">
+              <input type="number" min="2020" step="1" name="year_unit" id="year_unit__{{client.id}}" value="{{actual_year}}">
           </div>
           <label for="date">Date sur les factures:</label>
           <input type="date" id="date_unit__{{client.id}}" name="date_unit"

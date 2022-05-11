@@ -16117,6 +16117,114 @@ footer .recaptcha-branding {
   margin: 0;
 }
 
+tr.client-forms {
+  margin-bottom: 1rem;
+}
+tr.client-forms td {
+  vertical-align: middle;
+}
+tr.client-forms td form {
+  text-align-last: center;
+  width: min-content;
+}
+tr.client-forms td form div input {
+  width: -webkit-fill-available;
+}
+tr.client-forms input:not(.checkbox-default-food) {
+  inline-size: -webkit-fill-available;
+}
+tr.client-forms .checkbox-default-food {
+  transform: scale(2.3);
+  vertical-align: -webkit-baseline-middle;
+}
+
+.circuit-modal td {
+  vertical-align: middle;
+}
+.circuit-modal-address {
+  overflow-wrap: anywhere;
+  max-width: 8em;
+}
+.circuit-modal-food {
+  font-weight: bold;
+}
+
+.circuit-total {
+  border-top: 2px solid black;
+}
+.circuit-total-head {
+  text-align: end;
+  padding-right: 1em;
+  background-color: lightgrey !important;
+}
+.circuit-total-body {
+  vertical-align: middle;
+  font-weight: bold;
+  background-color: lightgrey !important;
+}
+.circuit-total-total {
+  border-top: 2px solid black;
+}
+.circuit-total-total td {
+  font-weight: bold;
+  background-color: lightgrey;
+}
+
+.top-bar ul {
+  font-size: x-large;
+}
+.top-bar-btn {
+  align-self: center;
+}
+.top-bar-btn form {
+  text-align-last: center;
+  width: min-content;
+}
+.top-bar-btn form input:not(.date) {
+  width: -webkit-fill-available;
+}
+
+.quarter-year-header-picker {
+  text-align-last: center;
+}
+.quarter-year-header-picker .btn-checked {
+  background-color: blue;
+}
+
+.date-nav {
+  bottom: 0px;
+  text-align-last: center;
+  text-align: -webkit-center;
+  display: flex;
+  place-content: center;
+}
+.date-nav .list-group {
+  max-width: 500px;
+}
+
+.wrapper {
+  top: 140px;
+}
+
+.planning-client {
+  margin-bottom: 1rem;
+  border-spacing: 0 20px;
+  border-collapse: separate;
+}
+.planning-client-names {
+  min-width: 1px;
+  max-width: 1px;
+}
+.planning-client .meals {
+  min-width: 52px;
+  max-width: 52px;
+  width: 52px;
+  vertical-align: middle;
+}
+.planning-client .meals input {
+  width: 52px;
+}
+
 header {
   min-height: 50px;
   background: lightcyan;

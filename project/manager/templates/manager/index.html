@@ -77,7 +77,7 @@
     <body class="overflow-auto" id="reference">
         <!-- Navbar -->
         <div class="top-bar">
-            <ul class="nav nav-tabs d-print-none" id="menu" role="tablist" style="font-size: x-large;">
+            <ul class="nav nav-tabs d-print-none" id="menu" role="tablist">
                 <li class="nav-brand h-100">
                     <img src="{% static 'img_elephant.png' %}"
                          alt="Small"
@@ -106,51 +106,54 @@
                 <li class="nav-item ms-auto">
                     <a class="nav-link" id="parameters-tab" data-bs-toggle="tab" href="#parameters" role="tab" aria-controls="parameters" aria-selected="false">Paramètres</a>
                 </li>
-                <li class="" style="align-self: center;">
+                <li class="top-bar-btn">
                     <button form="myform" class="btn btn-lg btn-primary align-content-center mx-3" type="submit">Enregistrer</button>
                 </li>
-                <li class="" style="align-self: center;">
-                        <button type="button" class="btn btn-lg dropdown-toggle bg-secondary align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
-                            Exporter
-                        </button>
-                        <form class="dropdown-menu text-center p-2" style="text-align-last: center; width: min-content;" action="{% url "manager:facture" %}" method="post" id="facture">
-                            {% csrf_token %}
-                            <div class="mb-1">
-                                <h4>Factures</h4>
-                            </div>
-                            <div class="mb-1">
-                                <label for="month_export" class="form-label">Mois de facturation</label>
-                                <input style="width: -webkit-fill-available;" type="number" min="1" max="12" step="1"  name="month" id="month" value="{{actual_month}}">
-                            </div>
-                            <div class="mb-1">
-                                <label for="year_export" class="form-label">Année de facturation</label>
-                                <input style="width: -webkit-fill-available;" type="number" min="2020" step="1"  name="year" id="year" value="{{actual_year}}">
-                            </div>
-                            <label for="date">Date sur les factures:</label>
-                            <input type="date" id="date" name="date"
-                                   value="{{actual_year}}-{{actual_month}}-{{actual_day}}">
-                            <button class="btn btn-secondary mt-2" type="submit" href="{% url 'manager:facture' %}">Exporter</button>
-                        </form>
+                <li class="top-bar-btn">
+                    <button type="button" class="btn btn-lg dropdown-toggle bg-secondary align-content-center mx-3" data-bs-toggle="dropdown" aria-expanded="false">
+                        Exporter
+                    </button>
+                    <form class="dropdown-menu text-center p-2" action="{% url "manager:facture" %}" method="post" id="facture">
+                        {% csrf_token %}
+                        <div class="mb-1">
+                            <h4>Factures</h4>
+                        </div>
+                        <div class="mb-1">
+                            <label for="month_export" class="form-label">Mois de facturation</label>
+                            <input type="number" min="1" max="12" step="1"  name="month" id="month" value="{{actual_month}}">
+                        </div>
+                        <div class="mb-1">
+                            <label for="year_export" class="form-label">Année de facturation</label>
+                            <input type="number" min="2020" step="1"  name="year" id="year" value="{{actual_year}}">
+                        </div>
+                        <label for="date">Date sur les factures:</label>
+                        <input type="date" id="date" name="date" class="date"
+                               value="{{actual_year}}-{{actual_month}}-{{actual_day}}">
+                        <button class="btn btn-secondary mt-2" type="submit" href="{% url 'manager:facture' %}">Exporter</button>
+                    </form>
                 </li>
-
             </ul>
 
-            <div class="quarter-year-header-picker my-1 d-print-none" style="text-align-last:center;">
+            <div class="quarter-year-header-picker my-1 d-print-none">
                 <form action="{% url "manager:week_range" %}" method="post" id="week_range_id">
                     {% csrf_token %}
                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                         {% for week_range_choice in week_range_choices %}
-                            <input type="radio"
-                                   onchange='this.form.submit();'
-                                   class="btn-check"
-                                   name="week_range_input"
-                                   value="{{forloop.counter}}"
-                                   id="week_range{{ forloop.counter0 }}"
-                                   autocomplete="off"
-                                    {% if week_range.0|striptags == forloop.counter|striptags %}
-                                       style="background-color: blue;"
-                                       checked
-                                    {% endif %}
+                            <input 
+                                type="radio"
+                                onchange='this.form.submit();'
+                                name="week_range_input"
+                                value="{{forloop.counter}}"
+                                id="week_range{{ forloop.counter0 }}"
+                                autocomplete="off"
+                                {% if week_range.0|striptags == forloop.counter|striptags %}
+                                    class="
+                                    btn-check
+                                    btn-checked"
+                                    checked
+                                {% else %}
+                                    class="btn-check"                                
+                                {% endif %}
                                 >
                             <label class="p-0 btn btn-outline-primary align-content-center mx-0 p-2" for="week_range{{ forloop.counter0 }}">
                                 {{forloop.counter}}
@@ -165,37 +168,42 @@
                 </form>
             </div>
 
-
-            <div class=" d-print-none pb-2" style="bottom:0px; text-align-last: center; text-align: -webkit-center; display: flex; place-content: center;">
+            <div class="date-nav d-print-none pb-2">
                 <a
                     href="#"
-                    class="btn btn-secondary align-content-center mx-1 save-position"
+                    class="text-bold btn btn-secondary align-content-center mx-1 save-position"
                     data-anchor="-4"
                     type="button">
                     <<
                 </a>
                 <a
                     href="#"
-                    class="btn btn-secondary align-content-center mx-1 save-position"
+                    class="text-bold btn btn-secondary align-content-center mx-1 save-position"
                     data-anchor="-1"
                     type="button">
                     <
                 </a>
-                <div class="list-group list-group-horizontal text-nowrap overflow-hidden" style="max-width:500px;" id="calendarBtn">
+                <div class="list-group list-group-horizontal text-nowrap overflow-hidden" id="calendarBtn">
                     {% for weeks in list_weeks %}
-                        <a href="{% url "manager:index" %}{{weeks|year}}/{{weeks|month}}/{{weeks|day}}/" id='week_{{weeks|get_year}}_{{weeks|get_week}}'class="list-group-item list-group-item-action {% if weeks|get_week == actual_week and weeks|get_year == actual_year %}active {% elif weeks|get_week in range_weeks and weeks|get_year == actual_year %} bg-info{% endif %}">{{weeks|day}}/{{weeks|month}}/{{weeks|get_year}}</a>
+                        <a 
+                            href="{% url "manager:index" %}{{weeks|year}}/{{weeks|month}}/{{weeks|day}}/" 
+                            id='week_{{weeks|get_year}}_{{weeks|get_week}}'
+                            class="list-group-item list-group-item-action {% if weeks|get_week == actual_week and weeks|get_year == actual_year %}active {% elif weeks|get_week in range_weeks and weeks|get_year == actual_year %} bg-info{% endif %}"
+                        >
+                            {{weeks|day}}/{{weeks|month}}/{{weeks|get_year}}
+                        </a>
                     {% endfor %}
                   </div>
                 <a  
                     href="#"
-                    class="btn btn-secondary align-content-center mx-1 save-position"
+                    class="text-bold btn btn-secondary align-content-center mx-1 save-position"
                     data-anchor="1"
                     type="button">
                     >
                 </a>
                 <a
                     href="#"
-                    class="btn btn-secondary align-content-center mx-1 save-position"
+                    class="text-bold btn btn-secondary align-content-center mx-1 save-position"
                     data-anchor="4"
                     type="button">
                     >>
@@ -206,7 +214,7 @@
         <div></div>
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="wrapper pt-0 d-print-none position-relative" style="top:140px">
+        <div class="wrapper pt-0 d-print-none position-relative">
             <!-- Main content -->
             <section class="content p-0 vh-100">
                 <div class="container-fluid vh-100">
@@ -417,7 +425,7 @@
                                 <tr>
                                     <th>Date</th>
                                     <th>Commentaires</th>
-                                    <th style="width:0">Supprimer</th>
+                                    <th class="w0">Supprimer</th>
                                 </tr>
                             </thead>
                             <tbody id="feedmecomment">
@@ -441,14 +449,13 @@
 <script>
     function PrintElem(elem)
     {
-        var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+        var mywindow = window.open('', 'PRINT', 'height=1000,width=1300');
     
         mywindow.document.write('<html><head>');
         mywindow.document.write(`
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <link href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" rel="stylesheet">
-        <link href="{% static "css/calendar.css" %}" rel="stylesheet">
-        
+        <link href="{% static "dist/index.css" %}" rel="stylesheet">
         `)
         mywindow.document.write('</head><body >');
         mywindow.document.write(document.getElementById(elem).innerHTML);
@@ -459,9 +466,9 @@
     
     
         setTimeout(function () {
-        mywindow.print();
-        mywindow.close();
-        }, 2000)
+            mywindow.print();
+            mywindow.close();
+        }, 2000);
         return true;
     }
 </script>

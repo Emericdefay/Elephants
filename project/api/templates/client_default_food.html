@@ -15,7 +15,7 @@
         </div>
     </div>
 {% else %}
-    <div class="{% if is_different_from_default %}background-food-day-different{% else %}background-food-day-same{% endif %}" style="border: 2px solid #363742;">
+    <div class="background-food-day {% if is_different_from_default %}background-food-day-different{% else %}background-food-day-same{% endif %}">
         <div class="text-center mx-1">
             <strong>Plats Commandés ce jour</strong>
         </div>

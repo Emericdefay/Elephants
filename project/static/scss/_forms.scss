@@ -44,3 +44,128 @@
     }
 
 }
+
+tr.client-forms {
+    margin-bottom:1rem;
+    td {
+        vertical-align: middle;
+
+        form {
+            text-align-last: center;
+            width: min-content;
+
+            div input {
+                width: -webkit-fill-available;
+            }
+        }
+    }
+    input:not(.checkbox-default-food) {
+        inline-size: -webkit-fill-available;
+    }
+    .checkbox-default-food {
+        transform: scale(2.3);
+        vertical-align: -webkit-baseline-middle;
+    }
+}
+
+.circuit-modal {
+    td {
+        vertical-align: middle;
+
+    }
+    &-address {
+        overflow-wrap: anywhere;
+        max-width:8em;
+    }
+    &-food {
+        font-weight: bold;
+    }
+}
+
+.circuit-total {
+    border-top: 2px solid black;
+
+    &-head {
+        text-align: end;
+        padding-right: 1em;
+        background-color: lightgrey !important;
+    }
+
+    &-body {
+        vertical-align: middle;
+        font-weight: bold;
+        background-color: lightgrey !important;
+    }
+
+    &-total {
+        border-top: 2px solid black; 
+        td {
+            font-weight: bold;
+            background-color: lightgrey;
+        }
+    }
+}
+
+.top-bar {
+    ul {
+        font-size: x-large;
+    }
+    &-btn {
+        align-self: center;
+        
+        
+        form {
+            text-align-last: center; 
+            width: min-content;
+
+            input:not(.date) {
+                width: -webkit-fill-available;
+            }
+
+        }
+    }
+}
+
+.quarter-year-header-picker {
+    text-align-last:center;
+    .btn-checked {
+        background-color: blue;
+    }
+}
+
+.date-nav {
+    bottom:0px; 
+    text-align-last: center; 
+    text-align: -webkit-center; 
+    display: flex; 
+    place-content: center;
+
+    .list-group {
+        max-width:500px;
+    }
+}
+
+.wrapper {
+    top:140px;
+}
+
+.planning-client {
+    margin-bottom: 1rem;
+    border-spacing:0 20px;
+    border-collapse: separate; 
+
+    &-names {
+        min-width:$width_text_cells;
+        max-width:$width_text_cells_max;
+    }
+    .meals {
+        min-width:$width_cells;
+        max-width:$width_cells;
+        width:$width_cells;
+        vertical-align: middle;
+
+        input {
+            width:$width_cells;
+        }
+    }
+}

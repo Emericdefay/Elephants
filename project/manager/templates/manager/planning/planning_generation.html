@@ -6,78 +6,56 @@
 {% now "m" as to_month %}
 {% now "d" as todays_date %}
 
-
-
 {% regroup actual_commands by client as client_list %}
-        {% for client, command_list in client_list %}
-
-            {% comment %} {% ifchanged client.circuit.id %}
-                {% if forloop.counter0 != 0 %}
-                    <tr style="border-collapse: separate; border-spacing:0 20px; margin-bottom:1rem;">
-                        <td colspan="36">
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endifchanged %} {% endcomment %}
-            <tr id="tr_planning_{{client.id}}" class="line" style="margin-bottom: 1rem; border-spacing:0 20px; border-collapse: separate; background-color:{{client.circuit.circuit_color}}">
-            {% with command_list|get:forloop.counter0 as client__command  %}
-            <td class="meals meals-details customer-comment-btn {% if client.has_comment %}comment{% endif %}" 
-                data-client="{{client.id}}" 
-                style="min-width:{{width_text_cells}}px;
-                max-width:{{width_text_cells_max}}px;"
-            >
-            {% endwith %}
-                <span></span>
-                <strong>{{client.last_name}}<br>{{client.first_name}}</strong>
-            </td>
-            {% for day in range_dates %}
-                {% with command_list|get:forloop.counter0 as command_client %}
-                {% with command_list|get_futur:forloop.counter as command_client_2 %}
-                {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
-                    <td 
+{% for client, command_list in client_list %}
+    <tr class="planning-client line" id="tr_planning_{{client.id}}" style="background-color:{{client.circuit.circuit_color}}">
+        <td class="text-bold planning-client-names meals meals-details customer-comment-btn {% if client.has_comment %}comment{% endif %}" 
+            data-client="{{client.id}}"
+        >
+            {{client.last_name}}<br>{{client.first_name}}
+        </td>
+        {% for day in range_dates %}
+            {% with command_list|get:forloop.counter0 as command_client %}
+            {% with command_list|get_futur:forloop.counter as command_client_2 %}
+            {% if day|day_name|firsts:3 == 'lun' or day|day_name|firsts:3 == 'mar' or day|day_name|firsts:3 == 'jeu' or day|day_name|firsts:3 == 'sam' %}
+                <td 
                     class="meals
                         {% if day|day_name|firsts:3 == 'sam' %}
                              gradient-darker
                         {% endif %}
-                    " 
-                    style="min-width:{{width_cells}}px;
-                           vertical-align: middle;
-                           "
-                           >
-                           {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd command_id=command_client.id day_time_command=command_client.command_command default_command=client.client_command command_opts=command_client %}
-                        {% if day|day_name|firsts:3 != 'lun' %}
-                            {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd_plus_one command_id=command_client_2.id day_time_command=command_client_2.command_command default_command=client.client_command command_opts=command_client_2 %}
-                        {% endif %}
-                        <input
-                           type="number"
-                           min=1
-                           max=31
-                           id="day_date_command__{{day|convert_day_ymd}}__{{client.id}}"
-                           name="day_date_command__{{day|convert_day_ymd}}__{{client.id}}"
-                           value="{{day|day}}"
-                           style="width:{{width_cells}}px;"
-                           class="default_box invisible d-none">
-                        <input
-                           type="number"
-                           min=1
-                           max=12
-                           id="month_date_command__{{day|convert_day_ymd}}__{{client.id}}"
-                           name="month_date_command__{{day|convert_day_ymd}}__{{client.id}}"
-                           value="{{day|month}}"
-                           style="width:{{width_cells}}px;"
-                           class="default_box invisible d-none">
-                        <input
-                           type="number"
-                           min=2000
-                           id="year_date_command__{{day|convert_day_ymd}}__{{client.id}}"
-                           name="year_date_command__{{day|convert_day_ymd}}__{{client.id}}"
-                           value="{{day|year}}"
-                           style="width:{{width_cells}}px;"
-                           class="default_box invisible d-none">
-                    </td>
-                {% endif %}
-                {% endwith %}
-                {% endwith %}
-            {% endfor %}
+                          "
+                >
+                    {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd command_id=command_client.id day_time_command=command_client.command_command default_command=client.client_command command_opts=command_client %}
+                    {% if day|day_name|firsts:3 != 'lun' %}
+                        {% include "manager/planning/input_command.html" with this_year=day|year this_month=day|month this_day=day|day day_time=day|convert_day_ymd_plus_one command_id=command_client_2.id day_time_command=command_client_2.command_command default_command=client.client_command command_opts=command_client_2 %}
+                    {% endif %}
+                    <input
+                       type="number"
+                       min=1
+                       max=31
+                       id="day_date_command__{{day|convert_day_ymd}}__{{client.id}}"
+                       name="day_date_command__{{day|convert_day_ymd}}__{{client.id}}"
+                       value="{{day|day}}"
+                       class="default_box invisible d-none">
+                    <input
+                       type="number"
+                       min=1
+                       max=12
+                       id="month_date_command__{{day|convert_day_ymd}}__{{client.id}}"
+                       name="month_date_command__{{day|convert_day_ymd}}__{{client.id}}"
+                       value="{{day|month}}"
+                       class="default_box invisible d-none">
+                    <input
+                       type="number"
+                       min=2000
+                       id="year_date_command__{{day|convert_day_ymd}}__{{client.id}}"
+                       name="year_date_command__{{day|convert_day_ymd}}__{{client.id}}"
+                       value="{{day|year}}"
+                       class="default_box invisible d-none">
+                </td>
+            {% endif %}
+            {% endwith %}
+            {% endwith %}
         {% endfor %}
     </tr>
+{% endfor %}

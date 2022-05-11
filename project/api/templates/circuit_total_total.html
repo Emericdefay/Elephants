@@ -1,23 +1,19 @@
-{% load static humanize index %}
-{% with width_cells=130 %}
+{% load index %}
 {% with actual_commands|get:0 as command_client %}
 
    <tr 
-    class="day_cells"
-    style="border-top: 2px solid black;"
-    id="total-circuit-{{circuit.id}}" 
+        class="day_cells circuit-total-total"
+        id="total-circuit-{{circuit.id}}" 
     >
-        <td style="background-color: lightgrey;
-                   font-weight: bold;">
-                Total
+        <td>
+            Total
         </td>
-            {% for food in foods %}
-            <td style="font-weight: bold;background-color: lightgrey;">
+        {% for food in foods %}
+            <td>
                 {% if command_client %}
                     {{command_client|make_query|query_filter_search:search|query_sum_morning:food}}
                 {% endif %}
             </td>
-            {% endfor %}
-        </tr>
-{% endwith %}
+        {% endfor %}
+    </tr>
 {% endwith %}
