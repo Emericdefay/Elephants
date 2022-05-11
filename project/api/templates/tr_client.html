@@ -1,4 +1,5 @@
 {% load humanize index %}
+
 <tr id="tr_client_{{client.id}}" style="margin-bottom:1rem;  background-color:{{client.circuit.circuit_color}}">
     <td style="vertical-align: middle;">
       <input type="text" data-client="{{client.id}}" data-attrib="last_name" class="input_last_name" style="inline-size: -webkit-fill-available;" name="last_name__{{client.id}}" id="last_name__{{client.id}}" value="{{client.last_name}}"/></br>

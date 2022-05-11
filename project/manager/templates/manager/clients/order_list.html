@@ -1,113 +1,5 @@
 {% load static humanize index %}
 
-<style> 
-    /* 
-    Generic Styling, for Desktops/Laptops 
-    */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th {
-      background: #333;
-      color: white;
-      font-weight: bold;
-    }
-
-    td, th {
-      padding: 6.2px !important;
-      border: 1px solid #ccc;
-      text-align: center;
-    }
-    .draggable {
-      height: 61.88px !important;
-      text-align: center;
-    }
-
-    /* 
-    Max width before this PARTICULAR table gets nasty
-    This query will take effect for any screen smaller than 760px
-    and also iPads specifically.
-    */
-    @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
-      .responsive-table-input-matrix {
-        display: block;
-        position: relative;
-        width: 100%;
-      }
-      .responsive-table-input-matrix:after {
-        clear: both;
-        content: "";
-        display: block;
-        font-size: 0;
-        height: 0;
-        visibility: hidden;
-      }
-      .responsive-table-input-matrix tbody {
-        display: block;
-        overflow-x: auto;
-        position: relative;
-        white-space: nowrap;
-        width: auto;
-      }
-      .responsive-table-input-matrix tbody tr {
-        display: inline-block;
-        vertical-align: top;
-      }
-      .responsive-table-input-matrix tbody tr td {
-        display: block;
-        text-align: center;
-      }
-      .responsive-table-input-matrix tbody tr td:first-child {
-        text-align: center;
-      }
-      .responsive-table-input-matrix thead {
-        display: block;
-        float: left;
-        margin-right: 10px;
-      }
-      .responsive-table-input-matrix thead:after {
-        clear: both;
-        content: "";
-        display: block;
-        font-size: 0;
-        height: 0;
-        visibility: hidden;
-      }
-      .responsive-table-input-matrix thead th:first-of-type {
-        height: 1.4em;
-      }
-      .responsive-table-input-matrix thead th {
-        display: block;
-        text-align: center;
-      }
-      .responsive-table-input-matrix thead th:first-child {
-        text-align: center;
-      }
-    }
-</style>
-<style>
-  .board-ordered tr > *:nth-child(2) {
-    display: none;
-}
-</style>
-<style>
-  .draggable-grip{
-    vertical-align: middle;
-  }
-
-  .draggable-grip:after {
-    width: 3%;
-    position: relative;
-    text-align: center;
-    content: '\f58d';
-    font-family: 'Font Awesome\ 5 Free';
-    font-weight: 900;
-  }
-</style>
-
-
 <h3>
     Ordre des clients
 </h3>
@@ -118,7 +10,7 @@
       <div class="col">
         <h4>{{circuit.name}}</h4>
         <table class="responsive-table-input-matrix table table-hover board-ordered" id="table-order-{{forloop.counter0}}">
-          <thead class="table-dark position-relative" style="z-index:1; opacity:1;">
+          <thead class="table-dark position-relative showed">
               <tr>
                   <th>#</th>
                   <th>#</th>
@@ -127,23 +19,15 @@
               </tr>
           </thead>
           <tbody>
-            {% ifchanged clients_by_circuit.circuit %}
-              {% if forloop.counter0 != 0 %}
-                <tr style="border-collapse: separate; border-spacing:0 20px;">
-                  <td colspan="17">
-                  </td>
-                </tr>
-              {% endif %}
-            {% endifchanged %}
             {% for client in clients_by_circuit|sort_order %}
               <tr style=" background-color:{{circuit.circuit_color}}">
-                  <td style="vertical-align:middle;" class="draggable draggable-grip"></td>
-                  <td style="vertical-align:middle;" class="d-none"><input class="order_clients" type="text" name="order__{{client.id}}" id="order__{{client.id}}" value="{{forloop.counter0}}"/></td>
-                  <td style="vertical-align:middle;">
+                  <td class="draggable draggable-grip align-vert"></td>
+                  <td class="d-none"><input class="order_clients" type="text" name="order__{{client.id}}" id="order__{{client.id}}" value="{{forloop.counter0}}"/></td>
+                  <td class=" align-vert">
                     <span><strong>{{client.last_name}}</strong> </span><br>
                     <span><strong>{{client.first_name}}</strong></span>
                   </td>
-                  <td style="vertical-align:middle;">
+                  <td class="align-vert">
                     <span><strong>{{client.address}}</strong>   </span><br>
                     <span><strong>{{client.postcode}}</strong>  </span>
                   </td>

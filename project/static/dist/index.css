@@ -15881,6 +15881,43 @@ readers do not read off random characters that represent icons */
   font-family: 'Font Awesome 5 Free';
   font-weight: 900; }
 
+.collapsible-link {
+  width: 100%;
+  position: relative;
+  text-align: left;
+}
+.collapsible-link::before {
+  content: "\f077";
+  position: absolute;
+  top: 50%;
+  right: 0.8rem;
+  transform: translateY(-50%);
+  display: block;
+  font-family: "Font Awesome 5 Free";
+  font-size: 1.1rem;
+}
+.collapsible-link[aria-expanded=true]::before {
+  content: "\f078";
+}
+.collapsible-link:focus {
+  outline: 0 !important;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.circuit-total {
+  background-color: #363742;
+}
+
+.align-vert {
+  vertical-align: middle;
+}
+
+.unique-circuit-btn td,
+.total-circuit-btn td {
+  vertical-align: middle;
+}
+
 /* Body */
 body {
   display: flex;
@@ -16041,14 +16078,29 @@ footer .recaptcha-branding {
 }
 
 /* Forms */
+#food_form {
+  display: grid;
+  justify-items: stretch;
+  font-weight: bold;
+}
 #food_form label {
   text-align: start;
 }
 
+#client_form {
+  display: grid;
+  justify-items: stretch;
+  font-weight: bold;
+}
 #client_form label {
   text-align: start;
 }
 
+#circuit_form {
+  display: grid;
+  justify-items: stretch;
+  font-weight: bold;
+}
 #circuit_form label {
   text-align: start;
 }
@@ -16126,12 +16178,162 @@ svg {
   background-color: rgb(149, 211, 137);
 }
 
+/* 
+Generic Styling, for Desktops/Laptops 
+*/
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-collapse: collapse;
+  width: 100%;
+}
+table thead tr th:not(.circuit) {
+  /* you could also change td instead th depending your html code */
+  background-color: #363742;
+  position: sticky;
+  z-index: 100;
+  top: 150px;
+  opacity: 1;
+}
+table thead.collapsed {
+  visibility: collapse;
+}
+table thead.showed {
+  z-index: 1;
+  opacity: 1;
+}
+
+th {
+  background: #333;
+  color: white;
+  font-weight: bold;
+}
+th .w0 {
+  width: 0px;
+}
+
+td, th {
+  padding: 6px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+tr {
+  opacity: 0.9;
+}
+tr:hover {
+  opacity: 1;
+}
+
+/* 
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+  .responsive-table-input-matrix {
+    display: block;
+    position: relative;
+    width: 100%;
+  }
+
+  .responsive-table-input-matrix:after {
+    clear: both;
+    content: "";
+    display: block;
+    font-size: 0;
+    height: 0;
+    visibility: hidden;
+  }
+
+  .responsive-table-input-matrix tbody {
+    display: block;
+    overflow-x: auto;
+    position: relative;
+    white-space: nowrap;
+    width: auto;
+  }
+
+  .responsive-table-input-matrix tbody tr {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .responsive-table-input-matrix tbody tr td {
+    display: block;
+    text-align: center;
+  }
+
+  .responsive-table-input-matrix tbody tr td:first-child {
+    text-align: center;
+  }
+
+  .responsive-table-input-matrix thead {
+    display: block;
+    float: left;
+    margin-right: 10px;
+  }
+
+  .responsive-table-input-matrix thead:after {
+    clear: both;
+    content: "";
+    display: block;
+    font-size: 0;
+    height: 0;
+    visibility: hidden;
+  }
+
+  .responsive-table-input-matrix thead th:first-of-type {
+    height: 1.4em;
+  }
+
+  .responsive-table-input-matrix thead th {
+    display: block;
+    text-align: center;
+  }
+
+  .responsive-table-input-matrix thead th:first-child {
+    text-align: center;
+  }
+}
+.verticalTableHeader {
+  writing-mode: vertical-lr;
+  vertical-align: middle !important;
+}
+
+.unique-circuit-btn:hover {
+  cursor: pointer;
+}
+
+.draggable {
+  height: 61.88px !important;
+  text-align: center;
+}
+.draggable-grip {
+  vertical-align: middle;
+}
+.draggable-grip:after {
+  width: 3%;
+  position: relative;
+  text-align: center;
+  content: "\f58d";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+.board-ordered tr > *:nth-child(2) {
+  display: none;
+}
+
 .text-bold {
   font-weight: bold;
 }
 .text-little {
   font-size: small;
   font-style: italic;
+}
+.text-end {
+  text-align: end;
 }
 
 .bill {

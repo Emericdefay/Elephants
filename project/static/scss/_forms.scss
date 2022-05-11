@@ -1,14 +1,32 @@
 /* Forms */
-#food_form label {
-    text-align:start;
+#food_form {
+    display: grid;
+    justify-items: stretch;
+    font-weight: bold;
+    
+    label {
+        text-align:start;
+    }
+} 
+
+#client_form {
+    display: grid;
+    justify-items: stretch;
+    font-weight: bold;
+
+    label {
+        text-align:start;
+    }
 }
 
-#client_form label {
-    text-align:start;
-}
+#circuit_form { 
+    display: grid;
+    justify-items: stretch;
+    font-weight: bold;
 
-#circuit_form label {
-    text-align:start;
+    label {
+        text-align:start;
+    }
 }
 
 .inline-group {
