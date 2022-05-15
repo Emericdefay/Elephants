@@ -47,7 +47,39 @@ class UpdateHomeView(View):
 
     def synth_client(self, save):
         """ INFO CLIENT """
-        targets = ['order', 'circuit_id', ]
+        # targets = ['order', 'circuit_id', ]
+        # key_values = {}
+        # for key, value in save.items():
+        #     if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
+        #         key_values.update({key: value})
+        # # detect id
+        # ids = set()
+        # for i in key_values.keys():
+        #     ids.add(i.split('__')[1])
+        # # regroup by id
+        # values_by_id = dict()
+        # for id_ in ids:
+        #     values_by_id[id_] = {key.split('__')[0]:value for key, value in key_values.items() if key.split('__')[1]==id_}
+        # #start_time = time.time()
+        # # save
+        # print("--- circuit saves ", end="")
+        # start_time = time.time()
+        # objs = []
+        # for client_id, kwargs in values_by_id.items():
+        #     for key, value in kwargs.items():
+        #         client = Client.objects.get(id=client_id)
+        #         setattr(client, key, value)
+        #         print(client, key, value)
+        #         objs.append(client)
+        # Client.objects.bulk_update(objs, fields=['order'])
+        
+        # print("en %s secondes!\n" % round((time.time() - start_time), 2))
+        print("--- order saves ", end="")
+        start_time = time.time()
+        # for obj in objs:
+        #     obj.save(update_fields=["order"])
+        # Client.objects.bulk_update(objs, ['order'])
+        targets = ['order', ]
         key_values = {}
         for key, value in save.items():
             if str(key).split('__')[0] in targets and len(str(key).split('__')) == 2:
@@ -62,21 +94,15 @@ class UpdateHomeView(View):
             values_by_id[id_] = {key.split('__')[0]:value for key, value in key_values.items() if key.split('__')[1]==id_}
         #start_time = time.time()
         # save
-        print("--- circuit saves ", end="")
         start_time = time.time()
         objs = []
         for client_id, kwargs in values_by_id.items():
             for key, value in kwargs.items():
                 client = Client.objects.get(id=client_id)
-                setattr(client, key, value)
+                client.order= value
                 objs.append(client)
-        Client.objects.bulk_update(objs, ['circuit_id'])
-        
-        print("en %s secondes!\n" % round((time.time() - start_time), 2))
-        print("--- order saves ", end="")
-        start_time = time.time()
-        for obj in objs:
-            obj.save(update_fields=["order"])
+        Client.objects.bulk_update(objs, fields=['order'])
+
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
 
         """ MEALS """
@@ -147,52 +173,52 @@ class UpdateHomeView(View):
         # save
         print("--- save commands  ", end=" ")
         start_time = time.time()
-        objs = []
-        for key, value in values_by_id_2.items():
-            if value != '' or value != None:
-                command_id = key[-1]
-                try:
-                    command = Command.objects\
-                                        .get(
-                                            id=command_id,
-                                        )
-                    command.command_command = value
-                    objs.append(command)
-                except ValueError as e:
-                    pass
+        # objs = []
+        # for key, value in values_by_id_2.items():
+        #     if value != '' or value != None:
+        #         command_id = key[-1]
+        #         try:
+        #             command = Command.objects\
+        #                                 .get(
+        #                                     id=command_id,
+        #                                 )
+        #             command.command_command = value
+        #             objs.append(command)
+        #         except ValueError as e:
+        #             pass
         #Command.objects.bulk_update(objs, ['command_command'])
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
-        targets = ['comment', ]
-        key_values = {}
-        for key, value in save.items():
-            if str(key).split('__')[0] in targets:
-                key_values.update({key: value})
-        # print(key_values)
-        # detect id
-        ids = set()
-        for i in key_values.keys():
-            ids.add(i.split('__')[-1])
-        # print(ids)
-        # regroup by id
-        values_by_id_2 = dict()
-        values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
+        # targets = ['comment', ]
+        # key_values = {}
+        # for key, value in save.items():
+        #     if str(key).split('__')[0] in targets:
+        #         key_values.update({key: value})
+        # # print(key_values)
+        # #detect id
+        # ids = set()
+        # for i in key_values.keys():
+        #     ids.add(i.split('__')[-1])
+        # # print(ids)
+        # #regroup by id
+        # values_by_id_2 = dict()
+        # values_by_id_2 = {(key.split('__')[0], key.split('__')[2]):value for key, value in key_values.items()}
         # save
         print("--- save comment ", end=" ")
         start_time = time.time()
-        objs = []
-        for key, value in values_by_id_2.items():
-            if value != '' or value != None:
-                command_id = key[-1]
-                try:
-                    command = Command.objects\
-                                        .get(
-                                            id=command_id,
-                                        )
-                    command.comment = value
-                    objs.append(command)
-                except ValueError as e:
-                    pass
-        Command.objects.bulk_update(objs, ['comment'])
+        # objs = []
+        # for key, value in values_by_id_2.items():
+        #     if value != '' or value != None:
+        #         command_id = key[-1]
+        #         try:
+        #             command = Command.objects\
+        #                                 .get(
+        #                                     id=command_id,
+        #                                 )
+        #             command.comment = value
+        #             objs.append(command)
+        #         except ValueError as e:
+        #             pass
+        # Command.objects.bulk_update(objs, ['comment'])
         print("en %s secondes!\n" % round((time.time() - start_time), 2))
         print("--- save meals ", end=" ")
         start_time = time.time()
@@ -362,7 +388,7 @@ class DeleteUser(View):
         """
         """
         return redirect(reverse('manager:index'))
-        
+
 
 class HomeView(TemplateView, UpdateView):
     template_name = 'manager/index.html'
