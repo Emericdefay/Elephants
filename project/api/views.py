@@ -387,5 +387,6 @@ class GetAllClients(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = models.Client.objects.none()
 
     def get_queryset(self):
+        print('Chargement des clients...')
         # get non expired ads
         return models.Client.objects.all().order_by('last_name', 'first_name')
