@@ -5,9 +5,6 @@
 {% now "Y" as to_year %}
 {% now "m" as to_month %}
 {% now "d" as todays_date %}
-{% with width_cells=130 %}
-{% with width_text_cells=150 %}
-{% with width_text_cells_max=150 %}
 
 <h3>
     Planning
@@ -23,9 +20,9 @@
                         <th 
                             class="day_cells" 
                             {% if to_day|striptags == day|day|striptags and to_month|nonpadded|striptags == day|month|striptags and to_year|striptags == day|year|striptags %}
-                                style="background-color:darkorange; width:{{width_cells}}px;"
+                                style="background-color:darkorange;"
                             {% elif day|day_name|firsts:3 == 'sam' %}
-                                style="background-color:darkgrey; width:{{width_cells}}px;"
+                                style="background-color:darkgrey;"
                             {% endif %}
                         >
                             {% if day|day_name|firsts:3 == 'lun' %}
@@ -62,10 +59,6 @@
         </tbody>
     </table>
 </div>
-
-{% endwith %}
-{% endwith %}
-{% endwith %}
 
 <script type="application/javascript">
     window.app.buttonHandler();
