@@ -22199,10 +22199,14 @@ var commentUpdate = function commentUpdate() {
     var command = $(this).data('command');
     var client = $(this).data('client');
     var value = $("textarea[data-command=\"".concat(command, "\"]")).val();
-    var urlFood = "".concat(url, "/").concat(command, "/").concat(value, "/");
+    var urlFood = "".concat(url, "/");
     $.ajax({
       url: urlFood,
-      type: 'GET',
+      type: 'POST',
+      data: {
+        'command': command,
+        'value': value
+      },
       dataType: 'json',
       beforeSend: function beforeSend() {},
       success: function success(data) {
@@ -22358,7 +22362,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52616" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62765" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

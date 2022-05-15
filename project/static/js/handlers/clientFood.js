@@ -23,10 +23,15 @@ const lastName = () => {
     //do something
     const client = input.data('client');
     const val = input.val();
-    urlClient = `${url}/${client}/last_name/${val}/`;
+    urlClient = `${url}/`;
     $.ajax({
       url: urlClient,
-      type: 'GET',
+      type: 'POST',
+      data: {
+        'client': client,
+        'attr': 'last_name',
+        'value': val,
+      },
       dataType: 'json',
       beforeSend: () => {
       },
@@ -65,10 +70,15 @@ const firstName = () => {
     //do something
     const client = input.data('client');
     const val = input.val();
-    urlClient = `${url}/${client}/first_name/${val}/`;
+    urlClient = `${url}/`;
     $.ajax({
       url: urlClient,
-      type: 'GET',
+      type: 'POST',
+      data: {
+        'client': client,
+        'attr': 'first_name',
+        'value': val,
+      },
       dataType: 'json',
       beforeSend: () => {
       },
@@ -107,10 +117,15 @@ const address = () => {
     //do something
     const client = input.data('client');
     const val = input.val();
-    urlClient = `${url}/${client}/address/${val}/`;
+    urlClient = `${url}/`;
     $.ajax({
       url: urlClient,
-      type: 'GET',
+      type: 'POST',
+      data: {
+        'client': client,
+        'attr': 'address',
+        'value': val,
+      },
       dataType: 'json',
       beforeSend: () => {
       },
@@ -149,10 +164,15 @@ const postCode = () => {
     //do something
     const client = input.data('client');
     const val = input.val();
-    urlClient = `${url}/${client}/postcode/${val}/`;
+    urlClient = `${url}/`;
     $.ajax({
       url: urlClient,
-      type: 'GET',
+      type: 'POST',
+      data: {
+        'client': client,
+        'attr': 'postcode',
+        'value': val,
+      },
       dataType: 'json',
       beforeSend: () => {
       },
@@ -191,10 +211,15 @@ const addressDetails = () => {
     //do something
     const client = input.data('client');
     const val = input.val();
-    urlClient = `${url}/${client}/address_details/${val}/`;
+    urlClient = `${url}/`;
     $.ajax({
       url: urlClient,
-      type: 'GET',
+      type: 'POST',
+      data: {
+        'client': client,
+        'attr': 'address_details',
+        'value': val,
+      },
       dataType: 'json',
       beforeSend: () => {
       },
@@ -233,10 +258,15 @@ const cellphone = () => {
     //do something
     const client = input.data('client');
     const val = input.val();
-    urlClient = `${url}/${client}/cellphone/${val}/`;
+    urlClient = `${url}/`;
     $.ajax({
       url: urlClient,
-      type: 'GET',
+      type: 'POST',
+      data: {
+        'client': client,
+        'attr': 'cellphone',
+        'value': val,
+      },
       dataType: 'json',
       beforeSend: () => {
       },
@@ -275,10 +305,15 @@ const cellphone2 = () => {
     //do something
     const client = input.data('client');
     const val = input.val();
-    urlClient = `${url}/${client}/cellphone2/${val}/`;
+    urlClient = `${url}/`;
     $.ajax({
       url: urlClient,
-      type: 'GET',
+      type: 'POST',
+      data: {
+        'client': client,
+        'attr': 'cellphone2',
+        'value': val,
+      },
       dataType: 'json',
       beforeSend: () => {
       },

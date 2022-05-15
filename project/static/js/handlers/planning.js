@@ -54,10 +54,14 @@ export const commentUpdate = () => {
         const command = $(this).data('command');
         const client = $(this).data('client');
         const value = $(`textarea[data-command="${command}"]`).val()
-        const urlFood = `${url}/${command}/${value}/`;
+        const urlFood = `${url}/`;
         $.ajax({
             url: urlFood,
-            type: 'GET',
+            type: 'POST',
+            data: {
+              'command': command,
+              'value': value,
+            },
             dataType: 'json',
             beforeSend: () => {
             },

@@ -237,9 +237,11 @@ class CommentUpdate(APIView):
         except models.Command.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, comment_value, format=None):
+    def post(self, request, format=None):
+        pk = request.POST.get('command')
+        value = request.POST.get('value')
         command = self.get_object(pk)
-        command.comment = comment_value
+        command.comment = value
         command.save()
         return Response(serializers.AllCommentsOfCustomerSerializer(command).data)
 
@@ -254,7 +256,10 @@ class ClientUpdate(APIView):
         except models.Command.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, attr, value, format=None):
+    def post(self, request, format=None):
+        pk = request.POST.get('client')
+        attr = request.POST.get('attr')
+        value = request.POST.get('value')
         client = self.get_object(pk)
         setattr(client, attr, value)
         client.save()
