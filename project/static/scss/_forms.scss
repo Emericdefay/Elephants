@@ -163,9 +163,40 @@ tr.client-forms {
         max-width:$width_cells;
         width:$width_cells;
         vertical-align: middle;
+        padding: 0!important;
 
         input {
             width:$width_cells;
         }
+
+        &-details {
+            vertical-align: middle !important;
+        }
     }
+}
+
+.background-food-day {
+    border: 2px solid #363742;
+}
+
+
+.line {
+    border-bottom: 2px solid;
+    border-color: black;
+  }
+  .day_cells {
+      width:50px!important;
+      padding:0!important;
+  }
+
+.customer-comment-btn:hover {
+    cursor:pointer;
+}
+
+.dropdown-menu.show:hover {
+    opacity:1;
+} 
+
+.gradient-darker {
+    background-color:darkgrey !important;
 }

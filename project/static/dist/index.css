@@ -16216,13 +16216,43 @@ tr.client-forms .checkbox-default-food {
   max-width: 1px;
 }
 .planning-client .meals {
-  min-width: 52px;
-  max-width: 52px;
-  width: 52px;
+  min-width: 150px;
+  max-width: 150px;
+  width: 150px;
   vertical-align: middle;
+  padding: 0 !important;
 }
 .planning-client .meals input {
-  width: 52px;
+  width: 150px;
+}
+.planning-client .meals-details {
+  vertical-align: middle !important;
+}
+
+.background-food-day {
+  border: 2px solid #363742;
+}
+
+.line {
+  border-bottom: 2px solid;
+  border-color: black;
+}
+
+.day_cells {
+  width: 50px !important;
+  padding: 0 !important;
+}
+
+.customer-comment-btn:hover {
+  cursor: pointer;
+}
+
+.dropdown-menu.show:hover {
+  opacity: 1;
+}
+
+.gradient-darker {
+  background-color: darkgrey !important;
 }
 
 header {
