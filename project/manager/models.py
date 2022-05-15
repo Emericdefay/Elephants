@@ -4,6 +4,11 @@ from statistics import mode
 from django.db import models
 from .choices import FoodCategory, CommandTimes
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from django.core.cache import cache
+
 
 class Food(models.Model):
     """_summary_
@@ -13,6 +18,11 @@ class Food(models.Model):
 
     def __str__(self):
         return f"{self.pk}: {self.category}"
+
+
+@receiver(post_save, sender=Food)
+def clear_cache(sender, instance, **kwargs):
+    cache.clear()
 
 
 class DefaultCommand(models.Model):
@@ -35,6 +45,11 @@ class Circuit(models.Model):
 
     def __str__(self):
         return f"{self.pk}-{self.name}"
+
+
+@receiver(post_save, sender=Circuit)
+def clear_cache(sender, instance, **kwargs):
+    cache.clear()
 
 
 class Client(models.Model):
@@ -65,6 +80,11 @@ class Client(models.Model):
 
     def __str__(self):
         return f"{self.last_name} {self.first_name}"
+
+
+@receiver(post_save, sender=Client)
+def clear_cache(sender, instance, **kwargs):
+    cache.clear()
 
 
 class Day(models.Model):
@@ -121,6 +141,12 @@ class Command(models.Model):
     class Meta:
         indexes = [models.Index(fields=['day_date_command', 'month_date_command','year_date_command', 'client']),]
 
+
+@receiver(post_save, sender=Command)
+def clear_cache(sender, instance, **kwargs):
+    cache.clear()
+
+
 class Company(models.Model):
     """_summary_
     """
@@ -134,9 +160,18 @@ class Company(models.Model):
         return "Modèle de facture"
 
 
+@receiver(post_save, sender=Company)
+def clear_cache(sender, instance, **kwargs):
+    cache.clear()
+
+
 class WeekRange(models.Model):
     """"""
     range = models.IntegerField(verbose_name="", default=2)
 
     def __str__(self):
         return str(self.range)
+
+@receiver(post_save, sender=WeekRange)
+def clear_cache(sender, instance, **kwargs):
+    cache.clear()
